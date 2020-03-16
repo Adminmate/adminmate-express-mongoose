@@ -1,0 +1,16 @@
+{
+  "name": "adminmate-express-mongoose",
+  "version": "1.0.0",
+  "description": "AdminMate Express Mongoose",
+  "author": "Marc Delalonde",
+  "private": true,
+  "scripts": {
+    "start": "node ./index"
+  },
+  "engines": {
+    "node": "10.x"
+  },
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
