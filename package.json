@@ -11,6 +11,8 @@
     "node": "10.x"
   },
   "dependencies": {
-    "express": "^4.16.4"
+    "axios": "^0.19.2",
+    "express": "^4.16.4",
+    "jwt-simple": "^0.5.6"
   }
 }
