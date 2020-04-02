@@ -31,6 +31,7 @@ class AdminMate {
       params,
       data,
       headers: {
+        'Content-Type': 'application/json',
         'X-Project-Id': this.projectId,
         'Signature': signatureToCompareWith
         // 'Authorization': `bearer ${token}`
@@ -50,7 +51,16 @@ class AdminMate {
 
     // Check if connection between servers is ok
     router.post('/adminmate/api/check_connection', async (req, res) => {
-      const request = await this.request('POST', '/api/check_connection', { action: 'check_connection' }).catch(err => {
+      const localhostUrl = req.body.localhostUrl;
+      if (!localhostUrl) {
+        return res.status(403).json({ message: 'Invalid request' });
+      }
+
+      const postData = {
+        action: 'check_connection',
+        localhostUrl
+      };
+      const request = await this.request('POST', '/api/check_connection', {}, postData).catch(err => {
         console.log('===', err.response.status, err.response.data);
         //res.status(403).json({ message: err.response.data.message });
       });
@@ -65,7 +75,7 @@ class AdminMate {
     // Check if there is at least one mongoose model
     router.post('/adminmate/api/check_models', async (req, res) => {
       if (this.models && this.models.length > 0) {
-        const request = await this.request('POST', '/api/check_models', { action: 'check_models' }).catch(err => {
+        const request = await this.request('POST', '/api/check_models', {}, { action: 'check_models' }).catch(err => {
           console.log('===', err.response.status, err.response.data);
           //res.status(403).json({ message: err.response.data.message });
         });
