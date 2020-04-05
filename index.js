@@ -3,6 +3,35 @@ const axios = require('axios');
 const cookieParser = require('cookie-parser');
 const crypto = require('crypto');
 
+const getModelProperties = (model) => {
+  let modelFields = [];
+  const modelProps = model.schema.paths;
+
+  Object.keys(modelProps).forEach(key => {
+    if (key === '__v') {
+      return;
+    }
+    let property = {
+      path: key,
+      type: modelProps[key].instance
+    };
+
+    if (modelProps[key].enumValues && modelProps[key].enumValues.length) {
+      property.enum = modelProps[key].enumValues;
+    }
+    if (modelProps[key].options.default) {
+      property.default = modelProps[key].options.default;
+    }
+    if (modelProps[key].options.ref) {
+      property.ref = modelProps[key].options.ref;
+    }
+
+    modelFields.push(property);
+  });
+
+  return modelFields;
+};
+
 class AdminMate {
   constructor({ projectId, secretKey, authKey, masterPassword, models }) {
     this.projectId = projectId;
@@ -88,6 +117,32 @@ class AdminMate {
       } else {
         return res.status(403).json({ message: 'Invalid request' });
       }
+    });
+
+    router.get('/adminmate/api/model', async (req, res) => {
+      let models = [];
+      this.models.forEach(model => {
+        models.push(model.collection.name);
+      });
+      res.json({ models });
+    });
+
+    router.get('/adminmate/api/model/:model/config', async (req, res) => {
+      const currentModel = this.models.find(m => m.collection.name === req.params.model);
+      if (!currentModel) {
+        return res.status(403).json({ message: 'Invalid request' });
+      }
+      const keys = getModelProperties(currentModel);
+      res.json({ keys });
+    });
+
+    router.get('/adminmate/api/model/:model', async (req, res) => {
+      const currentModel = this.models.find(m => m.collection.name === req.params.model);
+      if (!currentModel) {
+        return res.status(403).json({ message: 'Invalid request' });
+      }
+      const modelData = await currentModel.find().lean();
+      res.json({ data: modelData });
     });
 
     return router;
