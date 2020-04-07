@@ -109,7 +109,8 @@ class AdminMate {
       res.json({ keys });
     });
 
-    router.get('/adminmate/api/model/:model', async (req, res) => modelController.get(req, res, this.models));
+    router.post('/adminmate/api/model/:model', async (req, res) => modelController.get(req, res, this.models));
+    router.get('/adminmate/api/model/:model/:id', async (req, res) => modelController.getOne(req, res, this.models));
 
     return router;
   }
