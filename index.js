@@ -2,6 +2,7 @@ const router = require('express').Router();
 const axios = require('axios');
 const cookieParser = require('cookie-parser');
 const crypto = require('crypto');
+const modelController = require('./src/controllers/model');
 
 const getModelProperties = (model) => {
   let modelFields = [];
@@ -136,14 +137,7 @@ class AdminMate {
       res.json({ keys });
     });
 
-    router.get('/adminmate/api/model/:model', async (req, res) => {
-      const currentModel = this.models.find(m => m.collection.name === req.params.model);
-      if (!currentModel) {
-        return res.status(403).json({ message: 'Invalid request' });
-      }
-      const modelData = await currentModel.find().lean();
-      res.json({ data: modelData });
-    });
+    router.get('/adminmate/api/model/:model', async (req, res) => modelController.get(req, res, this.models));
 
     return router;
   }
