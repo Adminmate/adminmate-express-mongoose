@@ -1,3 +1,5 @@
+const fnHelper = require('../helpers/functions');
+
 module.exports.get = async (req, res, models) => {
   const modelName = req.params.model;
   // const submodelName = req.params.submodel;
@@ -11,6 +13,24 @@ module.exports.get = async (req, res, models) => {
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
+
+  const keys = fnHelper.getModelProperties(currentModel);
+  console.log('==model keys properties', keys);
+
+  const fieldPopulateConfig = {
+    client_id: 'firstname lastname'
+  };
+  let fieldsToPopulate = [];
+  const fieldsToFetch = ['_id', 'firstname', 'lastname', 'client_id'];
+  fieldsToFetch.forEach(field => {
+    const matchingField = keys.find(k => k.path === field);
+    if (matchingField && matchingField.type === 'ObjectID' && matchingField.ref) {
+      fieldsToPopulate.push({
+        path: field,
+        select: fieldPopulateConfig[field] ? fieldPopulateConfig[field] : '_id'
+      });
+    }
+  });
 
   let params = {};
   if (search) {
@@ -46,23 +66,33 @@ module.exports.get = async (req, res, models) => {
   let data = await currentModel
     .find(params)
     .select('')
-    .populate('dev_id', 'firstname lastname')
+    .populate(fieldsToPopulate)
     .sort('-created_date')
     .skip(nbItemPerPage * (page - 1))
     .limit(nbItemPerPage)
     .lean();
 
+  // console.log('===data', data);
+
   const dataCount = await currentModel.countDocuments(params);
   const nbPage = Math.ceil(dataCount / nbItemPerPage);
 
+  // Make ref fields appeared as link in the dashboard
   data = data.map(item => {
-    if (item.dev_id) {
-      item.dev_id = {
-        type: 'ref',
-        label: `${item.dev_id.firstname} ${item.dev_id.lastname}`,
-        id: item.dev_id._id
-      };
-    }
+    const attributes = Object.keys(item);
+    attributes.forEach(attr => {
+      const matchingField = fieldsToPopulate.find(field => field.path === attr);
+      if (matchingField) {
+        const label = matchingField.select === '_id' ? item[attr]._id : matchingField.select.replace(/[a-z]+/gi, word => {
+          return item[attr][word];
+        });
+        item[attr] = {
+          type: 'ref',
+          id: item[attr]._id,
+          label
+        };
+      }
+    });
     return item;
   });
 
