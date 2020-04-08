@@ -2,8 +2,10 @@ const router = require('express').Router();
 const axios = require('axios');
 const cookieParser = require('cookie-parser');
 const crypto = require('crypto');
+const jwt = require('jwt-simple');
 const modelController = require('./src/controllers/model');
 const fnHelper = require('./src/helpers/functions');
+const { isAuthorized } = require('./src/middlewares/auth');
 
 class AdminMate {
   constructor({ projectId, secretKey, authKey, masterPassword, models }) {
@@ -16,7 +18,7 @@ class AdminMate {
 
   accessControl(req, res, next) {
     res.header('Access-Control-Allow-Origin', 'http://localhost:3002');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, X-Access-Token');
     res.header('Access-Control-Allow-Credentials', true);
     next();
   }
@@ -92,25 +94,32 @@ class AdminMate {
       }
     });
 
-    router.get('/adminmate/api/model', async (req, res) => {
-      let models = [];
-      this.models.forEach(model => {
-        models.push(model.collection.name);
-      });
-      res.json({ models });
-    });
-
-    router.get('/adminmate/api/model/:model/config', async (req, res) => {
-      const currentModel = this.models.find(m => m.collection.name === req.params.model);
-      if (!currentModel) {
+    router.post('/adminmate/api/login', async (req, res) => {
+      const { password } = req.body;
+      if (!password) {
         return res.status(403).json({ message: 'Invalid request' });
       }
-      const keys = fnHelper.getModelProperties(currentModel);
-      res.json({ keys });
+      setTimeout(() => {
+        if (password !== this.masterPassword) {
+          return res.status(403).json({ message: 'Invalid master password' });
+        }
+        // Generate the Admin token
+        const expireDays = 7;
+        const adminToken = jwt.encode({
+          exp_date: Date.now() + (24 * expireDays * 1000)
+        }, this.authKey);
+        res.json({ admin_token: adminToken });
+      }, 2000);
     });
 
-    router.post('/adminmate/api/model/:model', async (req, res) => modelController.get(req, res, this.models));
-    router.get('/adminmate/api/model/:model/:id', async (req, res) => modelController.getOne(req, res, this.models));
+    // Get models list
+    router.get('/adminmate/api/model', isAuthorized(this.authKey), modelController.getModels(this.models));
+
+    // Get model config
+    router.get('/adminmate/api/model/:model/config', isAuthorized(this.authKey),  modelController.getModelConfig(this.models));
+
+    router.post('/adminmate/api/model/:model', isAuthorized(this.authKey), async (req, res) => modelController.get(req, res, this.models));
+    router.get('/adminmate/api/model/:model/:id', isAuthorized(this.authKey), async (req, res) => modelController.getOne(req, res, this.models));
 
     return router;
   }
