@@ -26,3 +26,27 @@ module.exports.getModelProperties = model => {
 
   return modelFields;
 };
+
+const permutations = list => {
+  if (list.length <= 1) {
+    return list.slice();
+  }
+
+  let result = [],
+    i = 0,
+    j,
+    current,
+    rest;
+
+  for(; i < list.length; i++) {
+    rest = list.slice(); // make a copy of list
+    current = rest.splice(i, 1);
+    permutationsRest = permutations(rest);
+    for(j = 0; j < permutationsRest.length; j++) {
+      result.push(current.concat(permutationsRest[j]));
+    }
+  }
+  return result;
+};
+
+module.exports.permutations = permutations;

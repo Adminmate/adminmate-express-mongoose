@@ -73,6 +73,30 @@ module.exports.get = async (req, res) => {
         params.$or.push({ [field.path]: search });
       });
     }
+
+    // If the search terms contains multiple words
+    if (/\s/.test(search)) {
+      // Create all search combinaisons for $regexMatch
+      const searchPieces = search.split(' ');
+      const searchCombinaisons = fnHelper.permutations(searchPieces)
+        .map(comb => comb.join('')
+        .toLowerCase()
+        .replace(/\W/g, ''))
+        .join('|');
+      const concatFields = fieldsToSeachIn.map(field => `$${field}`);
+
+      params.$or.push({
+        $expr: {
+          $regexMatch: {
+            input: {
+              $concat: concatFields
+            },
+            regex: new RegExp(searchCombinaisons),
+            options: 'i'
+          }
+        }
+      });
+    }
   }
   if (filters && filters.length) {
     const filter = filters[0];
