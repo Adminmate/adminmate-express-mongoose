@@ -1,16 +1,20 @@
 const jwt = require('jwt-simple');
 
-module.exports.isAuthorized = authKey => {
-  return (req, res, next) => {
-    const token = req.headers['x-access-token'];
-    const decoded = jwt.decode(token, authKey);
+module.exports.isAuthorized = (req, res, next) => {
+  const token = req.headers['x-access-token'];
 
-    if (!decoded || !decoded.exp_date) {
-      return res.status(403).json({ code: 'not_authorized' });
-    }
-    else {
-      // req.currentUser = decoded;
-      next();
-    }
+  let decoded;
+  try {
+    decoded = jwt.decode(token, global._config.authKey);
+  } catch(e) {
+    return res.status(403).json({ code: 'not_authorized' });
+  }
+
+  if (!decoded || !decoded.exp_date) {
+    return res.status(403).json({ code: 'not_authorized' });
+  }
+  else {
+    // req.currentUser = decoded;
+    next();
   }
 };

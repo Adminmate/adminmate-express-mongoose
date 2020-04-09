@@ -1,28 +1,24 @@
 const mongoose = require('mongoose');
 const fnHelper = require('../helpers/functions');
 
-module.exports.getModels = modelsList => {
-  return (req, res) => {
-    let models = [];
-    modelsList.forEach(model => {
-      models.push(model.collection.name);
-    });
-    res.json({ models });
-  };
+module.exports.getModels = (req, res) => {
+  let models = [];
+  global._config.models.forEach(model => {
+    models.push(model.collection.name);
+  });
+  res.json({ models });
 };
 
-module.exports.getModelConfig = modelsList => {
-  return (req, res) => {
-    const currentModel = modelsList.find(m => m.collection.name === req.params.model);
-    if (!currentModel) {
-      return res.status(403).json({ message: 'Invalid request' });
-    }
-    const keys = fnHelper.getModelProperties(currentModel);
-    res.json({ keys });
-  };
+module.exports.getModelConfig = (req, res) => {
+  const currentModel = global._config.models.find(m => m.collection.name === req.params.model);
+  if (!currentModel) {
+    return res.status(403).json({ message: 'Invalid request' });
+  }
+  const keys = fnHelper.getModelProperties(currentModel);
+  res.json({ keys });
 };
 
-module.exports.get = async (req, res, models) => {
+module.exports.get = async (req, res) => {
   const modelName = req.params.model;
   // const submodelName = req.params.submodel;
   const search = req.body.search;
@@ -31,7 +27,7 @@ module.exports.get = async (req, res, models) => {
   // const subSection = req.query.subsection;
   const nbItemPerPage = 10;
 
-  const currentModel = models.find(m => m.collection.name === modelName);
+  const currentModel = global._config.models.find(m => m.collection.name === modelName);
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
@@ -144,11 +140,11 @@ module.exports.get = async (req, res, models) => {
   });
 };
 
-module.exports.getOne = async (req, res, models) => {
+module.exports.getOne = async (req, res) => {
   const modelName = req.params.model;
   const modelItemId = req.params.id;
 
-  const currentModel = models.find(m => m.collection.name === modelName);
+  const currentModel = global._config.models.find(m => m.collection.name === modelName);
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
