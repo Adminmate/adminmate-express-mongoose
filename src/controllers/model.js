@@ -21,7 +21,7 @@ module.exports.getModelConfig = (req, res) => {
 module.exports.get = async (req, res) => {
   const modelName = req.params.model;
   // const submodelName = req.params.submodel;
-  const search = req.body.search;
+  const search = (req.body.search || '').trim();
   const filters = req.body.filters;
   const page = parseInt(req.body.page || 1);
   // const subSection = req.query.subsection;
@@ -78,10 +78,9 @@ module.exports.get = async (req, res) => {
     if (/\s/.test(search)) {
       // Create all search combinaisons for $regexMatch
       const searchPieces = search.split(' ');
-      const searchCombinaisons = fnHelper.permutations(searchPieces)
-        .map(comb => comb.join('')
-        .toLowerCase()
-        .replace(/\W/g, ''))
+      const searchCombinaisons = fnHelper
+        .permutations(searchPieces)
+        .map(comb => fnHelper.cleanString(comb.join('')))
         .join('|');
       const concatFields = fieldsToSeachIn.map(field => `$${field}`);
 

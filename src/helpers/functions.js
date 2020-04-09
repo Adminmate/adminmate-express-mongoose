@@ -50,3 +50,7 @@ const permutations = list => {
 };
 
 module.exports.permutations = permutations;
+
+module.exports.cleanString = string => {
+  return string.toLowerCase().replace(/\W/g, '');
+};
