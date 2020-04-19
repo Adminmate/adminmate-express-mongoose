@@ -21,7 +21,11 @@ module.exports.getModelProperties = model => {
       property.ref = modelProps[key].options.ref;
     }
 
-    modelFields.push(property);
+    if (key === '_id') {
+      modelFields.unshift(property);
+    } else {
+      modelFields.push(property);
+    }
   });
 
   return modelFields;

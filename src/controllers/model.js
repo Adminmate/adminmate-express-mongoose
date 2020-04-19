@@ -74,8 +74,8 @@ module.exports.get = async (req, res) => {
       });
     }
 
-    // If the search terms contains multiple words
-    if (/\s/.test(search)) {
+    // If the search terms contains multiple words and there is multiple fields to search in
+    if (/\s/.test(search) && fieldsToSeachIn.length > 1) {
       // Create all search combinaisons for $regexMatch
       const searchPieces = search.split(' ');
       const searchCombinaisons = fnHelper
