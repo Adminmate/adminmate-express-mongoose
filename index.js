@@ -18,6 +18,7 @@ class AdminMate {
   accessControl(req, res, next) {
     res.header('Access-Control-Allow-Origin', 'http://localhost:3002');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, X-Access-Token');
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Credentials', true);
     next();
   }
@@ -41,6 +42,7 @@ class AdminMate {
     // CRUD endpoints
     router.post('/adminmate/api/model/:model', isAuthorized, modelController.get);
     router.get('/adminmate/api/model/:model/:id', isAuthorized, modelController.getOne);
+    router.put('/adminmate/api/model/:model/:id', isAuthorized, modelController.putOne);
 
     return router;
   }

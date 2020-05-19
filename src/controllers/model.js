@@ -33,10 +33,12 @@ module.exports.get = async (req, res) => {
   }
 
   const keys = fnHelper.getModelProperties(currentModel);
-  console.log('==model keys properties', keys);
+  // console.log('==model keys properties', keys);
   const defaultFieldsToFetch = keys.map(key => key.path);
-  const fieldsToFetch = ['_id', 'email', 'firstname', 'lastname', 'client_id'] || defaultFieldsToFetch;
-  const fieldsToSeachIn = ['email', 'firstname', 'lastname'] || defaultFieldsToFetch;
+  const fieldsToFetch = /*['_id', 'email', 'firstname', 'lastname', 'client_id'] ||*/ defaultFieldsToFetch;
+
+  const defaultFieldsToSearchIn = keys.filter(key => ['String'].includes(key.type)).map(key => key.path);
+  const fieldsToSearchIn = /*['email', 'firstname', 'lastname'] ||*/ defaultFieldsToSearchIn;
   const sortingFields = {}; // { _id: 'asc' };
 
   const fieldPopulateConfig = {
@@ -61,7 +63,7 @@ module.exports.get = async (req, res) => {
   if (search) {
     params = { $or: [] };
 
-    fieldsToSeachIn.map(field => {
+    fieldsToSearchIn.map(field => {
       params.$or.push({ [field]: { '$regex': `${search}`, '$options': 'i' } });
     });
 
@@ -75,14 +77,14 @@ module.exports.get = async (req, res) => {
     }
 
     // If the search terms contains multiple words and there is multiple fields to search in
-    if (/\s/.test(search) && fieldsToSeachIn.length > 1) {
+    if (/\s/.test(search) && fieldsToSearchIn.length > 1) {
       // Create all search combinaisons for $regexMatch
       const searchPieces = search.split(' ');
       const searchCombinaisons = fnHelper
         .permutations(searchPieces)
         .map(comb => fnHelper.cleanString(comb.join('')))
         .join('|');
-      const concatFields = fieldsToSeachIn.map(field => `$${field}`);
+      const concatFields = fieldsToSearchIn.map(field => `$${field}`);
 
       params.$or.push({
         $expr: {
@@ -116,9 +118,14 @@ module.exports.get = async (req, res) => {
     .sort(sortingFields)
     .skip(nbItemPerPage * (page - 1))
     .limit(nbItemPerPage)
-    .lean();
+    .lean()
+    .catch(e => {
+      res.status(403).json({ message: e.message });
+    });
 
-  // console.log('===data', data);
+  if (!data) {
+    return res.status(403).json();
+  }
 
   const dataCount = await currentModel.countDocuments(params);
   const nbPage = Math.ceil(dataCount / nbItemPerPage);
@@ -173,9 +180,9 @@ module.exports.getOne = async (req, res) => {
   }
 
   const keys = fnHelper.getModelProperties(currentModel);
-  console.log('==model keys properties', keys);
+  // console.log('==model keys properties', keys);
   const defaultFieldsToFetch = keys.map(key => key.path);
-  const fieldsToFetch = ['_id', 'email', 'firstname', 'lastname', 'client_id'] || defaultFieldsToFetch;
+  const fieldsToFetch = /*['_id', 'email', 'firstname', 'lastname', 'client_id'] ||*/ defaultFieldsToFetch;
 
   let data = await currentModel
     .findById(modelItemId)
@@ -188,4 +195,39 @@ module.exports.getOne = async (req, res) => {
     itemListKeys: fieldsToFetch,
     itemEditableKeys: fieldsToFetch
   });
+};
+
+module.exports.putOne = async (req, res) => {
+  const modelName = req.params.model;
+  const modelItemId = req.params.id;
+  const data = req.body.data;
+
+  const currentModel = global._config.models.find(m => m.collection.name === modelName);
+  if (!currentModel) {
+    return res.status(403).json({ message: 'Invalid request' });
+  }
+
+  // const { model, itemEditableKeys } = models[modelName];
+
+  // // Only keep authorized keys
+  // const cleanData = {};
+  // for (key in data) {
+  //   if (itemEditableKeys.includes(key)) {
+  //     cleanData[key] = data[key]
+  //   }
+  // }
+
+  const cleanData = data;
+
+  if (Object.keys(cleanData).length) {
+    const updatedModel = await currentModel.findByIdAndUpdate(modelItemId, cleanData).catch(e => {
+      return res.status(403).json({ message: 'Unable to update the model' });
+    });
+
+    if (updatedModel) {
+      return res.json({ data: cleanData });
+    }
+  }
+
+  res.json({});
 };
