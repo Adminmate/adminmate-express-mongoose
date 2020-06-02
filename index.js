@@ -44,6 +44,9 @@ class AdminMate {
     router.get('/adminmate/api/model/:model/:id', isAuthorized, modelController.getOne);
     router.put('/adminmate/api/model/:model/:id', isAuthorized, modelController.putOne);
 
+    // Custom query
+    router.post('/adminmate/api/query', isAuthorized, modelController.customQuery);
+
     return router;
   }
 }

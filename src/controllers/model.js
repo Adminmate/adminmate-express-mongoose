@@ -14,8 +14,13 @@ module.exports.getModelConfig = (req, res) => {
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
+
   const keys = fnHelper.getModelProperties(currentModel);
-  res.json({ keys });
+
+  res.json({
+    keys,
+    name: currentModel.collection.name
+  });
 };
 
 module.exports.get = async (req, res) => {
@@ -34,7 +39,8 @@ module.exports.get = async (req, res) => {
 
   const keys = fnHelper.getModelProperties(currentModel);
   // console.log('==model keys properties', keys);
-  const defaultFieldsToFetch = keys.map(key => key.path);
+  const defaultFieldsToFetch = keys.filter(key => !key.path.includes('.')).map(key => key.path);
+  // console.log('===', defaultFieldsToFetch);
   const fieldsToFetch = /*['_id', 'email', 'firstname', 'lastname', 'client_id'] ||*/ defaultFieldsToFetch;
 
   const defaultFieldsToSearchIn = keys.filter(key => ['String'].includes(key.type)).map(key => key.path);
@@ -230,4 +236,48 @@ module.exports.putOne = async (req, res) => {
   }
 
   res.json({});
+};
+
+module.exports.customQuery = async (req, res) => {
+  const data = req.body.data;
+  const modelName = data.model;
+
+  const currentModel = global._config.models.find(m => m.collection.name === modelName);
+  if (!currentModel) {
+    return res.status(403).json({ message: 'Invalid request' });
+  }
+
+  if (data.type === 'pie') {
+    const groupByFieldName = 'contract_type';
+    const sum = 1;
+
+    const repartitionData = await currentModel
+      .aggregate([
+        {
+          $group: {
+            _id: `$${groupByFieldName}`,
+            count: { $sum: sum },
+          }
+        },
+        {
+          $project: {
+            key: '$_id',
+            value: '$count',
+            _id: false
+          }
+        }
+      ])
+      .sort({ value: -1 });
+
+    // console.log('==', repartitionData);
+
+    res.json({ data: repartitionData });
+  }
+  else if (data.operation === 'sum') {
+    res.json({ data: 10 });
+  }
+  else {
+    const dataCount = await currentModel.countDocuments({});
+    res.json({ data: dataCount });
+  }
 };
