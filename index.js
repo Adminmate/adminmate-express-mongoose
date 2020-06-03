@@ -37,7 +37,7 @@ class AdminMate {
     router.get('/adminmate/api/model', isAuthorized, modelController.getModels);
 
     // Get model config
-    router.get('/adminmate/api/model/:model/config', isAuthorized,  modelController.getModelConfig);
+    // router.get('/adminmate/api/model/:model/config', isAuthorized,  modelController.getModelConfig);
 
     // CRUD endpoints
     router.post('/adminmate/api/model/:model', isAuthorized, modelController.get);

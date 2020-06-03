@@ -4,7 +4,10 @@ const fnHelper = require('../helpers/functions');
 module.exports.getModels = (req, res) => {
   let models = [];
   global._config.models.forEach(model => {
-    models.push(model.collection.name);
+    models.push({
+      name: model.collection.name,
+      properties: fnHelper.getModelProperties(model)
+    });
   });
   res.json({ models });
 };
@@ -248,14 +251,16 @@ module.exports.customQuery = async (req, res) => {
   }
 
   if (data.type === 'pie') {
-    const groupByFieldName = 'contract_type';
-    const sum = 1;
+    let sum = 1;
+    if (data.field && data.operation === 'sum') {
+      sum = `$${data.field}`;
+    }
 
     const repartitionData = await currentModel
       .aggregate([
         {
           $group: {
-            _id: `$${groupByFieldName}`,
+            _id: `$${data.group_by}`,
             count: { $sum: sum },
           }
         },
@@ -267,17 +272,32 @@ module.exports.customQuery = async (req, res) => {
           }
         }
       ])
-      .sort({ value: -1 });
-
-    // console.log('==', repartitionData);
+      .sort({ key: 1 });
 
     res.json({ data: repartitionData });
   }
-  else if (data.operation === 'sum') {
-    res.json({ data: 10 });
+  else if (data.type === 'single_value') {
+    if (data.operation === 'sum') {
+      const sumData = await currentModel
+        .aggregate([{
+          $group: {
+            _id: `$${data.group_by}`,
+            count: { $sum: `$${data.field}` },
+          }
+        }]);
+
+      if (!sumData || !sumData[0] || typeof sumData[0].count !== 'number') {
+        return res.status(403).json();
+      }
+
+      res.json({ data: sumData[0].count });
+    }
+    else {
+      const dataCount = await currentModel.countDocuments({});
+      res.json({ data: dataCount });
+    }
   }
   else {
-    const dataCount = await currentModel.countDocuments({});
-    res.json({ data: dataCount });
+    res.json({ data: null });
   }
 };
