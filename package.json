@@ -1,11 +1,12 @@
 {
   "name": "adminmate-express-mongoose",
   "version": "1.0.1",
-  "description": "AdminMate Express Mongoose",
+  "description": "Adminmate Express/Mongoose connector",
   "author": "Marc Delalonde",
   "private": true,
   "scripts": {
-    "start": "node ./index"
+    "start": "node ./index",
+    "test": "echo \"No test specified\""
   },
   "engines": {
     "node": "10.x"
