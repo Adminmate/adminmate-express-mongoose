@@ -189,7 +189,6 @@ module.exports.getOne = async (req, res) => {
   }
 
   const keys = fnHelper.getModelProperties(currentModel);
-  // console.log('==model keys properties', keys);
   const defaultFieldsToFetch = keys.map(key => key.path);
   const fieldsToFetch = /*['_id', 'email', 'firstname', 'lastname', 'client_id'] ||*/ defaultFieldsToFetch;
 
@@ -199,10 +198,10 @@ module.exports.getOne = async (req, res) => {
     .lean();
 
   res.json({
-    data,
-    modelFields: keys,
-    itemListKeys: fieldsToFetch,
-    itemEditableKeys: fieldsToFetch
+    data
+    // modelFields: keys,
+    // itemListKeys: fieldsToFetch,
+    // itemEditableKeys: fieldsToFetch
   });
 };
 
