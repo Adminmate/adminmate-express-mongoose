@@ -7,8 +7,9 @@
     "start": "node ./index",
     "test": "echo \"No test specified\""
   },
-  "engines": {
-    "node": "10.x"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Adminmate/adminmate-express-mongoose.git"
   },
   "dependencies": {
     "axios": "^0.19.2",
