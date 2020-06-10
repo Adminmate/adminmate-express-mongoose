@@ -3,7 +3,7 @@ const crypto = require('crypto');
 
 const requestLauncher = (method, url, params = {}, data = {}) => {
   // Create request signature
-  const hmac = crypto.createHmac('sha256', global._config.secretKey);
+  const hmac = crypto.createHmac('sha256', global._amConfig.secretKey);
   hmac.update(JSON.stringify(data));
   const signatureToCompareWith = hmac.digest('hex');
 
@@ -14,7 +14,7 @@ const requestLauncher = (method, url, params = {}, data = {}) => {
     data,
     headers: {
       'Content-Type': 'application/json',
-      'X-Project-Id': global._config.projectId,
+      'X-Project-Id': global._amConfig.projectId,
       'Signature': signatureToCompareWith
       // 'Authorization': `bearer ${token}`
     }
@@ -46,7 +46,7 @@ module.exports.checkConnection = async (req, res) => {
 };
 
 module.exports.checkModels = async (req, res) => {
-  if (global._config.models && global._config.models.length > 0) {
+  if (global._amConfig.models && global._amConfig.models.length > 0) {
     const request = await requestLauncher('POST', '/api/check_models', {}, { action: 'check_models' }).catch(err => {
       console.log('===', err.response.status, err.response.data);
       //res.status(403).json({ message: err.response.data.message });

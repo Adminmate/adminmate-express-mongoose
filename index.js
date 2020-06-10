@@ -7,12 +7,12 @@ const { isAuthorized } = require('./src/middlewares/auth');
 
 class AdminMate {
   constructor({ projectId, secretKey, authKey, masterPassword, models }) {
-    global._config = {};
-    global._config.projectId = projectId;
-    global._config.secretKey = secretKey;
-    global._config.authKey = authKey;
-    global._config.masterPassword = masterPassword;
-    global._config.models = models;
+    global._amConfig = {};
+    global._amConfig.projectId = projectId;
+    global._amConfig.secretKey = secretKey;
+    global._amConfig.authKey = authKey;
+    global._amConfig.masterPassword = masterPassword;
+    global._amConfig.models = models;
   }
 
   accessControl(req, res, next) {

@@ -5,7 +5,7 @@ module.exports.isAuthorized = (req, res, next) => {
 
   let decoded;
   try {
-    decoded = jwt.decode(token, global._config.authKey);
+    decoded = jwt.decode(token, global._amConfig.authKey);
   } catch(e) {
     return res.status(403).json({ code: 'not_authorized' });
   }

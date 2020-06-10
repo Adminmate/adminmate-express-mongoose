@@ -3,7 +3,7 @@ const fnHelper = require('../helpers/functions');
 
 module.exports.getModels = (req, res) => {
   let models = [];
-  global._config.models.forEach(model => {
+  global._amConfig.models.forEach(model => {
     models.push({
       name: model.collection.name,
       properties: fnHelper.getModelProperties(model)
@@ -13,7 +13,7 @@ module.exports.getModels = (req, res) => {
 };
 
 module.exports.getModelConfig = (req, res) => {
-  const currentModel = global._config.models.find(m => m.collection.name === req.params.model);
+  const currentModel = global._amConfig.models.find(m => m.collection.name === req.params.model);
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
@@ -35,7 +35,7 @@ module.exports.get = async (req, res) => {
   // const subSection = req.query.subsection;
   const nbItemPerPage = 10;
 
-  const currentModel = global._config.models.find(m => m.collection.name === modelName);
+  const currentModel = global._amConfig.models.find(m => m.collection.name === modelName);
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
@@ -183,7 +183,7 @@ module.exports.getOne = async (req, res) => {
   const modelName = req.params.model;
   const modelItemId = req.params.id;
 
-  const currentModel = global._config.models.find(m => m.collection.name === modelName);
+  const currentModel = global._amConfig.models.find(m => m.collection.name === modelName);
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
@@ -211,7 +211,7 @@ module.exports.putOne = async (req, res) => {
   const modelItemId = req.params.id;
   const data = req.body.data;
 
-  const currentModel = global._config.models.find(m => m.collection.name === modelName);
+  const currentModel = global._amConfig.models.find(m => m.collection.name === modelName);
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
@@ -245,7 +245,7 @@ module.exports.customQuery = async (req, res) => {
   const data = req.body.data;
   const modelName = data.model;
 
-  const currentModel = global._config.models.find(m => m.collection.name === modelName);
+  const currentModel = global._amConfig.models.find(m => m.collection.name === modelName);
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
