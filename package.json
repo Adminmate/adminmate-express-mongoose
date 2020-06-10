@@ -3,7 +3,6 @@
   "version": "1.0.2",
   "description": "Adminmate Express/Mongoose connector",
   "author": "Marc Delalonde",
-  "private": true,
   "scripts": {
     "start": "node ./index",
     "test": "echo \"No test specified\""
