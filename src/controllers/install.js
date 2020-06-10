@@ -1,13 +1,13 @@
 const axios = require('axios');
 const crypto = require('crypto');
 
-const requestLauncher = (method, url, params = {}, data = {}) => {
+const requestLauncher = (method, relativeUrl, params = {}, data = {}) => {
   // Create request signature
   const hmac = crypto.createHmac('sha256', global._amConfig.secretKey);
   hmac.update(JSON.stringify(data));
   const signatureToCompareWith = hmac.digest('hex');
 
-  const url = global._amConfig.devMode ? `http://localhost:3000${url}` : `https://api.adminmate.app${url}`;
+  const url = global._amConfig.devMode ? `http://localhost:3000${relativeUrl}` : `https://api.adminmate.app${relativeUrl}`;
   const request = axios({
     method,
     url,
