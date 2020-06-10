@@ -1,6 +1,6 @@
 {
   "name": "adminmate-express-mongoose",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Adminmate Express/Mongoose connector",
   "author": "Marc Delalonde",
   "scripts": {
