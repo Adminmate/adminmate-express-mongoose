@@ -6,17 +6,19 @@ const installController = require('./src/controllers/install');
 const { isAuthorized } = require('./src/middlewares/auth');
 
 class AdminMate {
-  constructor({ projectId, secretKey, authKey, masterPassword, models }) {
+  constructor({ projectId, secretKey, authKey, masterPassword, models, devMode }) {
     global._amConfig = {};
     global._amConfig.projectId = projectId;
     global._amConfig.secretKey = secretKey;
     global._amConfig.authKey = authKey;
     global._amConfig.masterPassword = masterPassword;
     global._amConfig.models = models;
+    global._amConfig.devMode = devMode || false;
   }
 
   accessControl(req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'https://my.adminmate.app');
+    const origin = global._amConfig.devMode ? 'http://localhost:3002' : 'https://my.adminmate.app';
+    res.header('Access-Control-Allow-Origin', origin);
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, X-Access-Token');
     res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Credentials', true);
