@@ -7,7 +7,7 @@ const requestLauncher = (method, relativeUrl, params = {}, data = {}) => {
   hmac.update(JSON.stringify(data));
   const signatureToCompareWith = hmac.digest('hex');
 
-  const url = global._amConfig.devMode ? `http://localhost:3000${relativeUrl}` : `https://api.adminmate.app${relativeUrl}`;
+  const url = global._amConfig.devMode ? `http://localhost:3010${relativeUrl}` : `https://api.adminmate.app${relativeUrl}`;
   const request = axios({
     method,
     url,
