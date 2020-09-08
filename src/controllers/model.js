@@ -4,10 +4,22 @@ const fnHelper = require('../helpers/functions');
 module.exports.getModels = (req, res) => {
   let models = [];
   global._amConfig.models.forEach(model => {
-    models.push({
-      name: model.collection.name,
-      properties: fnHelper.getModelProperties(model)
-    });
+    const currentModel = typeof model === 'function' ? model : model.model;
+    const modelObject = {
+      name: currentModel.collection.name,
+      properties: fnHelper.getModelProperties(currentModel),
+      subSections: []
+    };
+    // Add subsections if present
+    if (typeof model !== 'function' && model.subSections) {
+      modelObject.subSections = model.subSections.map(section => {
+        return {
+          label: section.label,
+          code: section.code
+        };
+      });
+    }
+    models.push(modelObject);
   });
   res.json({ models });
 };
@@ -35,10 +47,11 @@ module.exports.get = async (req, res) => {
   // const subSection = req.query.subsection;
   const nbItemPerPage = 10;
 
-  const currentModel = global._amConfig.models.find(m => m.collection.name === modelName);
+  let currentModel = global._amConfig.models.find(m => (typeof m === 'function' ? m.collection.name : m.model.collection.name) === modelName);
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
+  currentModel = typeof currentModel === 'function' ? currentModel : currentModel.model;
 
   const keys = fnHelper.getModelProperties(currentModel);
   // console.log('==model keys properties', keys);
@@ -183,10 +196,11 @@ module.exports.getOne = async (req, res) => {
   const modelName = req.params.model;
   const modelItemId = req.params.id;
 
-  const currentModel = global._amConfig.models.find(m => m.collection.name === modelName);
+  let currentModel = global._amConfig.models.find(m => (typeof m === 'function' ? m.collection.name : m.model.collection.name) === modelName);
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
+  currentModel = typeof currentModel === 'function' ? currentModel : currentModel.model;
 
   const keys = fnHelper.getModelProperties(currentModel);
   const defaultFieldsToFetch = keys.map(key => key.path);
@@ -210,10 +224,11 @@ module.exports.putOne = async (req, res) => {
   const modelItemId = req.params.id;
   const data = req.body.data;
 
-  const currentModel = global._amConfig.models.find(m => m.collection.name === modelName);
+  let currentModel = global._amConfig.models.find(m => (typeof m === 'function' ? m.collection.name : m.model.collection.name) === modelName);
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
+  currentModel = typeof currentModel === 'function' ? currentModel : currentModel.model;
 
   // const { model, itemEditableKeys } = models[modelName];
 
@@ -244,10 +259,11 @@ module.exports.customQuery = async (req, res) => {
   const data = req.body.data;
   const modelName = data.model;
 
-  const currentModel = global._amConfig.models.find(m => m.collection.name === modelName);
+  let currentModel = global._amConfig.models.find(m => (typeof m === 'function' ? m.collection.name : m.model.collection.name) === modelName);
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
+  currentModel = typeof currentModel === 'function' ? currentModel : currentModel.model;
 
   if (data.type === 'pie') {
     let sum = 1;
