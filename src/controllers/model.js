@@ -11,13 +11,17 @@ module.exports.getModels = (req, res) => {
       subSections: []
     };
     // Add subsections if present
-    if (typeof model !== 'function' && model.subSections) {
+    if (typeof model !== 'function' && model.subSections && model.subSections.length) {
       modelObject.subSections = model.subSections.map(section => {
         return {
           label: section.label,
           code: section.code
         };
       });
+    }
+    // Add smart actions if present
+    if (typeof model !== 'function' && model.smartActions) {
+      modelObject.smartActions = model.smartActions;
     }
     models.push(modelObject);
   });
@@ -40,17 +44,17 @@ module.exports.getModelConfig = (req, res) => {
 
 module.exports.get = async (req, res) => {
   const modelName = req.params.model;
-  // const submodelName = req.params.submodel;
+  const submodelName = req.body.submodel;
   const search = (req.body.search || '').trim();
   const filters = req.body.filters;
   const page = parseInt(req.body.page || 1);
-  // const subSection = req.query.subsection;
   const nbItemPerPage = 10;
 
   let currentModel = global._amConfig.models.find(m => (typeof m === 'function' ? m.collection.name : m.model.collection.name) === modelName);
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
+  const subSections = typeof currentModel === 'function' ? null : currentModel.subSections;
   currentModel = typeof currentModel === 'function' ? currentModel : currentModel.model;
 
   const keys = fnHelper.getModelProperties(currentModel);
@@ -126,12 +130,13 @@ module.exports.get = async (req, res) => {
     params[filter.attr] = filter.value;
   }
 
-  // if (submodelName && subSections) {
-  //   const fetchSubSection = subSections.find(s => s.code === submodelName);
-  //   if (fetchSubSection && fetchSubSection.query) {
-  //     params = {$and: [params, fetchSubSection.query] };
-  //   }
-  // }
+  // Submodel
+  if (submodelName && subSections) {
+    const fetchSubSection = subSections.find(s => s.code === submodelName);
+    if (fetchSubSection && fetchSubSection.query) {
+      params = {$and: [params, fetchSubSection.query] };
+    }
+  }
 
   let data = await currentModel
     .find(params)
