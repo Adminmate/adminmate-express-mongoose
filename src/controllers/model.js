@@ -44,7 +44,7 @@ module.exports.getModelConfig = (req, res) => {
 
 module.exports.get = async (req, res) => {
   const modelName = req.params.model;
-  const submodelName = req.body.submodel;
+  const segment = req.body.segment;
   const search = (req.body.search || '').trim();
   const filters = req.body.filters;
   const page = parseInt(req.body.page || 1);
@@ -54,7 +54,7 @@ module.exports.get = async (req, res) => {
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
-  const subSections = typeof currentModel === 'function' ? null : currentModel.subSections;
+  //const subSections = typeof currentModel === 'function' ? null : currentModel.subSections;
   currentModel = typeof currentModel === 'function' ? currentModel : currentModel.model;
 
   const keys = fnHelper.getModelProperties(currentModel);
@@ -65,7 +65,7 @@ module.exports.get = async (req, res) => {
 
   const defaultFieldsToSearchIn = keys.filter(key => ['String'].includes(key.type)).map(key => key.path);
   const fieldsToSearchIn = /*['email', 'firstname', 'lastname'] ||*/ defaultFieldsToSearchIn;
-  const sortingFields = {}; // { _id: 'asc' };
+  const sortingFields = { _id: 'desc' };
 
   const fieldPopulateConfig = {
     client_id: 'firstname lastname'
@@ -130,13 +130,17 @@ module.exports.get = async (req, res) => {
     params[filter.attr] = filter.value;
   }
 
-  // Submodel
-  if (submodelName && subSections) {
-    const fetchSubSection = subSections.find(s => s.code === submodelName);
-    if (fetchSubSection && fetchSubSection.query) {
-      params = {$and: [params, fetchSubSection.query] };
+  // Segment
+  if (segment) {
+    console.log('===segment', segment);
+    const segmentQuery = fnHelper.constructQuery(segment.data);
+    console.log('===segmentQuery', JSON.stringify(segmentQuery), segmentQuery['$and']);
+    if (segmentQuery) {
+      params = {$and: [params, segmentQuery] };
     }
   }
+
+  console.log('=========fieldsToPopulate', fieldsToPopulate);
 
   let data = await currentModel
     .find(params)

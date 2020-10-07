@@ -58,3 +58,40 @@ module.exports.permutations = permutations;
 module.exports.cleanString = string => {
   return string.toLowerCase().replace(/\W/g, '');
 };
+
+module.exports.constructQuery = criterias => {
+  const query = [];
+  criterias.forEach(criteria => {
+    let q = {};
+    if (criteria.operator === 'is') {
+      q[criteria.field] = { $eq: criteria.value };
+    }
+    else if (criteria.operator === 'is_not') {
+      q[criteria.field] = { $neq: criteria.value };
+    }
+    else if (criteria.operator === 'is_present') {
+      q[criteria.field] = { $exists: true };
+    }
+    else if (criteria.operator === 'is_blank') {
+      q[criteria.field] = { $exists: false };
+    }
+    else if (criteria.operator === 'start_with') {
+      const regexp = new RegExp(`^${criteria.value}`);
+      q[criteria.field] = { $regex: regexp, $options: 'i' };
+    }
+    else if (criteria.operator === 'end_with') {
+      const regexp = new RegExp(`${criteria.value}$`);
+      q[criteria.field] = { $regex: regexp, $options: 'i' };
+    }
+    else if (criteria.operator === 'contains') {
+      const regexp = new RegExp(`${criteria.value}`);
+      q[criteria.field] = { $regex: regexp, $options: 'i' };
+    }
+    else if (criteria.operator === 'not_contains') {
+      const regexp = new RegExp(`^((?!${criteria.value}).)*$`);
+      q[criteria.field] = { $regex: regexp, $options: 'i' };
+    }
+    query.push(q);
+  });
+  return query.length ? { $and: query } : {};
+};
