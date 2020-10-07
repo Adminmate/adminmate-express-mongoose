@@ -20,6 +20,9 @@ module.exports.getModelProperties = model => {
     if (modelProps[key].options.ref) {
       property.ref = modelProps[key].options.ref;
     }
+    if (modelProps[key].options.refPath) {
+      property.refPath = modelProps[key].options.refPath;
+    }
 
     if (key === '_id') {
       modelFields.unshift(property);

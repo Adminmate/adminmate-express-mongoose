@@ -68,14 +68,17 @@ module.exports.get = async (req, res) => {
   const sortingFields = { _id: 'desc' };
 
   const fieldPopulateConfig = {
-    client_id: 'firstname lastname'
+    client_id: 'firstname lastname',
+    from_legal_id: 'billing.name',
+    to_legal_id: 'billing.name',
+    owner_id: 'firstname lastname'
   };
 
   // Create query populate config
   let fieldsToPopulate = [];
   fieldsToFetch.forEach(field => {
     const matchingField = keys.find(k => k.path === field);
-    if (matchingField && matchingField.type === 'ObjectID' && matchingField.ref) {
+    if (matchingField && matchingField.type === 'ObjectID' && (matchingField.ref || matchingField.refPath)) {
       fieldsToPopulate.push({
         path: field,
         select: fieldPopulateConfig[field] ? fieldPopulateConfig[field] : '_id'
@@ -167,9 +170,15 @@ module.exports.get = async (req, res) => {
     attributes.forEach(attr => {
       const matchingField = fieldsToPopulate.find(field => field.path === attr);
       if (matchingField) {
-        const label = matchingField.select === '_id' ? item[attr]._id : matchingField.select.replace(/[a-z]+/gi, word => {
-          return item[attr][word];
-        });
+        let label = '';
+        if (matchingField.select === '_id') {
+          label = global._.get(item, `${attr}._id`);
+        }
+        else {
+          label = matchingField.select.replace(/[a-z._]+/gi, word => {
+            return global._.get(item, `${attr}.${word}`);
+          });
+        }
         item[attr] = {
           type: 'ref',
           id: item[attr]._id,
