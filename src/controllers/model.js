@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongooseLegacyPluralize = require('mongoose-legacy-pluralize');
 const fnHelper = require('../helpers/functions');
 
 module.exports.getModels = (req, res) => {
@@ -8,17 +9,17 @@ module.exports.getModels = (req, res) => {
     const modelObject = {
       name: currentModel.collection.name,
       properties: fnHelper.getModelProperties(currentModel),
-      subSections: []
+      // subSections: []
     };
-    // Add subsections if present
-    if (typeof model !== 'function' && model.subSections && model.subSections.length) {
-      modelObject.subSections = model.subSections.map(section => {
-        return {
-          label: section.label,
-          code: section.code
-        };
-      });
-    }
+    // // Add subsections if present
+    // if (typeof model !== 'function' && model.subSections && model.subSections.length) {
+    //   modelObject.subSections = model.subSections.map(section => {
+    //     return {
+    //       label: section.label,
+    //       code: section.code
+    //     };
+    //   });
+    // }
     // Add smart actions if present
     if (typeof model !== 'function' && model.smartActions) {
       modelObject.smartActions = model.smartActions;
@@ -47,6 +48,7 @@ module.exports.get = async (req, res) => {
   const segment = req.body.segment;
   const search = (req.body.search || '').trim();
   const filters = req.body.filters;
+  const refFields = req.body.refFields;
   const page = parseInt(req.body.page || 1);
   const nbItemPerPage = 10;
 
@@ -67,12 +69,38 @@ module.exports.get = async (req, res) => {
   const fieldsToSearchIn = /*['email', 'firstname', 'lastname'] ||*/ defaultFieldsToSearchIn;
   const sortingFields = { _id: 'desc' };
 
-  const fieldPopulateConfig = {
-    client_id: 'firstname lastname',
-    from_legal_id: 'billing.name',
-    to_legal_id: 'billing.name',
-    owner_id: 'firstname lastname'
-  };
+  // const fieldPopulateConfig = {
+  //   client_id: 'firstname lastname',
+  //   from_legal_id: 'billing.name',
+  //   to_legal_id: 'billing.name',
+  //   owner_id: 'firstname lastname'
+  // };
+
+  const refFieldsForModel = {};
+  keys.forEach(prop => {
+    if (prop.type === 'ObjectID' && (prop.ref || prop.refPath)) {
+      if (prop.ref) {
+        const currentRefModelName = prop.ref.toLowerCase();
+        const currentRefModelNamePlural = mongooseLegacyPluralize(currentRefModelName);
+        if (refFields[currentRefModelName] || refFields[currentRefModelNamePlural]) {
+          refFieldsForModel[prop.path] = refFields[currentRefModelName] || refFields[currentRefModelNamePlural];
+        }
+      }
+      else if (prop.refPath) {
+        console.log('====', prop.refPath)
+        const refPathField = keys.find(k=>k.path===prop.refPath);
+        console.log('===', refPathField)
+        if (refPathField && refPathField.enum) {
+          const currentRefModelName = refPathField.enum[0].toLowerCase();
+          const currentRefModelNamePlural = mongooseLegacyPluralize(currentRefModelName);
+          if (refFields[currentRefModelName] || refFields[currentRefModelNamePlural]) {
+            refFieldsForModel[prop.path] = refFields[currentRefModelName] || refFields[currentRefModelNamePlural];
+          }
+        }
+      }
+    }
+  });
+  console.log('===refFieldsForModel', refFieldsForModel);
 
   // Create query populate config
   let fieldsToPopulate = [];
@@ -81,7 +109,7 @@ module.exports.get = async (req, res) => {
     if (matchingField && matchingField.type === 'ObjectID' && (matchingField.ref || matchingField.refPath)) {
       fieldsToPopulate.push({
         path: field,
-        select: fieldPopulateConfig[field] ? fieldPopulateConfig[field] : '_id'
+        select: refFieldsForModel[field] ? refFieldsForModel[field] : '_id'
       });
     }
   });
