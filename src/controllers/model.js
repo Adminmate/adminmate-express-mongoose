@@ -139,7 +139,7 @@ module.exports.getOne = async (req, res) => {
 
   const keys = fnHelper.getModelProperties(currentModel);
   const defaultFieldsToFetch = keys.map(key => key.path);
-  const fieldsToFetch = /*['_id', 'email', 'firstname', 'lastname', 'client_id'] ||*/ defaultFieldsToFetch;
+  const fieldsToFetch = req.body.fields || defaultFieldsToFetch;
 
   // Build ref fields for the model (for mongoose population purpose)
   const fieldsToPopulate = fnHelper.getFieldsToPopulate(keys, fieldsToFetch, refFields);
@@ -148,7 +148,14 @@ module.exports.getOne = async (req, res) => {
     .findById(modelItemId)
     .select(fieldsToFetch)
     .populate(fieldsToPopulate)
-    .lean();
+    .lean()
+    .catch(e => {
+      res.status(403).json({ message: e.message });
+    });
+
+  if (!data) {
+    return res.status(403).json();
+  }
 
   data = fnHelper.refFields(data, fieldsToPopulate);
 

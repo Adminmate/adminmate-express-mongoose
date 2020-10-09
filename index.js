@@ -6,7 +6,7 @@ const installController = require('./src/controllers/install');
 const { isAuthorized } = require('./src/middlewares/auth');
 
 const accessControl = (req, res, next) => {
-  const origin = global._amConfig.devMode ? 'http://localhost:3002' : 'https://my.adminmate.app';
+  const origin = global._amConfig.devMode ? 'http://localhost:3002' : 'https://my.adminmate.io';
   res.header('Access-Control-Allow-Origin', origin);
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, X-Access-Token, X-Perm-Token');
   res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
