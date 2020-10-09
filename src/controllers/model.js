@@ -56,26 +56,17 @@ module.exports.get = async (req, res) => {
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
-  //const subSections = typeof currentModel === 'function' ? null : currentModel.subSections;
   currentModel = typeof currentModel === 'function' ? currentModel : currentModel.model;
 
   const keys = fnHelper.getModelProperties(currentModel);
-  // console.log('==model keys properties', keys);
   const defaultFieldsToFetch = keys.filter(key => !key.path.includes('.')).map(key => key.path);
-  // console.log('===', defaultFieldsToFetch);
   const fieldsToFetch = /*['_id', 'email', 'firstname', 'lastname', 'client_id'] ||*/ defaultFieldsToFetch;
 
   const defaultFieldsToSearchIn = keys.filter(key => ['String'].includes(key.type)).map(key => key.path);
   const fieldsToSearchIn = /*['email', 'firstname', 'lastname'] ||*/ defaultFieldsToSearchIn;
   const sortingFields = { _id: 'desc' };
 
-  // const fieldPopulateConfig = {
-  //   client_id: 'firstname lastname',
-  //   from_legal_id: 'billing.name',
-  //   to_legal_id: 'billing.name',
-  //   owner_id: 'firstname lastname'
-  // };
-
+  // Build ref fields for the model (for mongoose population purpose)
   const refFieldsForModel = {};
   keys.forEach(prop => {
     if (prop.type === 'ObjectID' && (prop.ref || prop.refPath)) {
@@ -87,9 +78,7 @@ module.exports.get = async (req, res) => {
         }
       }
       else if (prop.refPath) {
-        console.log('====', prop.refPath)
-        const refPathField = keys.find(k=>k.path===prop.refPath);
-        console.log('===', refPathField)
+        const refPathField = keys.find(k => k.path === prop.refPath);
         if (refPathField && refPathField.enum) {
           const currentRefModelName = refPathField.enum[0].toLowerCase();
           const currentRefModelNamePlural = mongooseLegacyPluralize(currentRefModelName);
@@ -100,7 +89,6 @@ module.exports.get = async (req, res) => {
       }
     }
   });
-  console.log('===refFieldsForModel', refFieldsForModel);
 
   // Create query populate config
   let fieldsToPopulate = [];
@@ -194,42 +182,11 @@ module.exports.get = async (req, res) => {
 
   // Make ref fields appeared as link in the dashboard
   data = data.map(item => {
-    const attributes = Object.keys(item);
-    attributes.forEach(attr => {
-      const matchingField = fieldsToPopulate.find(field => field.path === attr);
-      if (matchingField) {
-        let label = '';
-        if (matchingField.select === '_id') {
-          label = global._.get(item, `${attr}._id`);
-        }
-        else {
-          label = matchingField.select.replace(/[a-z._]+/gi, word => {
-            return global._.get(item, `${attr}.${word}`);
-          });
-        }
-        item[attr] = {
-          type: 'ref',
-          id: item[attr]._id,
-          label
-        };
-      }
-    });
-    return item;
-  });
-
-  // Properties cleaning
-  const finalData = [];
-  data.forEach(d => {
-    const item = {};
-    const listKeys = Object.keys(d);
-    listKeys.forEach(k => {
-      item[k] = typeof d[k] === 'undefined' ? '' : d[k];
-    });
-    finalData.push(item);
+    return fnHelper.refFields(item, fieldsToPopulate);
   });
 
   res.json({
-    data: finalData,
+    data,
     count: dataCount,
     pagination: {
       current: page,
@@ -259,9 +216,6 @@ module.exports.getOne = async (req, res) => {
 
   res.json({
     data
-    // modelFields: keys,
-    // itemListKeys: fieldsToFetch,
-    // itemEditableKeys: fieldsToFetch
   });
 };
 

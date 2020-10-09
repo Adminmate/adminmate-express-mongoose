@@ -98,3 +98,33 @@ module.exports.constructQuery = criterias => {
   });
   return query.length ? { $and: query } : {};
 };
+
+module.exports.refFields = (item, fieldsToPopulate) => {
+  const attributes = Object.keys(item);
+  attributes.forEach(attr => {
+
+    // Set to empty instead of undefined
+    item[attr] = typeof item[attr] === 'undefined' ? '' : item[attr];
+
+    // Manage populate fields
+    const matchingField = fieldsToPopulate.find(field => field.path === attr);
+
+    if (matchingField) {
+      let label = '';
+      if (matchingField.select === '_id') {
+        label = global._.get(item, `${attr}._id`);
+      }
+      else {
+        label = matchingField.select.replace(/[a-z._]+/gi, word => {
+          return global._.get(item, `${attr}.${word}`);
+        });
+      }
+      item[attr] = {
+        type: 'ref',
+        id: item[attr]._id,
+        label
+      };
+    }
+  });
+  return item;
+}
