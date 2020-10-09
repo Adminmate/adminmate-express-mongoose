@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const mongooseLegacyPluralize = require('mongoose-legacy-pluralize');
 const fnHelper = require('../helpers/functions');
 
 module.exports.getModels = (req, res) => {
@@ -67,83 +66,16 @@ module.exports.get = async (req, res) => {
   const sortingFields = { _id: 'desc' };
 
   // Build ref fields for the model (for mongoose population purpose)
-  const refFieldsForModel = {};
-  keys.forEach(prop => {
-    if (prop.type === 'ObjectID' && (prop.ref || prop.refPath)) {
-      if (prop.ref) {
-        const currentRefModelName = prop.ref.toLowerCase();
-        const currentRefModelNamePlural = mongooseLegacyPluralize(currentRefModelName);
-        if (refFields[currentRefModelName] || refFields[currentRefModelNamePlural]) {
-          refFieldsForModel[prop.path] = refFields[currentRefModelName] || refFields[currentRefModelNamePlural];
-        }
-      }
-      else if (prop.refPath) {
-        const refPathField = keys.find(k => k.path === prop.refPath);
-        if (refPathField && refPathField.enum) {
-          const currentRefModelName = refPathField.enum[0].toLowerCase();
-          const currentRefModelNamePlural = mongooseLegacyPluralize(currentRefModelName);
-          if (refFields[currentRefModelName] || refFields[currentRefModelNamePlural]) {
-            refFieldsForModel[prop.path] = refFields[currentRefModelName] || refFields[currentRefModelNamePlural];
-          }
-        }
-      }
-    }
-  });
-
-  // Create query populate config
-  let fieldsToPopulate = [];
-  fieldsToFetch.forEach(field => {
-    const matchingField = keys.find(k => k.path === field);
-    if (matchingField && matchingField.type === 'ObjectID' && (matchingField.ref || matchingField.refPath)) {
-      fieldsToPopulate.push({
-        path: field,
-        select: refFieldsForModel[field] ? refFieldsForModel[field] : '_id'
-      });
-    }
-  });
+  const fieldsToPopulate = fnHelper.getFieldsToPopulate(keys, fieldsToFetch, refFields);
 
   let params = {};
 
   // If there is a text search query
   if (search) {
-    params = { $or: [] };
-
-    fieldsToSearchIn.map(field => {
-      params.$or.push({ [field]: { '$regex': `${search}`, '$options': 'i' } });
-    });
-
-    // If the search is a valid mongodb _id
-    // An object id's only defining feature is that its 12 bytes long
-    if (mongoose.Types.ObjectId.isValid(search)) {
-      params.$or.push({ _id: search });
-      fieldsToPopulate.map(field => {
-        params.$or.push({ [field.path]: search });
-      });
-    }
-
-    // If the search terms contains multiple words and there is multiple fields to search in
-    if (/\s/.test(search) && fieldsToSearchIn.length > 1) {
-      // Create all search combinaisons for $regexMatch
-      const searchPieces = search.split(' ');
-      const searchCombinaisons = fnHelper
-        .permutations(searchPieces)
-        .map(comb => fnHelper.cleanString(comb.join('')))
-        .join('|');
-      const concatFields = fieldsToSearchIn.map(field => `$${field}`);
-
-      params.$or.push({
-        $expr: {
-          $regexMatch: {
-            input: {
-              $concat: concatFields
-            },
-            regex: new RegExp(searchCombinaisons),
-            options: 'i'
-          }
-        }
-      });
-    }
+    params = fnHelper.constructSearch(search, fieldsToSearchIn);
   }
+
+  // Filters
   if (filters && filters.length) {
     const filter = filters[0];
     params[filter.attr] = filter.value;
@@ -151,11 +83,10 @@ module.exports.get = async (req, res) => {
 
   // Segment
   if (segment) {
-    console.log('===segment', segment);
     const segmentQuery = fnHelper.constructQuery(segment.data);
-    console.log('===segmentQuery', JSON.stringify(segmentQuery), segmentQuery['$and']);
+    console.log('===segmentQuery', segmentQuery['$and']);
     if (segmentQuery) {
-      params = {$and: [params, segmentQuery] };
+      params = { $and: [params, segmentQuery] };
     }
   }
 

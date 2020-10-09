@@ -1,3 +1,6 @@
+const mongoose = require('mongoose');
+const mongooseLegacyPluralize = require('mongoose-legacy-pluralize');
+
 module.exports.getModelProperties = model => {
   let modelFields = [];
   const modelProps = model.schema.paths;
@@ -127,4 +130,86 @@ module.exports.refFields = (item, fieldsToPopulate) => {
     }
   });
   return item;
-}
+};
+
+module.exports.getFieldsToPopulate = (keys, fieldsToFetch, refFields) => {
+  // Build ref fields for the model (for mongoose population purpose)
+  const refFieldsForModel = {};
+  keys.forEach(prop => {
+    if (prop.type === 'ObjectID' && (prop.ref || prop.refPath)) {
+      if (prop.ref) {
+        const currentRefModelName = prop.ref.toLowerCase();
+        const currentRefModelNamePlural = mongooseLegacyPluralize(currentRefModelName);
+        if (refFields[currentRefModelName] || refFields[currentRefModelNamePlural]) {
+          refFieldsForModel[prop.path] = refFields[currentRefModelName] || refFields[currentRefModelNamePlural];
+        }
+      }
+      else if (prop.refPath) {
+        const refPathField = keys.find(k => k.path === prop.refPath);
+        if (refPathField && refPathField.enum) {
+          const currentRefModelName = refPathField.enum[0].toLowerCase();
+          const currentRefModelNamePlural = mongooseLegacyPluralize(currentRefModelName);
+          if (refFields[currentRefModelName] || refFields[currentRefModelNamePlural]) {
+            refFieldsForModel[prop.path] = refFields[currentRefModelName] || refFields[currentRefModelNamePlural];
+          }
+        }
+      }
+    }
+  });
+
+  // Create query populate config
+  let fieldsToPopulate = [];
+  fieldsToFetch.forEach(field => {
+    const matchingField = keys.find(k => k.path === field);
+    if (matchingField && matchingField.type === 'ObjectID' && (matchingField.ref || matchingField.refPath)) {
+      fieldsToPopulate.push({
+        path: field,
+        select: refFieldsForModel[field] ? refFieldsForModel[field] : '_id'
+      });
+    }
+  });
+
+  return fieldsToPopulate;
+};
+
+module.exports.constructSearch = (search, fieldsToSearchIn) => {
+  params = { $or: [] };
+
+  fieldsToSearchIn.map(field => {
+    params.$or.push({ [field]: { '$regex': `${search}`, '$options': 'i' } });
+  });
+
+  // If the search is a valid mongodb _id
+  // An object id's only defining feature is that its 12 bytes long
+  if (mongoose.Types.ObjectId.isValid(search)) {
+    params.$or.push({ _id: search });
+    fieldsToPopulate.map(field => {
+      params.$or.push({ [field.path]: search });
+    });
+  }
+
+  // If the search terms contains multiple words and there is multiple fields to search in
+  if (/\s/.test(search) && fieldsToSearchIn.length > 1) {
+    // Create all search combinaisons for $regexMatch
+    const searchPieces = search.split(' ');
+    const searchCombinaisons = fnHelper
+      .permutations(searchPieces)
+      .map(comb => fnHelper.cleanString(comb.join('')))
+      .join('|');
+    const concatFields = fieldsToSearchIn.map(field => `$${field}`);
+
+    params.$or.push({
+      $expr: {
+        $regexMatch: {
+          input: {
+            $concat: concatFields
+          },
+          regex: new RegExp(searchCombinaisons),
+          options: 'i'
+        }
+      }
+    });
+  }
+
+  return params;
+};
