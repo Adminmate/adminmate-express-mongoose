@@ -59,7 +59,7 @@ module.exports.get = async (req, res) => {
 
   const keys = fnHelper.getModelProperties(currentModel);
   const defaultFieldsToFetch = keys.filter(key => !key.path.includes('.')).map(key => key.path);
-  const fieldsToFetch = /*['_id', 'email', 'firstname', 'lastname', 'client_id'] ||*/ defaultFieldsToFetch;
+  const fieldsToFetch = req.body.fields || defaultFieldsToFetch;
 
   const defaultFieldsToSearchIn = keys.filter(key => ['String'].includes(key.type)).map(key => key.path);
   const fieldsToSearchIn = /*['email', 'firstname', 'lastname'] ||*/ defaultFieldsToSearchIn;
@@ -129,6 +129,7 @@ module.exports.get = async (req, res) => {
 module.exports.getOne = async (req, res) => {
   const modelName = req.params.model;
   const modelItemId = req.params.id;
+  const refFields = req.body.refFields;
 
   let currentModel = global._amConfig.models.find(m => (typeof m === 'function' ? m.collection.name : m.model.collection.name) === modelName);
   if (!currentModel) {
@@ -140,10 +141,16 @@ module.exports.getOne = async (req, res) => {
   const defaultFieldsToFetch = keys.map(key => key.path);
   const fieldsToFetch = /*['_id', 'email', 'firstname', 'lastname', 'client_id'] ||*/ defaultFieldsToFetch;
 
+  // Build ref fields for the model (for mongoose population purpose)
+  const fieldsToPopulate = fnHelper.getFieldsToPopulate(keys, fieldsToFetch, refFields);
+
   let data = await currentModel
     .findById(modelItemId)
     .select(fieldsToFetch)
+    .populate(fieldsToPopulate)
     .lean();
+
+  data = fnHelper.refFields(data, fieldsToPopulate);
 
   res.json({
     data

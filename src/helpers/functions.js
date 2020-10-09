@@ -132,7 +132,7 @@ module.exports.refFields = (item, fieldsToPopulate) => {
   return item;
 };
 
-module.exports.getFieldsToPopulate = (keys, fieldsToFetch, refFields) => {
+module.exports.getFieldsToPopulate = (keys, fieldsToFetch, refFields = {}) => {
   // Build ref fields for the model (for mongoose population purpose)
   const refFieldsForModel = {};
   keys.forEach(prop => {
