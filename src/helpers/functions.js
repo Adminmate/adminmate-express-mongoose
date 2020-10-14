@@ -37,6 +37,7 @@ module.exports.getModelProperties = model => {
   return modelFields;
 };
 
+// To be used in this file
 const permutations = list => {
   if (list.length <= 1) {
     return list.slice();
@@ -61,9 +62,12 @@ const permutations = list => {
 
 module.exports.permutations = permutations;
 
-module.exports.cleanString = string => {
+// To be used in this file
+const cleanString = string => {
   return string.toLowerCase().replace(/\W/g, '');
 };
+
+module.exports.cleanString = cleanString;
 
 module.exports.constructQuery = criterias => {
   const query = [];
@@ -122,11 +126,17 @@ module.exports.refFields = (item, fieldsToPopulate) => {
           return global._.get(item, `${attr}.${word}`);
         });
       }
-      item[attr] = {
-        type: 'ref',
-        id: item[attr]._id,
-        label
-      };
+
+      if (item[attr]) {
+        item[attr] = {
+          type: 'ref',
+          id: item[attr]._id,
+          label
+        };
+      }
+      else {
+        item[attr] = '(deleted)';
+      }
     }
   });
   return item;
@@ -192,9 +202,8 @@ module.exports.constructSearch = (search, fieldsToSearchIn) => {
   if (/\s/.test(search) && fieldsToSearchIn.length > 1) {
     // Create all search combinaisons for $regexMatch
     const searchPieces = search.split(' ');
-    const searchCombinaisons = fnHelper
-      .permutations(searchPieces)
-      .map(comb => fnHelper.cleanString(comb.join('')))
+    const searchCombinaisons = permutations(searchPieces)
+      .map(comb => cleanString(comb.join('')))
       .join('|');
     const concatFields = fieldsToSearchIn.map(field => `$${field}`);
 
@@ -212,4 +221,17 @@ module.exports.constructSearch = (search, fieldsToSearchIn) => {
   }
 
   return params;
+};
+
+module.exports.getModelObject = (modelCode) => {
+  const currentModel = global._amConfig.models
+    .find(m => (typeof m === 'function' ? m.collection.name : m.model.collection.name) === modelCode);
+
+  if (!currentModel) {
+    return res.status(403).json({ message: 'Invalid request' });
+  }
+
+  const currentModelObject = typeof currentModel === 'function' ? currentModel : currentModel.model;
+
+  return currentModelObject;
 };

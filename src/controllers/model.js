@@ -51,11 +51,10 @@ module.exports.get = async (req, res) => {
   const page = parseInt(req.body.page || 1);
   const nbItemPerPage = 10;
 
-  let currentModel = global._amConfig.models.find(m => (typeof m === 'function' ? m.collection.name : m.model.collection.name) === modelName);
+  const currentModel = fnHelper.getModelObject(modelName);
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
-  currentModel = typeof currentModel === 'function' ? currentModel : currentModel.model;
 
   const keys = fnHelper.getModelProperties(currentModel);
   const defaultFieldsToFetch = keys.filter(key => !key.path.includes('.')).map(key => key.path);
@@ -131,11 +130,10 @@ module.exports.getOne = async (req, res) => {
   const modelItemId = req.params.id;
   const refFields = req.body.refFields;
 
-  let currentModel = global._amConfig.models.find(m => (typeof m === 'function' ? m.collection.name : m.model.collection.name) === modelName);
+  const currentModel = fnHelper.getModelObject(modelName);
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
-  currentModel = typeof currentModel === 'function' ? currentModel : currentModel.model;
 
   const keys = fnHelper.getModelProperties(currentModel);
   const defaultFieldsToFetch = keys.map(key => key.path);
@@ -169,11 +167,10 @@ module.exports.putOne = async (req, res) => {
   const modelItemId = req.params.id;
   const data = req.body.data;
 
-  let currentModel = global._amConfig.models.find(m => (typeof m === 'function' ? m.collection.name : m.model.collection.name) === modelName);
+  const currentModel = fnHelper.getModelObject(modelName);
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
-  currentModel = typeof currentModel === 'function' ? currentModel : currentModel.model;
 
   // const { model, itemEditableKeys } = models[modelName];
 
@@ -200,15 +197,34 @@ module.exports.putOne = async (req, res) => {
   res.json({});
 };
 
+module.exports.deleteSome = async (req, res) => {
+  const modelName = req.params.model;
+  const itemIds = req.body.ids;
+
+  if (!itemIds || !itemIds.length) {
+    return res.status(403).json({ message: 'Invalid request' });
+  }
+
+  const currentModel = fnHelper.getModelObject(modelName);
+  if (!currentModel) {
+    return res.status(403).json({ message: 'Invalid request' });
+  }
+
+  const deleteReq = await currentModel.deleteMany({ _id: { $in: itemIds }}).catch(e => {
+    return res.status(403).json({ message: 'Unable to delete the model items' });
+  });
+
+  res.json({ deletedCount: deleteReq.deletedCount });
+};
+
 module.exports.customQuery = async (req, res) => {
   const data = req.body.data;
   const modelName = data.model;
 
-  let currentModel = global._amConfig.models.find(m => (typeof m === 'function' ? m.collection.name : m.model.collection.name) === modelName);
+  const currentModel = fnHelper.getModelObject(modelName);
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
-  currentModel = typeof currentModel === 'function' ? currentModel : currentModel.model;
 
   if (data.type === 'pie') {
     let sum = 1;

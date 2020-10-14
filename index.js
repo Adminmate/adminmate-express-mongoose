@@ -43,6 +43,7 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, devM
   router.post('/api/model/:model', isAuthorized, modelController.get);
   router.post('/api/model/:model/:id', isAuthorized, modelController.getOne);
   router.put('/api/model/:model/:id', isAuthorized, modelController.putOne);
+  router.delete('/api/model/:model', isAuthorized, modelController.deleteSome);
 
   // Custom query
   router.post('/api/query', isAuthorized, modelController.customQuery);
