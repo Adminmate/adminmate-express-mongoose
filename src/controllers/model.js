@@ -185,16 +185,18 @@ module.exports.putOne = async (req, res) => {
   const cleanData = data;
 
   if (Object.keys(cleanData).length) {
-    const updatedModel = await currentModel.findByIdAndUpdate(modelItemId, cleanData).catch(e => {
-      return res.status(403).json({ message: 'Unable to update the model' });
-    });
+    const updatedModel = await currentModel.findByIdAndUpdate(modelItemId, cleanData, { runValidators: true })
+      .catch(e => {
+        res.status(403).json({ message: 'Unable to update the model' });
+      });
 
     if (updatedModel) {
       return res.json({ data: cleanData });
     }
   }
-
-  res.json({});
+  else {
+    res.json({});
+  }
 };
 
 module.exports.deleteSome = async (req, res) => {
@@ -210,9 +212,10 @@ module.exports.deleteSome = async (req, res) => {
     return res.status(403).json({ message: 'Invalid request' });
   }
 
-  const deleteReq = await currentModel.deleteMany({ _id: { $in: itemIds }}).catch(e => {
-    return res.status(403).json({ message: 'Unable to delete the model items' });
-  });
+  const deleteReq = await currentModel.deleteMany({ _id: { $in: itemIds }})
+    .catch(e => {
+      res.status(403).json({ message: 'Unable to delete the model items' });
+    });
 
   res.json({ deletedCount: deleteReq.deletedCount });
 };
