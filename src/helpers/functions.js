@@ -224,11 +224,21 @@ module.exports.constructSearch = (search, fieldsToSearchIn) => {
 };
 
 module.exports.getModelObject = (modelCode) => {
+  if (!modelCode) {
+    return null;
+  }
+
+  const currentRefModelName = modelCode.toLowerCase();
+  const currentRefModelNamePlural = mongooseLegacyPluralize(currentRefModelName);
+
   const currentModel = global._amConfig.models
-    .find(m => (typeof m === 'function' ? m.collection.name : m.model.collection.name) === modelCode);
+    .find(m => {
+      const collectionName = typeof m === 'function' ? m.collection.name : m.model.collection.name;
+      return collectionName === currentRefModelName || collectionName === currentRefModelNamePlural;
+    });
 
   if (!currentModel) {
-    return res.status(403).json({ message: 'Invalid request' });
+    return null;
   }
 
   const currentModelObject = typeof currentModel === 'function' ? currentModel : currentModel.model;
