@@ -122,7 +122,7 @@ module.exports.get = async (req, res) => {
 
   // If there is a text search query
   if (search) {
-    params = fnHelper.constructSearch(search, fieldsToSearchIn);
+    params = fnHelper.constructSearch(search, fieldsToSearchIn, fieldsToPopulate);
   }
 
   // Filters

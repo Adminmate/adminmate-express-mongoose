@@ -5,6 +5,15 @@ module.exports.getModelProperties = model => {
   let modelFields = [];
   const modelProps = model.schema.paths;
 
+  // if (model.schema.obj.contract_type) {
+  //   //console.log('====', model.schema.obj);
+  //   console.log('====contract_type', model.schema.obj.contract_type.type.name);
+  //   console.log('====contract_type', model.schema.obj.legal_structure_id.type.name);
+  //   console.log('====contract_type', model.schema.obj.experiences[0].company.type.name);
+  //   console.log('====contract_type', JSON.stringify(model.schema.obj.contract_type));
+  //   console.log('====experiences', JSON.stringify(model.schema.obj.experiences));
+  // }
+
   Object.keys(modelProps).forEach(key => {
     if (key === '__v') {
       return;
@@ -14,8 +23,24 @@ module.exports.getModelProperties = model => {
       type: modelProps[key].instance
     };
 
-    if (modelProps[key].enumValues && modelProps[key].enumValues.length) {
-      property.enum = modelProps[key].enumValues;
+    // if (key === 'technos') {
+    //   console.log('=====technos', modelProps[key])
+    // }
+    // if (key === 'mission_duration') {
+    //   console.log('=====mission_duration', modelProps[key])
+    // }
+    // if (key === 'contract_type') {
+    //   console.log('=====contract_type', modelProps[key])
+    // }
+
+    if (property.type === 'Array') {
+      if (modelProps[key].options.type && modelProps[key].options.type[0] && modelProps[key].options.type[0].name) {
+        property.type = `ArrayOf${modelProps[key].options.type[0].name}`;
+      }
+    }
+
+    if (modelProps[key].options.enum) {
+      property.enum = modelProps[key].options.enum.values;
     }
     if (modelProps[key].options.default) {
       property.default = modelProps[key].options.default;
@@ -182,7 +207,7 @@ module.exports.getFieldsToPopulate = (keys, fieldsToFetch, refFields = {}) => {
   return fieldsToPopulate;
 };
 
-module.exports.constructSearch = (search, fieldsToSearchIn) => {
+module.exports.constructSearch = (search, fieldsToSearchIn, fieldsToPopulate = []) => {
   params = { $or: [] };
 
   fieldsToSearchIn.map(field => {
