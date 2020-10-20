@@ -111,10 +111,8 @@ module.exports.postOne = async (req, res) => {
     res.status(403).json({ message: 'An error occured when saving the item', error_details: arr });
   });
 
-  console.log('==', newSavedItem);
-
   if (newSavedItem) {
-    res.json({});
+    res.json({ data: { id: newSavedItem._id } }); // id and not _id to be generic
   }
 };
 

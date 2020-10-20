@@ -43,9 +43,15 @@ module.exports.getModelProperties = model => {
     if (modelProps[key].options.required) {
       property.required = true;
     }
+
     // Default value option
     if (typeof modelProps[key].options.default !== 'undefined') {
-      property.default = modelProps[key].options.default;
+      if (typeof modelProps[key].options.default === 'function') {
+        property.default = modelProps[key].options.default();
+      }
+      else {
+        property.default = modelProps[key].options.default;
+      }
     }
     // Enum option
     if (modelProps[key].options.enum) {
