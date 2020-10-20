@@ -93,6 +93,31 @@ module.exports.getAutocomplete = async (req, res) => {
   res.json({ data: formattedData });
 };
 
+module.exports.postOne = async (req, res) => {
+  const modelName = req.params.model;
+  const data = req.body.data;
+
+  const currentModel = fnHelper.getModelObject(modelName);
+  if (!currentModel) {
+    return res.status(403).json({ message: 'Invalid request' });
+  }
+
+  const newItem = new currentModel(data);
+  const newSavedItem = await newItem.save().catch(e => {
+    let arr = [];
+    Object.entries(e.errors).forEach(value => {
+      arr.push({ field: value[0], message: value[1].message });
+    });
+    res.status(403).json({ message: 'An error occured when saving the item', error_details: arr });
+  });
+
+  console.log('==', newSavedItem);
+
+  if (newSavedItem) {
+    res.json({});
+  }
+};
+
 module.exports.get = async (req, res) => {
   const modelName = req.params.model;
   const segment = req.body.segment;
@@ -179,7 +204,7 @@ module.exports.get = async (req, res) => {
 module.exports.getOne = async (req, res) => {
   const modelName = req.params.model;
   const modelItemId = req.params.id;
-  const refFields = req.body.refFields;
+  const refFields = req.query.refFields;
 
   const currentModel = fnHelper.getModelObject(modelName);
   if (!currentModel) {
@@ -188,7 +213,10 @@ module.exports.getOne = async (req, res) => {
 
   const keys = fnHelper.getModelProperties(currentModel);
   const defaultFieldsToFetch = keys.map(key => key.path);
-  const fieldsToFetch = req.body.fields || defaultFieldsToFetch;
+  let fieldsToFetch = defaultFieldsToFetch;
+  if (req.query.fields) {
+    fieldsToFetch = req.query.fields.split(',');
+  }
 
   // Build ref fields for the model (for mongoose population purpose)
   const fieldsToPopulate = fnHelper.getFieldsToPopulate(keys, fieldsToFetch, refFields);

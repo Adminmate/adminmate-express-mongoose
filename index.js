@@ -42,7 +42,8 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, devM
   // CRUD endpoints
   router.post('/api/model/:model', isAuthorized, modelController.get);
   router.post('/api/model/:model/autocomplete', isAuthorized, modelController.getAutocomplete);
-  router.post('/api/model/:model/:id', isAuthorized, modelController.getOne);
+  router.post('/api/model/:model/create', isAuthorized, modelController.postOne);
+  router.get('/api/model/:model/:id', isAuthorized, modelController.getOne);
   router.put('/api/model/:model/:id', isAuthorized, modelController.putOne);
   router.delete('/api/model/:model', isAuthorized, modelController.deleteSome);
 

@@ -39,15 +39,23 @@ module.exports.getModelProperties = model => {
       }
     }
 
+    // Required option
+    if (modelProps[key].options.required) {
+      property.required = true;
+    }
+    // Default value option
+    if (typeof modelProps[key].options.default !== 'undefined') {
+      property.default = modelProps[key].options.default;
+    }
+    // Enum option
     if (modelProps[key].options.enum) {
       property.enum = modelProps[key].options.enum.values;
     }
-    if (modelProps[key].options.default) {
-      property.default = modelProps[key].options.default;
-    }
+    // Ref option
     if (modelProps[key].options.ref) {
       property.ref = modelProps[key].options.ref;
     }
+    // RefPath option
     if (modelProps[key].options.refPath) {
       property.refPath = modelProps[key].options.refPath;
     }
