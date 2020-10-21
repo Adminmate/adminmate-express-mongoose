@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const mongooseLegacyPluralize = require('mongoose-legacy-pluralize');
+const { serializeError } = require('serialize-error');
 
 module.exports.getModelProperties = model => {
   let modelFields = [];
@@ -283,4 +284,22 @@ module.exports.getModelObject = (modelCode) => {
   const currentModelObject = typeof currentModel === 'function' ? currentModel : currentModel.model;
 
   return currentModelObject;
+};
+
+module.exports.buildError = (e, defaultMessage) => {
+  if (e && e.errors) {
+    let arr = [];
+    Object.entries(e.errors).forEach(value => {
+      arr.push({ field: value[0], message: value[1].message });
+    });
+    return { message: defaultMessage, error_details: arr };
+  }
+  else if (e && e.message) {
+    const errorObject = serializeError(e);
+    const arr = [{
+      message: errorObject.stack
+    }];
+    return { message: defaultMessage, error_details: arr };
+  }
+  return { message: defaultMessage };
 };

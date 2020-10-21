@@ -104,11 +104,8 @@ module.exports.postOne = async (req, res) => {
 
   const newItem = new currentModel(data);
   const newSavedItem = await newItem.save().catch(e => {
-    let arr = [];
-    Object.entries(e.errors).forEach(value => {
-      arr.push({ field: value[0], message: value[1].message });
-    });
-    res.status(403).json({ message: 'An error occured when saving the item', error_details: arr });
+    const errorObject = fnHelper.buildError(e, 'An error occured when saving the item');
+    res.status(403).json(errorObject);
   });
 
   if (newSavedItem) {
@@ -262,13 +259,13 @@ module.exports.putOne = async (req, res) => {
   const cleanData = data;
 
   if (Object.keys(cleanData).length) {
-    const updatedModel = await currentModel.findByIdAndUpdate(modelItemId, cleanData, { runValidators: true })
-      .catch(e => {
-        res.status(403).json({ message: 'Unable to update the model' });
-      });
-
-    if (updatedModel) {
-      return res.json({ data: cleanData });
+    try {
+      await currentModel.findByIdAndUpdate(modelItemId, cleanData, { runValidators: true });
+      res.json({ data: cleanData });
+    }
+    catch(e) {
+      const errorObject = fnHelper.buildError(e, 'Unable to update the model');
+      res.status(403).json(errorObject);
     }
   }
   else {
