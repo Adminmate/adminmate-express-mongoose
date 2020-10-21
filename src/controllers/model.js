@@ -160,9 +160,7 @@ module.exports.get = async (req, res) => {
     }
   }
 
-  console.log('=========fieldsToPopulate', fieldsToPopulate);
-
-  let data = await currentModel
+  const data = await currentModel
     .find(params)
     .select(fieldsToFetch)
     .populate(fieldsToPopulate)
@@ -182,12 +180,12 @@ module.exports.get = async (req, res) => {
   const nbPage = Math.ceil(dataCount / nbItemPerPage);
 
   // Make ref fields appeared as link in the dashboard
-  data = data.map(item => {
+  const formattedData = data.map(item => {
     return fnHelper.refFields(item, fieldsToPopulate);
   });
 
   res.json({
-    data,
+    data: formattedData,
     count: dataCount,
     pagination: {
       current: page,
@@ -199,7 +197,7 @@ module.exports.get = async (req, res) => {
 module.exports.getOne = async (req, res) => {
   const modelName = req.params.model;
   const modelItemId = req.params.id;
-  const refFields = req.query.refFields;
+  const refFields = req.query.refFields ? JSON.parse(req.query.refFields) : {};
 
   const currentModel = fnHelper.getModelObject(modelName);
   if (!currentModel) {
