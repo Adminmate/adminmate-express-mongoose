@@ -119,6 +119,12 @@ module.exports.constructQuery = criterias => {
     else if (criteria.operator === 'is_not') {
       q[criteria.field] = { $neq: criteria.value };
     }
+    else if (criteria.operator === 'is_true') {
+      q[criteria.field] = { $eq: true };
+    }
+    else if (criteria.operator === 'is_false') {
+      q[criteria.field] = { $eq: false };
+    }
     else if (criteria.operator === 'is_present') {
       q[criteria.field] = { $exists: true };
     }
