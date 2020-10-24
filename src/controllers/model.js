@@ -8,6 +8,7 @@ module.exports.getModels = (req, res) => {
     const modelObject = {
       name: currentModel.collection.name,
       properties: fnHelper.getModelProperties(currentModel),
+      smartActions: []
       // subSections: []
     };
     // // Add subsections if present

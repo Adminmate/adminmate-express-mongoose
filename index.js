@@ -53,4 +53,7 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, devM
   return router;
 };
 
-module.exports = Adminmate;
+module.exports = {
+  init: Adminmate,
+  isAuthorized,
+};
