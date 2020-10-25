@@ -259,7 +259,7 @@ module.exports.constructSearch = (search, fieldsToSearchIn, fieldsToPopulate = [
   return params;
 };
 
-module.exports.getModelObject = (modelCode) => {
+module.exports.getModelObject = modelCode => {
   if (!modelCode) {
     return null;
   }
@@ -280,6 +280,29 @@ module.exports.getModelObject = (modelCode) => {
   const currentModelObject = typeof currentModel === 'function' ? currentModel : currentModel.model;
 
   return currentModelObject;
+};
+
+module.exports.getModelSmartActions = modelCode => {
+  if (!modelCode) {
+    return null;
+  }
+
+  const currentRefModelName = modelCode.toLowerCase();
+  const currentRefModelNamePlural = mongooseLegacyPluralize(currentRefModelName);
+
+  const currentModel = global._amConfig.models
+    .find(m => {
+      const collectionName = typeof m === 'function' ? m.collection.name : m.model.collection.name;
+      return collectionName === currentRefModelName || collectionName === currentRefModelNamePlural;
+    });
+
+  if (!currentModel) {
+    return null;
+  }
+
+  const currentModelSmartActions = typeof currentModel === 'function' ? null : currentModel.smartActions;
+
+  return currentModelSmartActions;
 };
 
 module.exports.buildError = (e, defaultMessage) => {

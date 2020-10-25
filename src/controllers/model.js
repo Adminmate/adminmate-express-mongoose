@@ -8,7 +8,7 @@ module.exports.getModels = (req, res) => {
     const modelObject = {
       name: currentModel.collection.name,
       properties: fnHelper.getModelProperties(currentModel),
-      smartActions: []
+      // smartActions: []
       // subSections: []
     };
     // // Add subsections if present
@@ -21,9 +21,9 @@ module.exports.getModels = (req, res) => {
     //   });
     // }
     // Add smart actions if present
-    if (typeof model !== 'function' && model.smartActions) {
-      modelObject.smartActions = model.smartActions;
-    }
+    // if (typeof model !== 'function' && model.smartActions) {
+    //   modelObject.smartActions = model.smartActions;
+    // }
     models.push(modelObject);
   });
   res.json({ models });

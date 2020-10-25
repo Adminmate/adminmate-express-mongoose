@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const modelController = require('./src/controllers/model');
 const authController = require('./src/controllers/auth');
 const installController = require('./src/controllers/install');
+const smartActionsController = require('./src/controllers/smartactions');
 const { isAuthorized } = require('./src/middlewares/auth');
 
 const accessControl = (req, res, next) => {
@@ -38,6 +39,9 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, devM
 
   // Get model config
   // router.get('/api/model/:model/config', isAuthorized,  modelController.getModelConfig);
+
+  // Get available Smart Actions for the items list
+  router.get('/api/model/:model/smartactions', isAuthorized, smartActionsController.get);
 
   // CRUD endpoints
   router.post('/api/model/:model', isAuthorized, modelController.get);
