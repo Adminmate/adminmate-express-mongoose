@@ -17,13 +17,8 @@ module.exports.getModelProperties = model => {
 
     if (property.type === 'Array') {
       const optionsTypes = modelProps[key].options.type;
-      if (
-        optionsTypes &&
-        optionsTypes[0] &&
-        optionsTypes[0].type &&
-        typeof optionsTypes[0].type === 'function'
-      ) {
-        property.type = `ArrayOf${optionsTypes[0].type.name}`;
+      if (optionsTypes && optionsTypes[0] && typeof optionsTypes[0] === 'function') {
+        property.type = `ArrayOf${optionsTypes[0].name}`;
       }
       else {
         property.type = 'ArrayOfObject';
