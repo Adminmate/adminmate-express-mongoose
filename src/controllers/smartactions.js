@@ -4,8 +4,9 @@ const fnHelper = require('../helpers/functions');
 module.exports.get = async (req, res) => {
   const modelName = req.params.model;
   const items = req.query.ids || '';
+  const target = req.query.target || '';
 
-  if (!items) {
+  if (!items || !['item', 'bulk'].includes(target)) {
     return res.status(403).json({ message: 'Invalid request' });
   }
 
@@ -35,12 +36,18 @@ module.exports.get = async (req, res) => {
     return res.json({ list: [] });
   }
 
-  let smartActionsCopy = currentModelSmartActions;
+  // Filter by target
+  let smartActionsCopy = currentModelSmartActions.filter(sa => {
+    const isStringAndValid = typeof sa.target === 'string' && sa.target === target;
+    const isArrayAndValid = Array.isArray(sa.target) && sa.target.includes(target);
+    return isStringAndValid || isArrayAndValid;
+  });
+
   itemsDB.forEach(item => {
-    smartActionsCopy.forEach(sm => {
+    smartActionsCopy.forEach(sa => {
       // If the filter do not pass, remove the smart actions from the list
-      if (sm.filter(item) === false) {
-        _.remove(smartActionsCopy, { code: sm.code });
+      if (sa.filter(item) === false) {
+        _.remove(smartActionsCopy, { code: sa.code });
       }
     });
   });
