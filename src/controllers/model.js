@@ -8,22 +8,14 @@ module.exports.getModels = (req, res) => {
     const modelObject = {
       name: currentModel.collection.name,
       properties: fnHelper.getModelProperties(currentModel),
-      // smartActions: []
-      // subSections: []
+      smartActions: []
     };
-    // // Add subsections if present
-    // if (typeof model !== 'function' && model.subSections && model.subSections.length) {
-    //   modelObject.subSections = model.subSections.map(section => {
-    //     return {
-    //       label: section.label,
-    //       code: section.code
-    //     };
-    //   });
-    // }
+
     // Add smart actions if present
-    // if (typeof model !== 'function' && model.smartActions) {
-    //   modelObject.smartActions = model.smartActions;
-    // }
+    if (typeof model !== 'function' && model.smartActions) {
+      modelObject.smartActions = model.smartActions;
+    }
+
     models.push(modelObject);
   });
   res.json({ models });
