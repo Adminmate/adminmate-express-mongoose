@@ -48,7 +48,7 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, auth
   router.post('/api/model/:model', isAuthorizedIP, isAuthorized, modelController.get);
   router.post('/api/model/:model/autocomplete', isAuthorizedIP, isAuthorized, modelController.getAutocomplete);
   router.post('/api/model/:model/create', isAuthorizedIP, isAuthorized, modelController.postOne);
-  router.get('/api/model/:model/:id', isAuthorizedIP, isAuthorized, modelController.getOne);
+  router.post('/api/model/:model/:id', isAuthorizedIP, isAuthorized, modelController.getOne);
   router.put('/api/model/:model/:id', isAuthorizedIP, isAuthorized, modelController.putOne);
   router.delete('/api/model/:model', isAuthorizedIP, isAuthorized, modelController.deleteSome);
 
