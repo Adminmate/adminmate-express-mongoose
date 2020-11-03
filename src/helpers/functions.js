@@ -94,7 +94,11 @@ const cleanString = string => {
 
 module.exports.cleanString = cleanString;
 
-module.exports.constructQuery = criterias => {
+module.exports.constructQuery = (criterias, operator = 'and') => {
+  if (!['and', 'or'].includes(operator)) {
+    return {};
+  }
+
   const query = [];
   criterias.forEach(criteria => {
     let q = {};
@@ -134,7 +138,7 @@ module.exports.constructQuery = criterias => {
     }
     query.push(q);
   });
-  return query.length ? { $and: query } : {};
+  return query.length ? { [`$${operator}`]: query } : {};
 };
 
 module.exports.refFields = (item, fieldsToPopulate) => {

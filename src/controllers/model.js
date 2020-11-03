@@ -139,15 +139,16 @@ module.exports.get = async (req, res) => {
   }
 
   // Filters
-  if (filters && filters.length) {
-    const filter = filters[0];
-    params[filter.attr] = filter.value;
+  if (filters && filters.operator && filters.list && filters.list.length) {
+    const filtersQuery = fnHelper.constructQuery(filters.list, filters.operator);
+    if (filtersQuery) {
+      params = { $and: [params, filtersQuery] };
+    }
   }
 
   // Segment
-  if (segment) {
-    const segmentQuery = fnHelper.constructQuery(segment.data);
-    console.log('===segmentQuery', segmentQuery['$and']);
+  if (segment && segment.operator && segment.list && segment.list.length) {
+    const segmentQuery = fnHelper.constructQuery(segment.list, segment.operator);
     if (segmentQuery) {
       params = { $and: [params, segmentQuery] };
     }
@@ -236,13 +237,14 @@ module.exports.putOne = async (req, res) => {
 
   // const { model, itemEditableKeys } = models[modelName];
 
-  // // Only keep authorized keys
+  // Only keep authorized keys
   // const cleanData = {};
-  // for (key in data) {
-  //   if (itemEditableKeys.includes(key)) {
-  //     cleanData[key] = data[key]
+  // updatableFields.forEach(updatableField => {
+  //   const fieldValue = global._.get(data, updatableField);
+  //   if (fieldValue) {
+  //     global._.set(cleanData, updatableField, fieldValue)
   //   }
-  // }
+  // });
 
   const cleanData = data;
 
