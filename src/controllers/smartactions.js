@@ -46,7 +46,7 @@ module.exports.get = async (req, res) => {
   itemsDB.forEach(item => {
     smartActionsCopy.forEach(sa => {
       // If the filter do not pass, remove the smart actions from the list
-      if (sa.filter(item) === false) {
+      if (typeof sa.filter === 'function' && sa.filter(item) === false) {
         _.remove(smartActionsCopy, { code: sa.code });
       }
     });
