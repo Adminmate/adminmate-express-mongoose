@@ -304,6 +304,29 @@ module.exports.getModelSmartActions = modelCode => {
   return currentModelSmartActions;
 };
 
+module.exports.getModelSegments = modelCode => {
+  if (!modelCode) {
+    return null;
+  }
+
+  const currentRefModelName = modelCode.toLowerCase();
+  const currentRefModelNamePlural = mongooseLegacyPluralize(currentRefModelName);
+
+  const currentModel = global._amConfig.models
+    .find(m => {
+      const collectionName = typeof m === 'function' ? m.collection.name : m.model.collection.name;
+      return collectionName === currentRefModelName || collectionName === currentRefModelNamePlural;
+    });
+
+  if (!currentModel) {
+    return null;
+  }
+
+  const currentModelSegments = typeof currentModel === 'function' ? null : currentModel.segments;
+
+  return currentModelSegments;
+};
+
 module.exports.buildError = (e, defaultMessage) => {
   if (e && e.errors) {
     let arr = [];

@@ -8,12 +8,18 @@ module.exports.getModels = (req, res) => {
     const modelObject = {
       name: currentModel.collection.name,
       properties: fnHelper.getModelProperties(currentModel),
-      smartActions: []
+      smartActions: [],
+      segments: []
     };
 
     // Add smart actions if present
     if (typeof model !== 'function' && model.smartActions) {
       modelObject.smartActions = model.smartActions;
+    }
+
+    // Add smart actions if present
+    if (typeof model !== 'function' && model.segments) {
+      modelObject.segments = model.segments.map(segment => segment.code);
     }
 
     models.push(modelObject);
@@ -147,10 +153,19 @@ module.exports.get = async (req, res) => {
   }
 
   // Segment
-  if (segment && segment.operator && segment.list && segment.list.length) {
-    const segmentQuery = fnHelper.constructQuery(segment.list, segment.operator);
+  if (segment && segment.type === 'simple') {
+    const segmentQuery = fnHelper.constructQuery(segment.data.list, segment.data.operator);
     if (segmentQuery) {
       params = { $and: [params, segmentQuery] };
+    }
+  }
+  else if (segment && segment.type === 'query') {
+    const modelSegments = fnHelper.getModelSegments(modelName);
+    if (modelSegments) {
+      const matchingSegment = modelSegments.find(s => s.code === segment.data);
+      if (matchingSegment) {
+        params = { $and: [params, matchingSegment.query] };
+      }
     }
   }
 
