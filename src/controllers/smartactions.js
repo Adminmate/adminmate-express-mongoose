@@ -37,20 +37,28 @@ module.exports.get = async (req, res) => {
   }
 
   // Filter by target
-  let smartActionsCopy = currentModelSmartActions.filter(sa => {
-    const isStringAndValid = typeof sa.target === 'string' && sa.target === target;
-    const isArrayAndValid = Array.isArray(sa.target) && sa.target.includes(target);
-    return isStringAndValid || isArrayAndValid;
-  });
+  const smartActionsFilteredByTarget = currentModelSmartActions
+    .filter(sa => {
+      const isStringAndValid = typeof sa.target === 'string' && sa.target === target;
+      const isArrayAndValid = Array.isArray(sa.target) && sa.target.includes(target);
+      return isStringAndValid || isArrayAndValid;
+    })
+    .map(sa => {
+      sa.passFilter = true;
+      return sa;
+    });
 
   itemsDB.forEach(item => {
-    smartActionsCopy.forEach(sa => {
+    smartActionsFilteredByTarget.forEach(sa => {
       // If the filter do not pass, remove the smart actions from the list
       if (typeof sa.filter === 'function' && sa.filter(item) === false) {
-        _.remove(smartActionsCopy, { code: sa.code });
+        sa.passFilter = false;
       }
     });
   });
 
-  res.json({ list: smartActionsCopy });
+  // We only keep valid smart actions
+  const finalSmartActions = smartActionsFilteredByTarget.filter(sa => sa.passFilter === true);
+
+  res.json({ list: finalSmartActions });
 };
