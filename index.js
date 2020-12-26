@@ -42,6 +42,7 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, auth
   // router.get('/api/model/:model/config', isAuthorized,  modelController.getModelConfig);
 
   // Get available Smart Actions for the items list
+  router.get('/api/model/smartactions', isAuthorizedIP, isAuthorized, smartActionsController.getAll);
   router.get('/api/model/:model/smartactions', isAuthorizedIP, isAuthorized, smartActionsController.get);
 
   // CRUD endpoints

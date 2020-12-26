@@ -1,6 +1,27 @@
 const mongoose = require('mongoose');
 const fnHelper = require('../helpers/functions');
 
+module.exports.getAll = async (req, res) => {
+  const list = [];
+
+  global._amConfig.models.forEach(model => {
+    const currentModel = typeof model === 'function' ? model : model.model;
+    const modelName = currentModel.collection.name;
+    const currentModelSmartActions = fnHelper.getModelSmartActions(modelName);
+    if (currentModelSmartActions && currentModelSmartActions.length) {
+      currentModelSmartActions.map(sa => {
+        list.push({
+          model: modelName,
+          label: sa.label,
+          code: sa.code
+        });
+      });
+    }
+  });
+
+  res.json({ list });
+};
+
 module.exports.get = async (req, res) => {
   const modelName = req.params.model;
   const items = req.query.ids || '';
