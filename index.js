@@ -37,6 +37,7 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, auth
 
   // Get models list
   router.get('/api/model', isAuthorizedIP, isAuthorized, modelController.getModels);
+  router.get('/api/model/properties', isAuthorizedIP, isAuthorized, modelController.getModelsProperties);
 
   // Get model config
   // router.get('/api/model/:model/config', isAuthorized,  modelController.getModelConfig);

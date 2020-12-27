@@ -1,6 +1,24 @@
 const mongoose = require('mongoose');
 const fnHelper = require('../helpers/functions');
 
+module.exports.getModelsProperties = (req, res) => {
+  const modelsProperties = [];
+
+  global._amConfig.models.forEach(model => {
+    const currentModel = typeof model === 'function' ? model : model.model;
+    const modelProperties = fnHelper.getModelProperties(currentModel);
+    const modelName = currentModel.collection.name;
+    modelProperties.map(property => {
+      modelsProperties.push({
+        model: modelName,
+        path: property.path
+      });
+    });
+  });
+
+  res.json({ properties: modelsProperties });
+};
+
 module.exports.getModels = (req, res) => {
   let models = [];
   global._amConfig.models.forEach(model => {
