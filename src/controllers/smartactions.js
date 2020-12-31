@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const fnHelper = require('../helpers/functions');
 
 module.exports.getAll = async (req, res) => {

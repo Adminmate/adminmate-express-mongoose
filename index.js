@@ -4,6 +4,7 @@ const modelController = require('./src/controllers/model');
 const authController = require('./src/controllers/auth');
 const installController = require('./src/controllers/install');
 const smartActionsController = require('./src/controllers/smartactions');
+const segmentsController = require('./src/controllers/segments');
 const { isAuthorized, isAuthorizedIP } = require('./src/middlewares/auth');
 
 const accessControl = (req, res, next) => {
@@ -45,6 +46,9 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, auth
   // Get available Smart Actions for the items list
   router.get('/api/model/smartactions', isAuthorizedIP, isAuthorized, smartActionsController.getAll);
   router.get('/api/model/:model/smartactions', isAuthorizedIP, isAuthorized, smartActionsController.get);
+
+  // Segments
+  router.get('/api/model/segments', isAuthorizedIP, isAuthorized, segmentsController.getAll);
 
   // CRUD endpoints
   router.post('/api/model/:model', isAuthorizedIP, isAuthorized, modelController.get);

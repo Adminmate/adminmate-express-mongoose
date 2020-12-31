@@ -37,7 +37,7 @@ module.exports.getModels = (req, res) => {
 
     // Add smart actions if present
     if (typeof model !== 'function' && model.segments) {
-      modelObject.segments = model.segments.map(segment => segment.code);
+      modelObject.segments = model.segments.map(segment => ({ label: segment.label, code: segment.code }));
     }
 
     models.push(modelObject);
@@ -170,14 +170,8 @@ module.exports.get = async (req, res) => {
     }
   }
 
-  // Segment
-  if (segment && segment.type === 'simple') {
-    const segmentQuery = fnHelper.constructQuery(segment.data.list, segment.data.operator);
-    if (segmentQuery) {
-      params = { $and: [params, segmentQuery] };
-    }
-  }
-  else if (segment && segment.type === 'query') {
+  // Segments
+  if (segment && segment.type === 'code') {
     const modelSegments = fnHelper.getModelSegments(modelName);
     if (modelSegments) {
       const matchingSegment = modelSegments.find(s => s.code === segment.data);
