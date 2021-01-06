@@ -12,7 +12,7 @@
     "url": "https://github.com/Adminmate/adminmate-express-mongoose.git"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "cookie-parser": "^1.4.5",
     "express": "^4.16.4",
     "jwt-simple": "^0.5.6",
