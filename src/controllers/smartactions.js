@@ -35,9 +35,21 @@ module.exports.get = async (req, res) => {
     return res.status(403).json({ message: 'Invalid request' });
   }
 
+  // Get model options
+  const currentModelOptions = fnHelper.getModelOptions(modelName);
+  const cannotDelete = currentModelOptions && currentModelOptions.canDelete === false;
+
+  const actionsList = [];
+  if (!cannotDelete) {
+    actionsList.push({
+      label: 'Delete items',
+      code: 'delete'
+    });
+  }
+
   const currentModelSmartActions = fnHelper.getModelSmartActions(modelName);
   if (!currentModelSmartActions || currentModelSmartActions.length === 0) {
-    return res.json({ list: [] });
+    return res.json({ list: actionsList });
   }
 
   // Ids list
@@ -45,15 +57,11 @@ module.exports.get = async (req, res) => {
 
   // Get corresponding items
   const itemsDB = await currentModel
-    .find({
-      _id: {
-        $in: itemsArray
-      }
-    })
+    .find({ _id: { $in: itemsArray } })
     .lean();
 
   if (!itemsDB) {
-    return res.json({ list: [] });
+    return res.json({ list: actionsList });
   }
 
   // Filter by target
@@ -80,5 +88,5 @@ module.exports.get = async (req, res) => {
   // We only keep valid smart actions
   const finalSmartActions = smartActionsFilteredByTarget.filter(sa => sa.passFilter === true);
 
-  res.json({ list: finalSmartActions });
+  res.json({ list: [...actionsList, ...finalSmartActions] });
 };

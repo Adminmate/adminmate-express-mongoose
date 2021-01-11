@@ -258,7 +258,7 @@ module.exports.constructSearch = (search, fieldsToSearchIn, fieldsToPopulate = [
   return params;
 };
 
-module.exports.getModelObject = modelCode => {
+const getModel = (modelCode) => {
   if (!modelCode) {
     return null;
   }
@@ -272,6 +272,11 @@ module.exports.getModelObject = modelCode => {
       return collectionName === currentRefModelName || collectionName === currentRefModelNamePlural;
     });
 
+  return currentModel;
+};
+
+module.exports.getModelObject = modelCode => {
+  const currentModel = getModel(modelCode);
   if (!currentModel) {
     return null;
   }
@@ -281,20 +286,19 @@ module.exports.getModelObject = modelCode => {
   return currentModelObject;
 };
 
-module.exports.getModelSmartActions = modelCode => {
-  if (!modelCode) {
+module.exports.getModelOptions = modelCode => {
+  const currentModel = getModel(modelCode);
+  if (!currentModel) {
     return null;
   }
 
-  const currentRefModelName = modelCode.toLowerCase();
-  const currentRefModelNamePlural = mongooseLegacyPluralize(currentRefModelName);
+  const currentModelOptions = typeof currentModel === 'function' ? {} : currentModel.options;
 
-  const currentModel = global._amConfig.models
-    .find(m => {
-      const collectionName = typeof m === 'function' ? m.collection.name : m.model.collection.name;
-      return collectionName === currentRefModelName || collectionName === currentRefModelNamePlural;
-    });
+  return currentModelOptions;
+};
 
+module.exports.getModelSmartActions = modelCode => {
+  const currentModel = getModel(modelCode);
   if (!currentModel) {
     return null;
   }
@@ -305,19 +309,7 @@ module.exports.getModelSmartActions = modelCode => {
 };
 
 module.exports.getModelSegments = modelCode => {
-  if (!modelCode) {
-    return null;
-  }
-
-  const currentRefModelName = modelCode.toLowerCase();
-  const currentRefModelNamePlural = mongooseLegacyPluralize(currentRefModelName);
-
-  const currentModel = global._amConfig.models
-    .find(m => {
-      const collectionName = typeof m === 'function' ? m.collection.name : m.model.collection.name;
-      return collectionName === currentRefModelName || collectionName === currentRefModelNamePlural;
-    });
-
+  const currentModel = getModel(modelCode);
   if (!currentModel) {
     return null;
   }
