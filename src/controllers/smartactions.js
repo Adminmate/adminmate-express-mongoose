@@ -42,7 +42,7 @@ module.exports.get = async (req, res) => {
   const actionsList = [];
   if (!cannotDelete) {
     actionsList.push({
-      label: 'Delete items',
+      label: target === 'item' ? 'Delete item' : 'Delete items',
       code: 'delete'
     });
   }
