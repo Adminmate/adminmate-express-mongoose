@@ -12,6 +12,7 @@
     "url": "https://github.com/Adminmate/adminmate-express-mongoose.git"
   },
   "dependencies": {
+    "adminmate-express-core": "^1.0.1",
     "mongoose": "^5.9.7",
     "mongoose-legacy-pluralize": "^1.0.2",
     "serialize-error": "^7.0.1"
