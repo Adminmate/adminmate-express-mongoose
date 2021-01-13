@@ -1,22 +1,43 @@
 const jwt = require('jwt-simple');
 
 module.exports.isAuthorized = (req, res, next) => {
-  const token = req.headers['x-access-token'];
+  const accessToken = req.headers['x-access-token'];
+  const permToken = req.headers['x-perm-token'];
+  const modelPermToken = req.headers['x-model-perm-token'];
 
-  let decoded;
   try {
-    decoded = jwt.decode(token, global._amConfig.authKey);
+    const decoded_accessToken = jwt.decode(accessToken, global._amConfig.authKey);
+
+    if (!decoded_accessToken || !decoded_accessToken.exp_date) {
+      return res.status(403).json({ code: 'not_authorized' });
+    }
+
+    if (permToken) {
+      const decoded_permToken = jwt.decode(permToken, global._amConfig.secretKey);
+
+      if (!decoded_permToken || !decoded_permToken.exp_date) {
+        return res.status(403).json({ code: 'not_authorized' });
+      }
+
+      req.permData = decoded_permToken.data;
+      console.log('====decoded_permToken', decoded_permToken.data);
+    }
+
+    if (modelPermToken) {
+      const decoded_modelPermToken = jwt.decode(modelPermToken, global._amConfig.secretKey);
+
+      if (!decoded_modelPermToken || !decoded_modelPermToken.exp_date) {
+        return res.status(403).json({ code: 'not_authorized' });
+      }
+
+      req.modelPermData = decoded_modelPermToken.data;
+      console.log('====decoded_modelPermToken', decoded_modelPermToken.data);
+    }
+
+    next();
   }
   catch(e) {
     return res.status(403).json({ code: 'not_authorized' });
-  }
-
-  if (!decoded || !decoded.exp_date) {
-    return res.status(403).json({ code: 'not_authorized' });
-  }
-  else {
-    // req.currentUser = decoded;
-    next();
   }
 };
 
