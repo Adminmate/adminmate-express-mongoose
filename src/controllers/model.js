@@ -45,20 +45,6 @@ module.exports.getModels = (req, res) => {
   res.json({ models });
 };
 
-module.exports.getModelConfig = (req, res) => {
-  const currentModel = global._amConfig.models.find(m => m.collection.name === req.params.model);
-  if (!currentModel) {
-    return res.status(403).json({ message: 'Invalid request' });
-  }
-
-  const keys = fnHelper.getModelProperties(currentModel);
-
-  res.json({
-    keys,
-    name: currentModel.collection.name
-  });
-};
-
 module.exports.getAutocomplete = async (req, res) => {
   const modelName = req.params.model;
   const search = (req.body.search || '').trim();
