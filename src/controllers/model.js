@@ -353,6 +353,98 @@ module.exports.customQuery = async (req, res) => {
       res.json({ data: dataCount });
     }
   }
+  else if (data.type === 'bar' || data.type === 'line') {
+    const toSum = data.field && data.operation === 'sum' ? `$${data.field}` : 1;
+
+    let matchReq = {};
+    let groupFormat = '';
+
+    // Day timeframe
+    if (data.timeframe === 'day') {
+      matchReq = {
+        '$gte': new Date(global._moment().subtract(30, 'day').startOf('day').format()),
+        '$lte': new Date(global._moment().endOf('day').format())
+      };
+      groupFormat = '%Y-%m-%d';
+    }
+    // Week timeframe
+    else if (data.timeframe === 'week') {
+      matchReq = {
+        '$gte': new Date(global._moment().subtract(26, 'week').startOf('week').format()),
+        '$lte': new Date(global._moment().endOf('week').format())
+      };
+      groupFormat = '%V';
+    }
+
+    if (!groupFormat) {
+      return res.status(403).json({ message: 'Invalid request' });
+    }
+
+    const repartitionData = await currentModel
+      .aggregate([
+        {
+          $match: {
+            [data.group_by]: matchReq
+          }
+        },
+        {
+          $group: {
+            _id: { $dateToString: { format: groupFormat, date: `$${data.group_by}` } },
+            count: { $sum: toSum }
+          }
+        },
+        {
+          $project: {
+            key: '$_id',
+            value: '$count',
+            _id: false
+          }
+        }
+      ]);
+
+    const formattedData = [];
+
+    // Day timeframe
+    if (data.timeframe === 'day') {
+      for (let i = 0; i < 30; i++) {
+        const currentDate = global._moment().subtract(i, 'day');
+        const countForTheTimeframe = global._.find(repartitionData, { key: currentDate.format('YYYY-MM-DD') });
+        formattedData.push({
+          key: currentDate.format('DD/MM'),
+          value: countForTheTimeframe ? countForTheTimeframe.value : 0
+        });
+      }
+    }
+    // Week timeframe
+    else if (data.timeframe === 'week') {
+      for (let i = 0; i < 26; i++) {
+        const currentWeek = global._moment().subtract(i, 'week');
+
+        const countForTheTimeframe = global._.find(repartitionData, { key: currentWeek.format('WW') });
+        formattedData.push({
+          key: currentWeek.startOf('week').format('DD/MM'),
+          value: countForTheTimeframe ? countForTheTimeframe.value : 0
+        });
+      }
+    }
+
+    formattedDataOrdered = formattedData.reverse();
+
+    const finalData = {
+      config: {
+        xaxis: [
+          { dataKey: 'key' }
+        ],
+        yaxis: [
+          { dataKey: 'value' },
+          // { dataKey: 'test', orientation: 'right' }
+        ]
+      },
+      data: formattedDataOrdered
+    };
+
+    res.json({ data: finalData });
+  }
   else {
     res.json({ data: null });
   }

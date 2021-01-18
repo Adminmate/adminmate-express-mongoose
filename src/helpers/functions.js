@@ -258,7 +258,7 @@ module.exports.constructSearch = (search, fieldsToSearchIn, fieldsToPopulate = [
   return params;
 };
 
-const getModel = (modelCode) => {
+const getModel = modelCode => {
   if (!modelCode) {
     return null;
   }
