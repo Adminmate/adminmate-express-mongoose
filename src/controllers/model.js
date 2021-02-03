@@ -4,13 +4,11 @@ const fnHelper = require('../helpers/functions');
 module.exports.getModelsProperties = (req, res) => {
   const modelsProperties = [];
 
-  global._amConfig.models.forEach(model => {
-    const currentModel = typeof model === 'function' ? model : model.model;
-    const modelProperties = fnHelper.getModelProperties(currentModel);
-    const modelName = currentModel.collection.name;
+  global._amConfig.models.forEach(modelConfig => {
+    const modelProperties = fnHelper.getModelProperties(modelConfig.model);
     modelProperties.map(property => {
       modelsProperties.push({
-        model: modelName,
+        model: modelConfig.slug,
         path: property.path
       });
     });
@@ -21,27 +19,28 @@ module.exports.getModelsProperties = (req, res) => {
 
 module.exports.getModels = (req, res) => {
   let models = [];
-  global._amConfig.models.forEach(model => {
-    const currentModel = typeof model === 'function' ? model : model.model;
+
+  global._amConfig.models.forEach(modelConfig => {
     const modelObject = {
-      name: currentModel.collection.name,
-      properties: fnHelper.getModelProperties(currentModel),
-      smartActions: [],
+      slug: modelConfig.slug,
+      properties: fnHelper.getModelProperties(modelConfig.model),
+      smart_actions: [],
       segments: []
     };
 
     // Add smart actions if present
-    if (typeof model !== 'function' && model.smartActions) {
-      modelObject.smartActions = model.smartActions;
+    if (modelConfig.smartActions) {
+      modelObject.smart_actions = modelConfig.smartActions;
     }
 
     // Add smart actions if present
-    if (typeof model !== 'function' && model.segments) {
-      modelObject.segments = model.segments.map(segment => ({ label: segment.label, code: segment.code }));
+    if (modelConfig.segments) {
+      modelObject.segments = modelConfig.segments.map(segment => ({ label: segment.label, code: segment.code }));
     }
 
     models.push(modelObject);
   });
+
   res.json({ models });
 };
 

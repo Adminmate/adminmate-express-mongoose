@@ -263,14 +263,7 @@ const getModel = modelCode => {
     return null;
   }
 
-  const currentRefModelName = modelCode.toLowerCase();
-  const currentRefModelNamePlural = mongooseLegacyPluralize(currentRefModelName);
-
-  const currentModel = global._amConfig.models
-    .find(m => {
-      const collectionName = typeof m === 'function' ? m.collection.name : m.model.collection.name;
-      return collectionName === currentRefModelName || collectionName === currentRefModelNamePlural;
-    });
+  const currentModel = global._amConfig.models.find(m => m.slug === modelCode);
 
   return currentModel;
 };
@@ -281,9 +274,7 @@ module.exports.getModelObject = modelCode => {
     return null;
   }
 
-  const currentModelObject = typeof currentModel === 'function' ? currentModel : currentModel.model;
-
-  return currentModelObject;
+  return currentModel.model;
 };
 
 module.exports.getModelOptions = modelCode => {
@@ -292,9 +283,7 @@ module.exports.getModelOptions = modelCode => {
     return null;
   }
 
-  const currentModelOptions = typeof currentModel === 'function' ? {} : currentModel.options;
-
-  return currentModelOptions;
+  return currentModel.options;
 };
 
 module.exports.getModelSmartActions = modelCode => {
@@ -303,9 +292,7 @@ module.exports.getModelSmartActions = modelCode => {
     return null;
   }
 
-  const currentModelSmartActions = typeof currentModel === 'function' ? null : currentModel.smartActions;
-
-  return currentModelSmartActions;
+  return currentModel.smartActions;
 };
 
 module.exports.getModelSegments = modelCode => {
@@ -314,9 +301,7 @@ module.exports.getModelSegments = modelCode => {
     return null;
   }
 
-  const currentModelSegments = typeof currentModel === 'function' ? null : currentModel.segments;
-
-  return currentModelSegments;
+  return currentModel.segments;
 };
 
 module.exports.buildError = (e, defaultMessage) => {
