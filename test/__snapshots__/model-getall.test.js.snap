@@ -1,0 +1,656 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing POST /api/models/cars With "fields" parameter (name & manufacturer only) 1`] = `
+Object {
+  "count": 20,
+  "data": Array [
+    Object {
+      "_id": "5cd5308e695db945d3cc81d2",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 LM",
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81d1",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 275",
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c9",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 488",
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c8",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GT Lusso",
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c7",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GTO",
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c6",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GT 2+2",
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c5",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GT Berlinetta SWB",
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c4",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GT Coupé",
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c3",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 MM",
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c2",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 212 Inter",
+    },
+  ],
+  "pagination": Object {
+    "count": 2,
+    "current": 1,
+  },
+}
+`;
+
+exports[`Testing POST /api/models/cars With "page" parameter set to 2 1`] = `
+Object {
+  "count": 20,
+  "data": Array [
+    Object {
+      "_id": "5cd5308e695db945d3cc81c1",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Porsche",
+      "name": "Porsche Macan",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "5cd5308e695db945d3cc81a2",
+        "type": "ref",
+      },
+      "year": 2014,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81b9",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Porsche",
+      "name": "Porsche 924",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "5cd5308e695db945d3cc81a2",
+        "type": "ref",
+      },
+      "year": 1976,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81b8",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Porsche",
+      "name": "Porsche 917",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "5cd5308e695db945d3cc81a2",
+        "type": "ref",
+      },
+      "year": 1969,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81b7",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Porsche",
+      "name": "Porsche 914",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a1",
+        "label": "5cd5308e695db945d3cc81a1",
+        "type": "ref",
+      },
+      "year": 1969,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81b6",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Porsche",
+      "name": "Porsche 908",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "5cd5308e695db945d3cc81a2",
+        "type": "ref",
+      },
+      "year": 1968,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81b5",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Porsche",
+      "name": "Porsche 906",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a1",
+        "label": "5cd5308e695db945d3cc81a1",
+        "type": "ref",
+      },
+      "year": 1966,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81b4",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Porsche",
+      "name": "Porsche 904",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "5cd5308e695db945d3cc81a2",
+        "type": "ref",
+      },
+      "year": 1964,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81b3",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Porsche",
+      "name": "Porsche 911",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a1",
+        "label": "5cd5308e695db945d3cc81a1",
+        "type": "ref",
+      },
+      "year": 1963,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81b2",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Porsche",
+      "name": "Porsche 550",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "5cd5308e695db945d3cc81a2",
+        "type": "ref",
+      },
+      "year": 1953,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81b1",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Porsche",
+      "name": "Porsche 356",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a1",
+        "label": "5cd5308e695db945d3cc81a1",
+        "type": "ref",
+      },
+      "year": 1948,
+    },
+  ],
+  "pagination": Object {
+    "count": 2,
+    "current": 2,
+  },
+}
+`;
+
+exports[`Testing POST /api/models/cars With "refFields" parameter 1`] = `
+Object {
+  "count": 20,
+  "data": Array [
+    Object {
+      "_id": "5cd5308e695db945d3cc81d2",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 LM",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "Maria Doe",
+        "type": "ref",
+      },
+      "year": 1964,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81d1",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 275",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "Maria Doe",
+        "type": "ref",
+      },
+      "year": 1964,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c9",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 488",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "Maria Doe",
+        "type": "ref",
+      },
+      "year": 1969,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c8",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GT Lusso",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a1",
+        "label": "John Doe",
+        "type": "ref",
+      },
+      "year": 1962,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c7",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GTO",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "Maria Doe",
+        "type": "ref",
+      },
+      "year": 1962,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c6",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GT 2+2",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a1",
+        "label": "John Doe",
+        "type": "ref",
+      },
+      "year": 1960,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c5",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GT Berlinetta SWB",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "Maria Doe",
+        "type": "ref",
+      },
+      "year": 1959,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c4",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GT Coupé",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a1",
+        "label": "John Doe",
+        "type": "ref",
+      },
+      "year": 1954,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c3",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 MM",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "Maria Doe",
+        "type": "ref",
+      },
+      "year": 1952,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c2",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 212 Inter",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a1",
+        "label": "John Doe",
+        "type": "ref",
+      },
+      "year": 1951,
+    },
+  ],
+  "pagination": Object {
+    "count": 2,
+    "current": 1,
+  },
+}
+`;
+
+exports[`Testing POST /api/models/cars With a "filters" parameter 1`] = `
+Object {
+  "count": 3,
+  "data": Array [
+    Object {
+      "_id": "5cd5308e695db945d3cc81b8",
+      "name": "Porsche 917",
+      "year": 1969,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81b7",
+      "name": "Porsche 914",
+      "year": 1969,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81b6",
+      "name": "Porsche 908",
+      "year": 1968,
+    },
+  ],
+  "pagination": Object {
+    "count": 1,
+    "current": 1,
+  },
+}
+`;
+
+exports[`Testing POST /api/models/cars With a "order" parameter 1`] = `
+Object {
+  "count": 3,
+  "data": Array [
+    Object {
+      "_id": "5cd5308e695db945d3cc81b3",
+      "name": "Porsche 911",
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81b7",
+      "name": "Porsche 914",
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81b8",
+      "name": "Porsche 917",
+    },
+  ],
+  "pagination": Object {
+    "count": 1,
+    "current": 1,
+  },
+}
+`;
+
+exports[`Testing POST /api/models/cars With a "search" parameter 1`] = `
+Object {
+  "count": 3,
+  "data": Array [
+    Object {
+      "_id": "5cd5308e695db945d3cc81b8",
+      "name": "Porsche 917",
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81b7",
+      "name": "Porsche 914",
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81b3",
+      "name": "Porsche 911",
+    },
+  ],
+  "pagination": Object {
+    "count": 1,
+    "current": 1,
+  },
+}
+`;
+
+exports[`Testing POST /api/models/cars With a "segment" parameter 1`] = `
+Object {
+  "count": 10,
+  "data": Array [
+    Object {
+      "_id": "5cd5308e695db945d3cc81d2",
+      "name": "Ferrari 250 LM",
+      "year": 1964,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81d1",
+      "name": "Ferrari 275",
+      "year": 1964,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c9",
+      "name": "Ferrari 488",
+      "year": 1969,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c8",
+      "name": "Ferrari 250 GT Lusso",
+      "year": 1962,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c7",
+      "name": "Ferrari 250 GTO",
+      "year": 1962,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c6",
+      "name": "Ferrari 250 GT 2+2",
+      "year": 1960,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c5",
+      "name": "Ferrari 250 GT Berlinetta SWB",
+      "year": 1959,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c4",
+      "name": "Ferrari 250 GT Coupé",
+      "year": 1954,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c3",
+      "name": "Ferrari 250 MM",
+      "year": 1952,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c2",
+      "name": "Ferrari 212 Inter",
+      "year": 1951,
+    },
+  ],
+  "pagination": Object {
+    "count": 1,
+    "current": 1,
+  },
+}
+`;
+
+exports[`Testing POST /api/models/cars With access token 1`] = `
+Object {
+  "count": 20,
+  "data": Array [
+    Object {
+      "_id": "5cd5308e695db945d3cc81d2",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 LM",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "5cd5308e695db945d3cc81a2",
+        "type": "ref",
+      },
+      "year": 1964,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81d1",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 275",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "5cd5308e695db945d3cc81a2",
+        "type": "ref",
+      },
+      "year": 1964,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c9",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 488",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "5cd5308e695db945d3cc81a2",
+        "type": "ref",
+      },
+      "year": 1969,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c8",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GT Lusso",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a1",
+        "label": "5cd5308e695db945d3cc81a1",
+        "type": "ref",
+      },
+      "year": 1962,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c7",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GTO",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "5cd5308e695db945d3cc81a2",
+        "type": "ref",
+      },
+      "year": 1962,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c6",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GT 2+2",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a1",
+        "label": "5cd5308e695db945d3cc81a1",
+        "type": "ref",
+      },
+      "year": 1960,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c5",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GT Berlinetta SWB",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "5cd5308e695db945d3cc81a2",
+        "type": "ref",
+      },
+      "year": 1959,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c4",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GT Coupé",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a1",
+        "label": "5cd5308e695db945d3cc81a1",
+        "type": "ref",
+      },
+      "year": 1954,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c3",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 MM",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "5cd5308e695db945d3cc81a2",
+        "type": "ref",
+      },
+      "year": 1952,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c2",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 212 Inter",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a1",
+        "label": "5cd5308e695db945d3cc81a1",
+        "type": "ref",
+      },
+      "year": 1951,
+    },
+  ],
+  "pagination": Object {
+    "count": 2,
+    "current": 1,
+  },
+}
+`;
+
+exports[`Testing POST /api/models/users With access token 1`] = `
+Object {
+  "count": 2,
+  "data": Array [
+    Object {
+      "_id": "5cd5308e695db945d3cc81a2",
+      "birthdate": "2021-04-02T00:00:00.000Z",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "firstname": "Maria",
+      "lastname": "Doe",
+      "rating": 5,
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81a1",
+      "birthdate": "2021-04-02T00:00:00.000Z",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "firstname": "John",
+      "lastname": "Doe",
+      "rating": 4,
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+    },
+  ],
+  "pagination": Object {
+    "count": 1,
+    "current": 1,
+  },
+}
+`;

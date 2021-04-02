@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const mongooseLegacyPluralize = require('mongoose-legacy-pluralize');
 const { serializeError } = require('serialize-error');
+const _ = require('lodash');
 
 module.exports.getModelProperties = model => {
   let modelFields = [];
@@ -154,11 +155,11 @@ module.exports.refFields = (item, fieldsToPopulate) => {
     if (matchingField) {
       let label = '';
       if (matchingField.select === '_id') {
-        label = global._.get(item, `${attr}._id`);
+        label = _.get(item, `${attr}._id`);
       }
       else {
         label = matchingField.select.replace(/[a-z._]+/gi, word => {
-          return global._.get(item, `${attr}.${word}`);
+          return _.get(item, `${attr}.${word}`);
         });
       }
 
@@ -286,13 +287,13 @@ module.exports.getModelOptions = modelCode => {
   return currentModel.options;
 };
 
-module.exports.getModelSmartActions = modelCode => {
+module.exports.getModelCustomActions = modelCode => {
   const currentModel = getModel(modelCode);
   if (!currentModel) {
     return null;
   }
 
-  return currentModel.smartActions;
+  return currentModel.customActions;
 };
 
 module.exports.getModelSegments = modelCode => {
@@ -320,4 +321,27 @@ module.exports.buildError = (e, defaultMessage) => {
     return { message: defaultMessage, error_details: arr };
   }
   return { message: defaultMessage };
+};
+
+module.exports.validateOrderStructure = orderConfig => {
+  let bool = true;
+  if (orderConfig && Array.isArray(orderConfig)) {
+    orderConfig.forEach(oc => {
+      if (!Array.isArray(oc) || oc.length !== 2 && !['ASC', 'DESC'].includes(oc[1])) {
+        bool = false;
+      }
+    });
+  }
+  else {
+    bool = false;
+  }
+  return bool;
+};
+
+module.exports.getCleanOrderStructure = orderConfig => {
+  const order = {};
+  orderConfig.forEach(oc => {
+    order[oc[0]] = oc[1];
+  });
+  return order;
 };

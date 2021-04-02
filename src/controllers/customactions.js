@@ -4,9 +4,9 @@ module.exports.getAll = async (req, res) => {
   const list = [];
 
   global._amConfig.models.forEach(modelConfig => {
-    const currentModelSmartActions = fnHelper.getModelSmartActions(modelConfig.slug);
-    if (currentModelSmartActions && currentModelSmartActions.length) {
-      currentModelSmartActions.map(sa => {
+    const currentModelCustomActions = fnHelper.getModelCustomActions(modelConfig.slug);
+    if (currentModelCustomActions && currentModelCustomActions.length) {
+      currentModelCustomActions.map(sa => {
         list.push({
           model: modelConfig.slug,
           label: sa.label,
@@ -45,8 +45,8 @@ module.exports.get = async (req, res) => {
     });
   }
 
-  const currentModelSmartActions = fnHelper.getModelSmartActions(modelName);
-  if (!currentModelSmartActions || currentModelSmartActions.length === 0) {
+  const currentModelCustomActions = fnHelper.getModelCustomActions(modelName);
+  if (!currentModelCustomActions || currentModelCustomActions.length === 0) {
     return res.json({ list: actionsList });
   }
 
@@ -63,7 +63,7 @@ module.exports.get = async (req, res) => {
   }
 
   // Filter by target
-  const smartActionsFilteredByTarget = currentModelSmartActions
+  const customActionsFilteredByTarget = currentModelCustomActions
     .filter(sa => {
       const isStringAndValid = typeof sa.target === 'string' && sa.target === target;
       const isArrayAndValid = Array.isArray(sa.target) && sa.target.includes(target);
@@ -75,16 +75,16 @@ module.exports.get = async (req, res) => {
     });
 
   itemsDB.forEach(item => {
-    smartActionsFilteredByTarget.forEach(sa => {
-      // If the filter do not pass, remove the smart actions from the list
+    customActionsFilteredByTarget.forEach(sa => {
+      // If the filter do not pass, remove the custom actions from the list
       if (typeof sa.filter === 'function' && sa.filter(item) === false) {
         sa.passFilter = false;
       }
     });
   });
 
-  // We only keep valid smart actions
-  const finalSmartActions = smartActionsFilteredByTarget.filter(sa => sa.passFilter === true);
+  // We only keep valid custom actions
+  const finalCustomActions = customActionsFilteredByTarget.filter(sa => sa.passFilter === true);
 
-  res.json({ list: [...actionsList, ...finalSmartActions] });
+  res.json({ list: [...actionsList, ...finalCustomActions] });
 };

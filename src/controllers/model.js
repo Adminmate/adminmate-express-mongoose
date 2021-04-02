@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const _ = require('lodash');
 const fnHelper = require('../helpers/functions');
 
 module.exports.getModelsProperties = (req, res) => {
@@ -24,16 +24,16 @@ module.exports.getModels = (req, res) => {
     const modelObject = {
       slug: modelConfig.slug,
       properties: fnHelper.getModelProperties(modelConfig.model),
-      smart_actions: [],
+      customactions: [],
       segments: []
     };
 
-    // Add smart actions if present
-    if (modelConfig.smartActions) {
-      modelObject.smart_actions = modelConfig.smartActions;
+    // Add custom actions if present
+    if (modelConfig.customActions) {
+      modelObject.customactions = modelConfig.customActions;
     }
 
-    // Add smart actions if present
+    // Add segments if present
     if (modelConfig.segments) {
       modelObject.segments = modelConfig.segments.map(segment => ({ label: segment.label, code: segment.code }));
     }
@@ -87,7 +87,7 @@ module.exports.getAutocomplete = async (req, res) => {
   let formattedData = [];
   if (data.length) {
     formattedData = data.map(d => {
-      const label = fieldsToDisplay.replace(/[a-z._]+/gi, word => global._.get(d, word));
+      const label = fieldsToDisplay.replace(/[a-z._]+/gi, word => _.get(d, word));
       return { label, value: d._id };
     });
   }
@@ -123,11 +123,17 @@ module.exports.get = async (req, res) => {
   const refFields = req.body.refFields;
   const page = parseInt(req.body.page || 1);
   const nbItemPerPage = 10;
+  const defaultOrdering = [ ['_id', 'DESC'] ];
+  const order = req.body.order || null;
 
   const currentModel = fnHelper.getModelObject(modelName);
   if (!currentModel) {
     return res.status(403).json({ message: 'Invalid request' });
   }
+
+  // Ordering config
+  const orderConfig = fnHelper.validateOrderStructure(order) ? order : defaultOrdering;
+  const orderSafe = fnHelper.getCleanOrderStructure(orderConfig);
 
   const keys = fnHelper.getModelProperties(currentModel);
   const defaultFieldsToFetch = keys.filter(key => !key.path.includes('.')).map(key => key.path);
@@ -135,7 +141,6 @@ module.exports.get = async (req, res) => {
 
   const defaultFieldsToSearchIn = keys.filter(key => ['String'].includes(key.type)).map(key => key.path);
   const fieldsToSearchIn = /*['email', 'firstname', 'lastname'] ||*/ defaultFieldsToSearchIn;
-  const sortingFields = { _id: 'desc' };
 
   // Build ref fields for the model (for mongoose population purpose)
   const fieldsToPopulate = fnHelper.getFieldsToPopulate(keys, fieldsToFetch, refFields);
@@ -170,7 +175,7 @@ module.exports.get = async (req, res) => {
     .find(params)
     .select(fieldsToFetch)
     .populate(fieldsToPopulate)
-    .sort(sortingFields)
+    .sort(orderSafe)
     .skip(nbItemPerPage * (page - 1))
     .limit(nbItemPerPage)
     .lean()
@@ -252,9 +257,9 @@ module.exports.putOne = async (req, res) => {
   // Only keep authorized keys
   // const cleanData = {};
   // updatableFields.forEach(updatableField => {
-  //   const fieldValue = global._.get(data, updatableField);
+  //   const fieldValue = _.get(data, updatableField);
   //   if (fieldValue) {
-  //     global._.set(cleanData, updatableField, fieldValue)
+  //     _.set(cleanData, updatableField, fieldValue)
   //   }
   // });
 
@@ -423,7 +428,7 @@ module.exports.customQuery = async (req, res) => {
     if (data.timeframe === 'day') {
       for (let i = 0; i < 30; i++) {
         const currentDate = global._moment().subtract(i, 'day');
-        const countForTheTimeframe = global._.find(repartitionData, { key: currentDate.format('YYYY-MM-DD') });
+        const countForTheTimeframe = _.find(repartitionData, { key: currentDate.format('YYYY-MM-DD') });
         formattedData.push({
           key: currentDate.format('DD/MM'),
           value: countForTheTimeframe ? countForTheTimeframe.value : 0
@@ -435,7 +440,7 @@ module.exports.customQuery = async (req, res) => {
       for (let i = 0; i < 26; i++) {
         const currentWeek = global._moment().subtract(i, 'week');
 
-        const countForTheTimeframe = global._.find(repartitionData, { key: currentWeek.format('WW') });
+        const countForTheTimeframe = _.find(repartitionData, { key: currentWeek.format('WW') });
         formattedData.push({
           key: currentWeek.startOf('week').format('DD/MM'),
           value: countForTheTimeframe ? countForTheTimeframe.value : 0
@@ -447,7 +452,7 @@ module.exports.customQuery = async (req, res) => {
       for (let i = 0; i < 12; i++) {
         const currentMonth = global._moment().subtract(i, 'month');
 
-        const countForTheTimeframe = global._.find(repartitionData, { key: currentMonth.format('MM') });
+        const countForTheTimeframe = _.find(repartitionData, { key: currentMonth.format('MM') });
         formattedData.push({
           key: currentMonth.startOf('month').format('MMM'),
           value: countForTheTimeframe ? countForTheTimeframe.value : 0
@@ -459,7 +464,7 @@ module.exports.customQuery = async (req, res) => {
       for (let i = 0; i < 8; i++) {
         const currentYear = global._moment().subtract(i, 'year');
 
-        const countForTheTimeframe = global._.find(repartitionData, { key: currentYear.format('YYYY') });
+        const countForTheTimeframe = _.find(repartitionData, { key: currentYear.format('YYYY') });
         formattedData.push({
           key: currentYear.startOf('year').format('YYYY'),
           value: countForTheTimeframe ? countForTheTimeframe.value : 0

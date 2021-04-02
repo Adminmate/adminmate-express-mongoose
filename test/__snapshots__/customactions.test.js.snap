@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing GET /api/models/:model/customactions should return a 200 http response 1`] = `
+Object {
+  "list": Array [
+    Object {
+      "code": "delete",
+      "label": "Delete item",
+    },
+  ],
+}
+`;
+
+exports[`Testing GET /api/models/customactions should return a 200 http response 1`] = `
+Object {
+  "list": Array [],
+}
+`;

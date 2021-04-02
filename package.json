@@ -5,7 +5,8 @@
   "author": "Marc Delalonde",
   "scripts": {
     "start": "node ./index",
-    "test": "echo \"No test specified\""
+    "test": "jest --testTimeout=10000 --verbose",
+    "reset-db": "node migration.js"
   },
   "repository": {
     "type": "git",
@@ -16,5 +17,10 @@
     "mongoose": "^5.9.7",
     "mongoose-legacy-pluralize": "^1.0.2",
     "serialize-error": "^7.0.1"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3",
+    "jwt-simple": "^0.5.6",
+    "supertest": "^6.1.3"
   }
 }

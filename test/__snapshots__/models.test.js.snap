@@ -1,0 +1,147 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing GET /api/models should return a 200 http response 1`] = `
+Object {
+  "models": Array [
+    Object {
+      "customactions": Array [],
+      "properties": Array [
+        Object {
+          "path": "_id",
+          "type": "ObjectID",
+        },
+        Object {
+          "path": "firstname",
+          "type": "String",
+        },
+        Object {
+          "path": "lastname",
+          "type": "String",
+        },
+        Object {
+          "path": "birthdate",
+          "type": "Date",
+        },
+        Object {
+          "path": "rating",
+          "type": "Number",
+        },
+        Object {
+          "path": "createdAt",
+          "type": "Date",
+        },
+        Object {
+          "path": "updatedAt",
+          "type": "Date",
+        },
+      ],
+      "segments": Array [],
+      "slug": "users",
+    },
+    Object {
+      "customactions": Array [],
+      "properties": Array [
+        Object {
+          "path": "_id",
+          "type": "ObjectID",
+        },
+        Object {
+          "path": "user_id",
+          "ref": "User",
+          "type": "ObjectID",
+        },
+        Object {
+          "path": "name",
+          "type": "String",
+        },
+        Object {
+          "path": "manufacturer",
+          "type": "String",
+        },
+        Object {
+          "path": "year",
+          "type": "Number",
+        },
+        Object {
+          "path": "createdAt",
+          "type": "Date",
+        },
+        Object {
+          "path": "updatedAt",
+          "type": "Date",
+        },
+      ],
+      "segments": Array [
+        Object {
+          "code": "ferrari",
+          "label": "Ferrari",
+        },
+      ],
+      "slug": "cars",
+    },
+  ],
+}
+`;
+
+exports[`Testing GET /api/models/properties should return a 200 http response 1`] = `
+Object {
+  "properties": Array [
+    Object {
+      "model": "users",
+      "path": "_id",
+    },
+    Object {
+      "model": "users",
+      "path": "firstname",
+    },
+    Object {
+      "model": "users",
+      "path": "lastname",
+    },
+    Object {
+      "model": "users",
+      "path": "birthdate",
+    },
+    Object {
+      "model": "users",
+      "path": "rating",
+    },
+    Object {
+      "model": "users",
+      "path": "createdAt",
+    },
+    Object {
+      "model": "users",
+      "path": "updatedAt",
+    },
+    Object {
+      "model": "cars",
+      "path": "_id",
+    },
+    Object {
+      "model": "cars",
+      "path": "user_id",
+    },
+    Object {
+      "model": "cars",
+      "path": "name",
+    },
+    Object {
+      "model": "cars",
+      "path": "manufacturer",
+    },
+    Object {
+      "model": "cars",
+      "path": "year",
+    },
+    Object {
+      "model": "cars",
+      "path": "createdAt",
+    },
+    Object {
+      "model": "cars",
+      "path": "updatedAt",
+    },
+  ],
+}
+`;
