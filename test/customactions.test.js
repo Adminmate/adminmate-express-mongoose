@@ -75,12 +75,60 @@ describe('Testing GET /api/models/:model/customactions', () => {
     expect(response.body.message).toBe('Invalid request');
   });
 
-  it('should return a 200 http response', async () => {
+  it('should return a 200 http response for users', async () => {
     // Make request
     const response = await supertest(app)
       .get(prefix + '/models/users/customactions')
       .set('x-access-token', adminToken)
-      .query({ ids: [9], target: 'item' })
+      .query({
+        ids: '9',
+        target: 'item'
+      });
+
+    // Check response
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchSnapshot();
+  });
+
+  it('should return a 200 http response for cars', async () => {
+    // Make request
+    const response = await supertest(app)
+      .get(prefix + '/models/cars/customactions')
+      .set('x-access-token', adminToken)
+      .query({
+        ids: '5cd5308e695db945d3cc81c5,5cd5308e695db945d3cc81c6,5cd5308e695db945d3cc81c7',
+        target: 'bulk'
+      });
+
+    // Check response
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchSnapshot();
+  });
+
+  it('should return a 200 http response for cars-bulk', async () => {
+    // Make request
+    const response = await supertest(app)
+      .get(prefix + '/models/cars/customactions')
+      .set('x-access-token', adminToken)
+      .query({
+        ids: '5cd5308e695db945d3cc81c6',
+        target: 'bulk'
+      });
+
+    // Check response
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchSnapshot();
+  });
+
+  it('should return a 200 http response for cars-item', async () => {
+    // Make request
+    const response = await supertest(app)
+      .get(prefix + '/models/cars/customactions')
+      .set('x-access-token', adminToken)
+      .query({
+        ids: '5cd5308e695db945d3cc81c6',
+        target: 'item'
+      });
 
     // Check response
     expect(response.status).toBe(200);

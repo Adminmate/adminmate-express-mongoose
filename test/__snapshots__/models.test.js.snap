@@ -39,7 +39,15 @@ Object {
       "slug": "users",
     },
     Object {
-      "customactions": Array [],
+      "customactions": Array [
+        Object {
+          "code": "block_car",
+          "label": "Block the car",
+          "target": Array [
+            "item",
+          ],
+        },
+      ],
       "properties": Array [
         Object {
           "path": "_id",

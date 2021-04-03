@@ -34,7 +34,16 @@ const amConfig = {
     {
       slug: 'cars',
       model: models.Car,
-      customActions: [],
+      customActions: [
+        {
+          label: 'Block the car',
+          code: 'block_car',
+          target: ['item'],
+          filter: car => {
+            return car.year === 1960
+          }
+        }
+      ],
       segments: [
         {
           label: 'Ferrari',
