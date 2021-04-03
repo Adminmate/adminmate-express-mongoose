@@ -1,12 +1,11 @@
 const { init, isAuthorized } = require(global.AM_DEV_MODE ? '../adminmate-express-core' : 'adminmate-express-core');
 
-// Controllers
-const modelsCtrl = require('./src/controllers/models');
-const customActionsCtrl = require('./src/controllers/customactions');
-const segmentsCtrl = require('./src/controllers/segments');
+// Helpers
+const fnHelper = require('./src/helpers/functions');
 
 // CRUD
 const { getAll } = require('./src/controllers/model-getall');
+const { getIn } = require('./src/controllers/model-getin');
 const { getOne } = require('./src/controllers/model-getone');
 const { postOne } = require('./src/controllers/model-postone');
 const { putOne } = require('./src/controllers/model-putone');
@@ -17,18 +16,11 @@ const { customQuery } = require('./src/controllers/model-query');
 const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, authorizedIps }) => {
   const api = {
     // General
-    getModels: modelsCtrl.getModels,
-    getModelsProperties: modelsCtrl.getModelsProperties,
-
-    // Custom actions
-    getCustomActions: customActionsCtrl.getAll,
-    getCustomAction: customActionsCtrl.get,
-
-    // Segments
-    getSegments: segmentsCtrl.getAll,
+    getModelProperties: fnHelper.getModelProperties,
 
     // CRUD
     modelGetAll: getAll,
+    modelGetIn: getIn,
     modelGetOne: getOne,
     modelPostOne: postOne,
     modelPutOne: putOne,
