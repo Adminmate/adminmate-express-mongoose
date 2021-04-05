@@ -3,7 +3,7 @@ const mongooseLegacyPluralize = require('mongoose-legacy-pluralize');
 const { serializeError } = require('serialize-error');
 const _ = require('lodash');
 
-module.exports.getModelProperties = model => {
+const getModelProperties = model => {
   let modelFields = [];
   const modelProps = model.schema.paths;
 
@@ -62,6 +62,8 @@ module.exports.getModelProperties = model => {
 
   return modelFields;
 };
+
+module.exports.getModelProperties = getModelProperties;
 
 // To be used in this file
 const permutations = list => {
@@ -257,6 +259,37 @@ module.exports.constructSearch = (search, fieldsToSearchIn, fieldsToPopulate = [
   }
 
   return params;
+};
+
+module.exports.getModelAssociations = modelCode => {
+  if (!modelCode) {
+    return null;
+  }
+
+  // Get current model mongoose realname
+  const currentModel = global._amConfig.models.find(m => m.slug === modelCode);
+  const currentModelRealName = currentModel.model.modelName;
+
+  // List all the models that reference the current model
+  const associationsList = [];
+  global._amConfig.models
+    .filter(mc => mc.slug !== modelCode)
+    .forEach(mc => {
+      const modelProperties = getModelProperties(mc.model);
+      if (modelProperties && modelProperties.length) {
+        modelProperties.forEach(mp => {
+          if (mp.ref === currentModelRealName) {
+            associationsList.push({
+              model: mc.model,
+              slug: mc.slug,
+              ref_field: mp.path
+            });
+          }
+        })
+      }
+    });
+
+  return associationsList;
 };
 
 const getModel = modelCode => {
