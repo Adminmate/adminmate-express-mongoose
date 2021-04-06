@@ -42,7 +42,7 @@ const getModelProperties = model => {
     }
     // Enum option
     if (modelProps[key].options.enum) {
-      property.enum = modelProps[key].options.enum.values;
+      property.enum = modelProps[key].enumValues;
     }
     // Ref option
     if (modelProps[key].options.ref) {
@@ -55,7 +55,8 @@ const getModelProperties = model => {
 
     if (key === '_id') {
       modelFields.unshift(property);
-    } else {
+    }
+    else {
       modelFields.push(property);
     }
   });
@@ -64,6 +65,11 @@ const getModelProperties = model => {
 };
 
 module.exports.getModelProperties = getModelProperties;
+
+// Return real mongoose model name
+module.exports.getModelRealname = model => {
+  return model.modelName;
+};
 
 // To be used in this file
 const permutations = list => {
@@ -155,15 +161,23 @@ module.exports.refFields = (item, fieldsToPopulate) => {
     const matchingField = fieldsToPopulate.find(field => field.path === attr);
 
     if (matchingField) {
-      let label = '';
-      if (matchingField.select === '_id') {
-        label = _.get(item, `${attr}._id`);
+      let fieldsList = '';
+      if (matchingField.multipleRefField && matchingField.multipleValues) {
+        const modelToCheck = item[matchingField.multipleRefField];
+        if (modelToCheck && matchingField.multipleValues[modelToCheck]) {
+          fieldsList = matchingField.multipleValues[modelToCheck];
+        }
+        else {
+          fieldsList = '_id';
+        }
       }
       else {
-        label = matchingField.select.replace(/[a-z._]+/gi, word => {
-          return _.get(item, `${attr}.${word}`);
-        });
+        fieldsList = matchingField.select;
       }
+
+      const label = fieldsList.replace(/[a-z._]+/gi, word => {
+        return _.get(item, `${attr}.${word}`);
+      });
 
       if (item[attr]) {
         item[attr] = {
@@ -181,39 +195,46 @@ module.exports.refFields = (item, fieldsToPopulate) => {
 };
 
 module.exports.getFieldsToPopulate = (keys, fieldsToFetch, refFields = {}) => {
-  // Build ref fields for the model (for mongoose population purpose)
-  const refFieldsForModel = {};
-  keys.forEach(prop => {
-    if (prop.type === 'ObjectID' && (prop.ref || prop.refPath)) {
-      if (prop.ref) {
-        const currentRefModelName = prop.ref.toLowerCase();
-        const currentRefModelNamePlural = mongooseLegacyPluralize(currentRefModelName);
-        if (refFields[currentRefModelName] || refFields[currentRefModelNamePlural]) {
-          refFieldsForModel[prop.path] = refFields[currentRefModelName] || refFields[currentRefModelNamePlural];
-        }
-      }
-      else if (prop.refPath) {
-        const refPathField = keys.find(k => k.path === prop.refPath);
-        if (refPathField && refPathField.enum) {
-          const currentRefModelName = refPathField.enum[0].toLowerCase();
-          const currentRefModelNamePlural = mongooseLegacyPluralize(currentRefModelName);
-          if (refFields[currentRefModelName] || refFields[currentRefModelNamePlural]) {
-            refFieldsForModel[prop.path] = refFields[currentRefModelName] || refFields[currentRefModelNamePlural];
-          }
-        }
-      }
-    }
-  });
-
   // Create query populate config
   let fieldsToPopulate = [];
   fieldsToFetch.forEach(field => {
     const matchingField = keys.find(k => k.path === field);
     if (matchingField && matchingField.type === 'ObjectID' && (matchingField.ref || matchingField.refPath)) {
-      fieldsToPopulate.push({
+
+      let fieldToSelect = '_id';
+      let toPush = {
         path: field,
-        select: refFieldsForModel[field] ? refFieldsForModel[field] : '_id'
-      });
+        select: '_id'
+      };
+
+      // For ref attributes
+      if (matchingField.ref) {
+        const matchingModel = global._amConfig.models.find(m => m.model.modelName === matchingField.ref);
+        if (matchingModel && matchingModel.slug && refFields[matchingModel.slug]) {
+          toPush.select = refFields[matchingModel.slug];
+        }
+      }
+      // For refPath attributes
+      else if (matchingField.refPath) {
+        const multipleValues = {};
+        const refPathField = keys.find(k => k.path === matchingField.refPath);
+        if (refPathField && refPathField.enum) {
+          refPathField.enum.forEach(modelName => {
+            multipleValues[modelName] = '_id';
+            const matchingModel = global._amConfig.models.find(m => m.model.modelName === modelName);
+            if (matchingModel && matchingModel.slug && refFields[matchingModel.slug]) {
+              // Merge all ref models fields
+              fieldToSelect += ` ${refFields[matchingModel.slug]}`;
+              multipleValues[modelName] = refFields[matchingModel.slug];
+            }
+          });
+          toPush.select = fieldToSelect || '_id';
+          toPush.multipleRefField = matchingField.refPath;
+          toPush.multipleValues = multipleValues;
+        }
+      }
+
+      fieldsToPopulate.push(toPush);
     }
   });
 

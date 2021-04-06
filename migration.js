@@ -6,7 +6,8 @@ connectDb().then(async () => {
   // Remove all entries
   await Promise.all([
     models.User.deleteMany({}),
-    models.Car.deleteMany({})
+    models.Car.deleteMany({}),
+    models.Blocked.deleteMany({})
   ]);
 
   // Create users
@@ -212,6 +213,20 @@ connectDb().then(async () => {
       user_id: '5cd5308e695db945d3cc81a2',
       createdAt: "2021-04-02T00:00:00.000Z",
       updatedAt: "2021-04-02T00:00:00.000Z"
+    }
+  ]);
+
+  // Create Blocked
+  await models.Blocked.insertMany([
+    {
+      _id: '5cd5308e695db945d3cc81c1',
+      blocked_id: '5cd5308e695db945d3cc81a1',
+      blocked_model: 'User'
+    },
+    {
+      _id: '5cd5308e695db945d3cc81c2',
+      blocked_id: '5cd5308e695db945d3cc81b1',
+      blocked_model: 'Car'
     }
   ]);
 
