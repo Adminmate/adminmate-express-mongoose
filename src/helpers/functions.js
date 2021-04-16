@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const mongooseLegacyPluralize = require('mongoose-legacy-pluralize');
 const { serializeError } = require('serialize-error');
 const _ = require('lodash');
+const moment = require('moment');
 
 const getModelProperties = model => {
   let modelFields = [];
@@ -117,18 +117,58 @@ module.exports.constructQuery = (criterias, operator = 'and') => {
     else if (criteria.operator === 'is_not') {
       q[criteria.field] = { $neq: criteria.value };
     }
+    // Date
+    else if (criteria.operator === 'is_before') {
+      q[criteria.field] = { $lt: criteria.value };
+    }
+    else if (criteria.operator === 'is_after') {
+      q[criteria.field] = { $gt: criteria.value };
+    }
+    else if (criteria.operator === 'is_today') {
+      q[criteria.field] = {
+        $gte: moment().startOf('day'),
+        $lte: moment().endOf('day')
+      };
+    }
+    else if (criteria.operator === 'was_yesterday') {
+      q[criteria.field] = {
+        $gte: moment().startOf('day').subtract(1, 'day'),
+        $lte: moment().endOf('day').subtract(1, 'day')
+      };
+    }
+    else if (criteria.operator === 'was_in_previous_week') {
+      q[criteria.field] = {
+        $gte: moment().subtract(1, 'week').startOf('week'),
+        $lte: moment().subtract(1, 'week').endOf('week')
+      };
+    }
+    else if (criteria.operator === 'was_in_previous_month') {
+      q[criteria.field] = {
+        $gte: moment().subtract(1, 'month').startOf('month'),
+        $lte: moment().subtract(1, 'month').endOf('month')
+      };
+    }
+    else if (criteria.operator === 'was_in_previous_year') {
+      q[criteria.field] = {
+        $gte: moment().subtract(1, 'year').startOf('year'),
+        $lte: moment().subtract(1, 'year').endOf('year')
+      };
+    }
+    // Boolean
     else if (criteria.operator === 'is_true') {
       q[criteria.field] = { $eq: true };
     }
     else if (criteria.operator === 'is_false') {
       q[criteria.field] = { $eq: false };
     }
+    // Exists
     else if (criteria.operator === 'is_present') {
       q[criteria.field] = { $exists: true };
     }
     else if (criteria.operator === 'is_blank') {
       q[criteria.field] = { $exists: false };
     }
+    // String comparison
     else if (criteria.operator === 'start_with') {
       const regexp = new RegExp(`^${criteria.value}`);
       q[criteria.field] = { $regex: regexp, $options: 'i' };
@@ -147,6 +187,8 @@ module.exports.constructQuery = (criterias, operator = 'and') => {
     }
     query.push(q);
   });
+
+
   return query.length ? { [`$${operator}`]: query } : {};
 };
 

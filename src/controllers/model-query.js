@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const moment = require('moment');
 const fnHelper = require('../helpers/functions');
 
 module.exports.customQuery = async (req, res) => {
@@ -66,32 +67,32 @@ module.exports.customQuery = async (req, res) => {
     // Day timeframe
     if (data.timeframe === 'day') {
       matchReq = {
-        '$gte': new Date(global._moment().subtract(30, 'day').startOf('day').format()),
-        '$lte': new Date(global._moment().endOf('day').format())
+        '$gte': new Date(moment().subtract(30, 'day').startOf('day').format()),
+        '$lte': new Date(moment().endOf('day').format())
       };
       groupFormat = '%Y-%m-%d';
     }
     // Week timeframe
     else if (data.timeframe === 'week') {
       matchReq = {
-        '$gte': new Date(global._moment().subtract(26, 'week').startOf('week').format()),
-        '$lte': new Date(global._moment().endOf('week').format())
+        '$gte': new Date(moment().subtract(26, 'week').startOf('week').format()),
+        '$lte': new Date(moment().endOf('week').format())
       };
       groupFormat = '%V';
     }
     // Month timeframe
     else if (data.timeframe === 'month') {
       matchReq = {
-        '$gte': new Date(global._moment().subtract(12, 'month').startOf('month').format()),
-        '$lte': new Date(global._moment().endOf('month').format())
+        '$gte': new Date(moment().subtract(12, 'month').startOf('month').format()),
+        '$lte': new Date(moment().endOf('month').format())
       };
       groupFormat = '%m';
     }
     // Year timeframe
     else if (data.timeframe === 'year') {
       matchReq = {
-        '$gte': new Date(global._moment().subtract(8, 'year').startOf('year').format()),
-        '$lte': new Date(global._moment().endOf('year').format())
+        '$gte': new Date(moment().subtract(8, 'year').startOf('year').format()),
+        '$lte': new Date(moment().endOf('year').format())
       };
       groupFormat = '%Y';
     }
@@ -127,7 +128,7 @@ module.exports.customQuery = async (req, res) => {
     // Day timeframe
     if (data.timeframe === 'day') {
       for (let i = 0; i < 30; i++) {
-        const currentDate = global._moment().subtract(i, 'day');
+        const currentDate = moment().subtract(i, 'day');
         const countForTheTimeframe = _.find(repartitionData, { key: currentDate.format('YYYY-MM-DD') });
         formattedData.push({
           key: currentDate.format('DD/MM'),
@@ -138,7 +139,7 @@ module.exports.customQuery = async (req, res) => {
     // Week timeframe
     else if (data.timeframe === 'week') {
       for (let i = 0; i < 26; i++) {
-        const currentWeek = global._moment().subtract(i, 'week');
+        const currentWeek = moment().subtract(i, 'week');
 
         const countForTheTimeframe = _.find(repartitionData, { key: currentWeek.format('WW') });
         formattedData.push({
@@ -150,7 +151,7 @@ module.exports.customQuery = async (req, res) => {
     // Month timeframe
     else if (data.timeframe === 'month') {
       for (let i = 0; i < 12; i++) {
-        const currentMonth = global._moment().subtract(i, 'month');
+        const currentMonth = moment().subtract(i, 'month');
 
         const countForTheTimeframe = _.find(repartitionData, { key: currentMonth.format('MM') });
         formattedData.push({
@@ -162,7 +163,7 @@ module.exports.customQuery = async (req, res) => {
     // Year timeframe
     else if (data.timeframe === 'year') {
       for (let i = 0; i < 8; i++) {
-        const currentYear = global._moment().subtract(i, 'year');
+        const currentYear = moment().subtract(i, 'year');
 
         const countForTheTimeframe = _.find(repartitionData, { key: currentYear.format('YYYY') });
         formattedData.push({
