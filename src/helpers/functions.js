@@ -103,93 +103,103 @@ const cleanString = string => {
 
 module.exports.cleanString = cleanString;
 
-module.exports.constructQuery = (criterias, operator = 'and') => {
-  if (!['and', 'or'].includes(operator)) {
-    return {};
+const queryRule = rule => {
+  let q = {};
+  if (rule.operator === 'is') {
+    q[rule.field] = { $eq: rule.value };
   }
+  else if (rule.operator === 'is_not') {
+    q[rule.field] = { $neq: rule.value };
+  }
+  // Date
+  else if (rule.operator === 'is_before') {
+    q[rule.field] = { $lt: rule.value };
+  }
+  else if (rule.operator === 'is_after') {
+    q[rule.field] = { $gt: rule.value };
+  }
+  else if (rule.operator === 'is_today') {
+    q[rule.field] = {
+      $gte: moment().startOf('day'),
+      $lte: moment().endOf('day')
+    };
+  }
+  else if (rule.operator === 'was_yesterday') {
+    q[rule.field] = {
+      $gte: moment().startOf('day').subtract(1, 'day'),
+      $lte: moment().endOf('day').subtract(1, 'day')
+    };
+  }
+  else if (rule.operator === 'was_in_previous_week') {
+    q[rule.field] = {
+      $gte: moment().subtract(1, 'week').startOf('week'),
+      $lte: moment().subtract(1, 'week').endOf('week')
+    };
+  }
+  else if (rule.operator === 'was_in_previous_month') {
+    q[rule.field] = {
+      $gte: moment().subtract(1, 'month').startOf('month'),
+      $lte: moment().subtract(1, 'month').endOf('month')
+    };
+  }
+  else if (rule.operator === 'was_in_previous_year') {
+    q[rule.field] = {
+      $gte: moment().subtract(1, 'year').startOf('year'),
+      $lte: moment().subtract(1, 'year').endOf('year')
+    };
+  }
+  // Boolean
+  else if (rule.operator === 'is_true') {
+    q[rule.field] = { $eq: true };
+  }
+  else if (rule.operator === 'is_false') {
+    q[rule.field] = { $eq: false };
+  }
+  // Exists
+  else if (rule.operator === 'is_present') {
+    q[rule.field] = { $exists: true };
+  }
+  else if (rule.operator === 'is_blank') {
+    q[rule.field] = { $exists: false };
+  }
+  // String comparison
+  else if (rule.operator === 'starts_with') {
+    const regexp = new RegExp(`^${rule.value}`);
+    q[rule.field] = { $regex: regexp, $options: 'i' };
+  }
+  else if (rule.operator === 'ends_with') {
+    const regexp = new RegExp(`${rule.value}$`);
+    q[rule.field] = { $regex: regexp, $options: 'i' };
+  }
+  else if (rule.operator === 'contains') {
+    const regexp = new RegExp(`${rule.value}`);
+    q[rule.field] = { $regex: regexp, $options: 'i' };
+  }
+  else if (rule.operator === 'not_contains') {
+    const regexp = new RegExp(`^((?!${rule.value}).)*$`);
+    q[rule.field] = { $regex: regexp, $options: 'i' };
+  }
+  return q;
+};
 
-  const query = [];
-  criterias.forEach(criteria => {
-    let q = {};
-    if (criteria.operator === 'is') {
-      q[criteria.field] = { $eq: criteria.value };
-    }
-    else if (criteria.operator === 'is_not') {
-      q[criteria.field] = { $neq: criteria.value };
-    }
-    // Date
-    else if (criteria.operator === 'is_before') {
-      q[criteria.field] = { $lt: criteria.value };
-    }
-    else if (criteria.operator === 'is_after') {
-      q[criteria.field] = { $gt: criteria.value };
-    }
-    else if (criteria.operator === 'is_today') {
-      q[criteria.field] = {
-        $gte: moment().startOf('day'),
-        $lte: moment().endOf('day')
-      };
-    }
-    else if (criteria.operator === 'was_yesterday') {
-      q[criteria.field] = {
-        $gte: moment().startOf('day').subtract(1, 'day'),
-        $lte: moment().endOf('day').subtract(1, 'day')
-      };
-    }
-    else if (criteria.operator === 'was_in_previous_week') {
-      q[criteria.field] = {
-        $gte: moment().subtract(1, 'week').startOf('week'),
-        $lte: moment().subtract(1, 'week').endOf('week')
-      };
-    }
-    else if (criteria.operator === 'was_in_previous_month') {
-      q[criteria.field] = {
-        $gte: moment().subtract(1, 'month').startOf('month'),
-        $lte: moment().subtract(1, 'month').endOf('month')
-      };
-    }
-    else if (criteria.operator === 'was_in_previous_year') {
-      q[criteria.field] = {
-        $gte: moment().subtract(1, 'year').startOf('year'),
-        $lte: moment().subtract(1, 'year').endOf('year')
-      };
-    }
-    // Boolean
-    else if (criteria.operator === 'is_true') {
-      q[criteria.field] = { $eq: true };
-    }
-    else if (criteria.operator === 'is_false') {
-      q[criteria.field] = { $eq: false };
-    }
-    // Exists
-    else if (criteria.operator === 'is_present') {
-      q[criteria.field] = { $exists: true };
-    }
-    else if (criteria.operator === 'is_blank') {
-      q[criteria.field] = { $exists: false };
-    }
-    // String comparison
-    else if (criteria.operator === 'start_with') {
-      const regexp = new RegExp(`^${criteria.value}`);
-      q[criteria.field] = { $regex: regexp, $options: 'i' };
-    }
-    else if (criteria.operator === 'end_with') {
-      const regexp = new RegExp(`${criteria.value}$`);
-      q[criteria.field] = { $regex: regexp, $options: 'i' };
-    }
-    else if (criteria.operator === 'contains') {
-      const regexp = new RegExp(`${criteria.value}`);
-      q[criteria.field] = { $regex: regexp, $options: 'i' };
-    }
-    else if (criteria.operator === 'not_contains') {
-      const regexp = new RegExp(`^((?!${criteria.value}).)*$`);
-      q[criteria.field] = { $regex: regexp, $options: 'i' };
-    }
-    query.push(q);
-  });
+const queryRuleSet = ruleSet => {
+  const conditions = {
+    'and': '$and',
+    'or': '$or'
+  };
 
+  return {
+    [conditions[ruleSet.operator]]: ruleSet.list.map(
+      rule => rule.list ? queryRuleSet(rule) : queryRule(rule)
+    )
+  }
+};
 
-  return query.length ? { [`$${operator}`]: query } : {};
+module.exports.constructQuery = jsonQuery => {
+  if (jsonQuery.operator && jsonQuery.list && jsonQuery.list.length) {
+    return queryRuleSet(jsonQuery);
+  }
+  return null;
 };
 
 module.exports.refFields = (item, fieldsToPopulate) => {
@@ -381,6 +391,16 @@ module.exports.getModelSegments = modelCode => {
   }
 
   return currentModel.segments;
+};
+
+module.exports.getModelSegment = (modelCode, segmentCode) => {
+  const currentModel = getModel(modelCode);
+  if (!currentModel || !currentModel.segments || currentModel.segments.length === 0) {
+    return null;
+  }
+
+  return currentModel.segments
+    .find(s => s.code === segmentCode);
 };
 
 module.exports.buildError = (e, defaultMessage) => {

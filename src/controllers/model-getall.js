@@ -31,29 +31,29 @@ module.exports.getAll = async (req, res) => {
   // Build ref fields for the model (for mongoose population purpose)
   const fieldsToPopulate = fnHelper.getFieldsToPopulate(keys, fieldsToFetch, refFields);
 
-  let params = {};
+  let params = { $and: [] };
 
   // If there is a text search query
   if (search) {
-    params = fnHelper.constructSearch(search, fieldsToSearchIn, fieldsToPopulate);
+    const searchQuery = fnHelper.constructSearch(search, fieldsToSearchIn, fieldsToPopulate);
+    params.$and.push(searchQuery);
   }
 
-  // Filters
-  if (filters && filters.operator && filters.list && filters.list.length) {
-    const filtersQuery = fnHelper.constructQuery(filters.list, filters.operator);
+  // Filters ----------------------------------------------------------------------------
+
+  if (filters) {
+    const filtersQuery = fnHelper.constructQuery(filters);
     if (filtersQuery) {
-      params = { $and: [params, filtersQuery] };
+      params.$and.push(filtersQuery);
     }
   }
 
-  // Segments
-  if (segment && segment.type === 'code') {
-    const modelSegments = fnHelper.getModelSegments(modelName);
-    if (modelSegments) {
-      const matchingSegment = modelSegments.find(s => s.code === segment.data);
-      if (matchingSegment) {
-        params = { $and: [params, matchingSegment.query] };
-      }
+  // Segments ---------------------------------------------------------------------------
+
+  if (segment && segment.type === 'code' && segment.data) {
+    const modelSegment = fnHelper.getModelSegment(modelName, segment.data);
+    if (modelSegment) {
+      params.$and.push(modelSegment.query);
     }
   }
 
