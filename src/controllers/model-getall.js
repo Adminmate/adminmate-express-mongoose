@@ -41,13 +41,13 @@ module.exports.getAll = async (req, res) => {
   // Build ref fields for the model (for mongoose population purpose)
   const fieldsToPopulate = fnHelper.getFieldsToPopulate(keys, fieldsToFetch, refFields);
 
-  let params = { $and: [] };
+  const queriesArray = [];
 
   // Search -----------------------------------------------------------------------------
 
   if (search) {
     const searchQuery = fnHelper.constructSearch(search, fieldsToSearchInSafe, fieldsToPopulate);
-    params.$and.push(searchQuery);
+    queriesArray.push(searchQuery);
   }
 
   // Filters ----------------------------------------------------------------------------
@@ -55,7 +55,7 @@ module.exports.getAll = async (req, res) => {
   if (filters) {
     const filtersQuery = fnHelper.constructQuery(filters);
     if (filtersQuery) {
-      params.$and.push(filtersQuery);
+      queriesArray.push(filtersQuery);
     }
   }
 
@@ -64,12 +64,14 @@ module.exports.getAll = async (req, res) => {
   if (segment && segment.type === 'code' && segment.data) {
     const modelSegment = fnHelper.getModelSegment(modelName, segment.data);
     if (modelSegment) {
-      params.$and.push(modelSegment.query);
+      queriesArray.push(modelSegment.query);
     }
   }
 
+  const findParams = queriesArray.length ? { $and: queriesArray } : {};
+
   const data = await currentModel
-    .find(params)
+    .find(findParams)
     .select(fieldsToFetchSafe)
     .populate(fieldsToPopulate)
     .sort(orderSafe)
@@ -84,7 +86,7 @@ module.exports.getAll = async (req, res) => {
     return res.status(403).json();
   }
 
-  const dataCount = await currentModel.countDocuments(params);
+  const dataCount = await currentModel.countDocuments(findParams);
   const nbPage = Math.ceil(dataCount / nbItemPerPage);
 
   // Make ref fields appeared as link in the dashboard
