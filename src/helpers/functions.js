@@ -148,6 +148,13 @@ const queryRule = rule => {
       $lte: moment().subtract(1, 'year').endOf('year')
     };
   }
+  // Number
+  else if (rule.operator === 'is_greater_than') {
+    q[rule.field] = { $gt: rule.value };
+  }
+  else if (rule.operator === 'is_less_than') {
+    q[rule.field] = { $lt: rule.value };
+  }
   // Boolean
   else if (rule.operator === 'is_true') {
     q[rule.field] = { $eq: true };
