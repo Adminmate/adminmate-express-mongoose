@@ -13,7 +13,7 @@ const { deleteSome } = require('./src/controllers/model-deletesome');
 const { getAutocomplete } = require('./src/controllers/model-autocomplete');
 const { customQuery } = require('./src/controllers/model-query');
 
-const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, authorizedIps }) => {
+const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, charts, authorizedIps }) => {
   const api = {
     // General
     getModelProperties: fnHelper.getModelProperties,
@@ -36,6 +36,7 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, auth
     authKey,
     masterPassword,
     models,
+    charts,
     authorizedIps,
     api
   });
