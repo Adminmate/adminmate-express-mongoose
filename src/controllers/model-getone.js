@@ -20,7 +20,7 @@ module.exports.getOne = async (req, res) => {
 
   // Get model associations
   const modelAssociations = fnHelper.getModelAssociations(modelName)
-    .map(ma => ({ slug: ma.slug, ref_field: ma.ref_field }));
+    .map(ma => ({ slug: ma.slug, model_slug: ma.model_slug, ref_field: ma.ref_field }));
 
   let data = await currentModel
     .findById(modelItemId)

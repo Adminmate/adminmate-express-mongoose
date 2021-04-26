@@ -361,7 +361,8 @@ module.exports.getModelAssociations = modelCode => {
           if (mp.ref === currentModelRealName) {
             associationsList.push({
               model: mc.model,
-              slug: mc.slug,
+              model_slug: mc.slug,
+              slug: `${mc.slug}_${mp.path}`,
               ref_field: mp.path
             });
           }
