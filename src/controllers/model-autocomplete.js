@@ -16,18 +16,14 @@ module.exports.getAutocomplete = async (req, res) => {
   const defaultFieldsToSearchIn = keys.filter(key => ['String'].includes(key.type)).map(key => key.path);
   const defaultFieldsToFetch = keys.filter(key => !key.path.includes('.')).map(key => key.path);
 
-  const modelNameSafe = currentModel.collection.collectionName;
-  const fieldsToSearchIn = refFields[modelNameSafe] ? refFields[modelNameSafe].split(' ') : defaultFieldsToSearchIn;
-  const fieldsToFetch = refFields[modelNameSafe] ? refFields[modelNameSafe].split(' ') : defaultFieldsToFetch;
+  const fieldsToSearchIn = refFields[modelName] ? refFields[modelName].split(' ') : defaultFieldsToSearchIn;
+  const fieldsToFetch = refFields[modelName] ? refFields[modelName].split(' ') : defaultFieldsToFetch;
   const params = fnHelper.constructSearch(search, fieldsToSearchIn);
-
-  console.log('====getAutocomplete', params['$or'], fieldsToFetch);
 
   const data = await currentModel
     .find(params)
     .select(fieldsToFetch)
-    // .populate(fieldsToPopulate)
-    // .sort(sortingFields)
+    // .sort()
     .limit(maxItem)
     .lean()
     .catch(e => {
@@ -38,11 +34,10 @@ module.exports.getAutocomplete = async (req, res) => {
     return res.status(403).json();
   }
 
-  // Field to be used as the item's label
-  const fieldsToDisplay = refFields[modelNameSafe] ? refFields[modelNameSafe] : '_id';
-
   let formattedData = [];
   if (data.length) {
+    // Field to be used for the item label
+    const fieldsToDisplay = refFields[modelName] ? refFields[modelName] : '_id';
     formattedData = data.map(d => {
       const label = fieldsToDisplay.replace(/[a-z._]+/gi, word => _.get(d, word));
       return { label, value: d._id };
