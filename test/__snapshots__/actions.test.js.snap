@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Testing GET /api/models/:model/customactions should return a 200 http response for cars 1`] = `
+exports[`Testing GET /api/models/:model/actions should return a 200 http response for cars 1`] = `
 Object {
   "list": Array [
     Object {
@@ -11,7 +11,7 @@ Object {
 }
 `;
 
-exports[`Testing GET /api/models/:model/customactions should return a 200 http response for cars-bulk 1`] = `
+exports[`Testing GET /api/models/:model/actions should return a 200 http response for cars-bulk 1`] = `
 Object {
   "list": Array [
     Object {
@@ -22,7 +22,7 @@ Object {
 }
 `;
 
-exports[`Testing GET /api/models/:model/customactions should return a 200 http response for cars-item 1`] = `
+exports[`Testing GET /api/models/:model/actions should return a 200 http response for cars-item 1`] = `
 Object {
   "list": Array [
     Object {
@@ -41,7 +41,7 @@ Object {
 }
 `;
 
-exports[`Testing GET /api/models/:model/customactions should return a 200 http response for users 1`] = `
+exports[`Testing GET /api/models/:model/actions should return a 200 http response for users 1`] = `
 Object {
   "list": Array [
     Object {
@@ -52,7 +52,7 @@ Object {
 }
 `;
 
-exports[`Testing GET /api/models/customactions should return a 200 http response 1`] = `
+exports[`Testing GET /api/models/actions should return a 200 http response 1`] = `
 Object {
   "list": Array [
     Object {

@@ -29,12 +29,12 @@ const amConfig = {
     {
       slug: 'users',
       model: models.User,
-      customActions: []
+      actions: []
     },
     {
       slug: 'cars',
       model: models.Car,
-      customActions: [
+      actions: [
         {
           label: 'Block the car',
           code: 'block_car',
@@ -59,7 +59,7 @@ const amConfig = {
 
 const plugin = require('../index.js');
 app.use('/adminmate', plugin.init(amConfig));
-// app.use('/adminmate/customactions', require('./server/routes/adminmate_ca'));
+// app.use('/adminmate/actions', require('./server/routes/adminmate_ca'));
 // app.use('/adminmate/custom_api', require('./server/routes/custom_api'));
 
 module.exports = app;

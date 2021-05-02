@@ -4,7 +4,7 @@ exports[`Testing GET /api/models should return a 200 http response 1`] = `
 Object {
   "models": Array [
     Object {
-      "customactions": Array [],
+      "actions": Array [],
       "properties": Array [
         Object {
           "path": "_id",
@@ -39,7 +39,7 @@ Object {
       "slug": "users",
     },
     Object {
-      "customactions": Array [
+      "actions": Array [
         Object {
           "code": "block_car",
           "label": "Block the car",

@@ -27,12 +27,12 @@ beforeAll(done => {
   done();
 });
 
-// Custom actions
-describe('Testing GET /api/models/customactions', () => {
+// Actions
+describe('Testing GET /api/models/actions', () => {
   it('should return a 403 http response', async () => {
     // Make request
     const response = await supertest(app)
-      .get(prefix + '/models/customactions');
+      .get(prefix + '/models/actions');
 
     // Check response
     expect(response.status).toBe(403);
@@ -42,7 +42,7 @@ describe('Testing GET /api/models/customactions', () => {
   it('should return a 200 http response', async () => {
     // Make request
     const response = await supertest(app)
-      .get(prefix + '/models/customactions')
+      .get(prefix + '/models/actions')
       .set('x-access-token', adminToken);
 
     // Check response
@@ -51,12 +51,12 @@ describe('Testing GET /api/models/customactions', () => {
   });
 });
 
-// Custom actions
-describe('Testing GET /api/models/:model/customactions', () => {
+// Actions
+describe('Testing GET /api/models/:model/actions', () => {
   it('should return a 403 http response', async () => {
     // Make request
     const response = await supertest(app)
-      .get(prefix + '/models/users/customactions');
+      .get(prefix + '/models/users/actions');
 
     // Check response
     expect(response.status).toBe(403);
@@ -66,7 +66,7 @@ describe('Testing GET /api/models/:model/customactions', () => {
   it('should return a 403 http response', async () => {
     // Make request
     const response = await supertest(app)
-      .get(prefix + '/models/users/customactions')
+      .get(prefix + '/models/users/actions')
       .set('x-access-token', adminToken)
       .query({ ids: [], target: '' })
 
@@ -78,7 +78,7 @@ describe('Testing GET /api/models/:model/customactions', () => {
   it('should return a 200 http response for users', async () => {
     // Make request
     const response = await supertest(app)
-      .get(prefix + '/models/users/customactions')
+      .get(prefix + '/models/users/actions')
       .set('x-access-token', adminToken)
       .query({
         ids: '9',
@@ -93,7 +93,7 @@ describe('Testing GET /api/models/:model/customactions', () => {
   it('should return a 200 http response for cars', async () => {
     // Make request
     const response = await supertest(app)
-      .get(prefix + '/models/cars/customactions')
+      .get(prefix + '/models/cars/actions')
       .set('x-access-token', adminToken)
       .query({
         ids: '5cd5308e695db945d3cc81c5,5cd5308e695db945d3cc81c6,5cd5308e695db945d3cc81c7',
@@ -108,7 +108,7 @@ describe('Testing GET /api/models/:model/customactions', () => {
   it('should return a 200 http response for cars-bulk', async () => {
     // Make request
     const response = await supertest(app)
-      .get(prefix + '/models/cars/customactions')
+      .get(prefix + '/models/cars/actions')
       .set('x-access-token', adminToken)
       .query({
         ids: '5cd5308e695db945d3cc81c6',
@@ -123,7 +123,7 @@ describe('Testing GET /api/models/:model/customactions', () => {
   it('should return a 200 http response for cars-item', async () => {
     // Make request
     const response = await supertest(app)
-      .get(prefix + '/models/cars/customactions')
+      .get(prefix + '/models/cars/actions')
       .set('x-access-token', adminToken)
       .query({
         ids: '5cd5308e695db945d3cc81c6',
