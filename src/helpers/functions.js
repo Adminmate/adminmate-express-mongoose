@@ -40,14 +40,22 @@ const getModelProperties = model => {
         property.default = modelProps[key].options.default;
       }
     }
+
     // Enum option
     if (modelProps[key].options.enum) {
-      property.enum = modelProps[key].enumValues;
+      if (modelProps[key].enumValues) {
+        property.enum = modelProps[key].enumValues;
+      }
+      else if (modelProps[key].options.enum.values) {
+        property.enum = modelProps[key].options.enum.values
+      }
     }
+
     // Ref option
     if (modelProps[key].options.ref) {
       property.ref = modelProps[key].options.ref;
     }
+
     // RefPath option
     if (modelProps[key].options.refPath) {
       property.refPath = modelProps[key].options.refPath;
