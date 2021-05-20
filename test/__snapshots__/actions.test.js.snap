@@ -5,7 +5,7 @@ Object {
   "list": Array [
     Object {
       "code": "delete",
-      "label": "Delete items",
+      "label": "Delete selected",
     },
   ],
 }
@@ -16,7 +16,7 @@ Object {
   "list": Array [
     Object {
       "code": "delete",
-      "label": "Delete items",
+      "label": "Delete selected",
     },
   ],
 }
@@ -26,16 +26,19 @@ exports[`Testing GET /api/models/:model/actions should return a 200 http respons
 Object {
   "list": Array [
     Object {
-      "code": "delete",
-      "label": "Delete item",
-    },
-    Object {
       "code": "block_car",
       "label": "Block the car",
       "passFilter": true,
       "target": Array [
         "item",
       ],
+    },
+    Object {
+      "type": "separator",
+    },
+    Object {
+      "code": "delete",
+      "label": "Delete",
     },
   ],
 }
@@ -46,19 +49,7 @@ Object {
   "list": Array [
     Object {
       "code": "delete",
-      "label": "Delete item",
-    },
-  ],
-}
-`;
-
-exports[`Testing GET /api/models/actions should return a 200 http response 1`] = `
-Object {
-  "list": Array [
-    Object {
-      "code": "block_car",
-      "label": "Block the car",
-      "model": "cars",
+      "label": "Delete",
     },
   ],
 }

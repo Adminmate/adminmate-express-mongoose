@@ -22,33 +22,45 @@ const adminToken = jwt.encode({
   exp_date: Date.now() + 1000
 }, 'authkey_secret');
 
+// Generate the perm token
+const permToken = jwt.encode({
+  exp_date: Date.now() + 1000,
+  data: {
+    authorized_models: ['*']
+  }
+}, '7dn6m0zrcsqta5b57hug52xlira4upqdempch65mwy5guehr33vt0r1s8cyrnmko');
+
+// Generate the users perm token
+const ModelPermToken_Users = jwt.encode({
+  exp_date: Date.now() + 1000,
+  data: {
+    model: 'users',
+    can_create: true,
+    can_update: ['*'],
+    can_delete: true,
+    can_configure: true,
+    can_use_actions: ['*'],
+    can_use_segments: ['*']
+  }
+}, '7dn6m0zrcsqta5b57hug52xlira4upqdempch65mwy5guehr33vt0r1s8cyrnmko');
+
+// Generate the users perm token
+const ModelPermToken_Cars = jwt.encode({
+  exp_date: Date.now() + 1000,
+  data: {
+    model: 'cars',
+    can_create: true,
+    can_update: ['*'],
+    can_delete: true,
+    can_configure: true,
+    can_use_actions: ['*'],
+    can_use_segments: ['*']
+  }
+}, '7dn6m0zrcsqta5b57hug52xlira4upqdempch65mwy5guehr33vt0r1s8cyrnmko');
+
 // Before all
 beforeAll(done => {
   done();
-});
-
-// Actions
-describe('Testing GET /api/models/actions', () => {
-  it('should return a 403 http response', async () => {
-    // Make request
-    const response = await supertest(app)
-      .get(prefix + '/models/actions');
-
-    // Check response
-    expect(response.status).toBe(403);
-    expect(response.body.code).toBe('not_authorized');
-  });
-
-  it('should return a 200 http response', async () => {
-    // Make request
-    const response = await supertest(app)
-      .get(prefix + '/models/actions')
-      .set('x-access-token', adminToken);
-
-    // Check response
-    expect(response.status).toBe(200);
-    expect(response.body).toMatchSnapshot();
-  });
 });
 
 // Actions
@@ -68,6 +80,7 @@ describe('Testing GET /api/models/:model/actions', () => {
     const response = await supertest(app)
       .get(prefix + '/models/users/actions')
       .set('x-access-token', adminToken)
+      .set('x-perm-token', permToken)
       .query({ ids: [], target: '' })
 
     // Check response
@@ -80,6 +93,8 @@ describe('Testing GET /api/models/:model/actions', () => {
     const response = await supertest(app)
       .get(prefix + '/models/users/actions')
       .set('x-access-token', adminToken)
+      .set('x-perm-token', permToken)
+      .set('x-model-perm-token', ModelPermToken_Users)
       .query({
         ids: '9',
         target: 'item'
@@ -95,6 +110,8 @@ describe('Testing GET /api/models/:model/actions', () => {
     const response = await supertest(app)
       .get(prefix + '/models/cars/actions')
       .set('x-access-token', adminToken)
+      .set('x-perm-token', permToken)
+      .set('x-model-perm-token', ModelPermToken_Cars)
       .query({
         ids: '5cd5308e695db945d3cc81c5,5cd5308e695db945d3cc81c6,5cd5308e695db945d3cc81c7',
         target: 'bulk'
@@ -110,6 +127,8 @@ describe('Testing GET /api/models/:model/actions', () => {
     const response = await supertest(app)
       .get(prefix + '/models/cars/actions')
       .set('x-access-token', adminToken)
+      .set('x-perm-token', permToken)
+      .set('x-model-perm-token', ModelPermToken_Cars)
       .query({
         ids: '5cd5308e695db945d3cc81c6',
         target: 'bulk'
@@ -125,6 +144,8 @@ describe('Testing GET /api/models/:model/actions', () => {
     const response = await supertest(app)
       .get(prefix + '/models/cars/actions')
       .set('x-access-token', adminToken)
+      .set('x-perm-token', permToken)
+      .set('x-model-perm-token', ModelPermToken_Cars)
       .query({
         ids: '5cd5308e695db945d3cc81c6',
         target: 'item'

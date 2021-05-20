@@ -39,7 +39,7 @@ module.exports.getAll = async (req, res) => {
   const fieldsToSearchInSafe = Array.isArray(fieldsToSearchIn) && fieldsToSearchIn.length ? fieldsToSearchIn : defaultFieldsToSearchIn;
 
   // Build ref fields for the model (for mongoose population purpose)
-  const fieldsToPopulate = fnHelper.getFieldsToPopulate(keys, fieldsToFetch, refFields);
+  const fieldsToPopulate = fnHelper.getFieldsToPopulate(keys, fieldsToFetchSafe, refFields);
 
   const queriesArray = [];
 

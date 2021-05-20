@@ -58,8 +58,6 @@ const amConfig = {
 };
 
 const plugin = require('../index.js');
-app.use('/adminmate', plugin.init(amConfig));
-// app.use('/adminmate/actions', require('./server/routes/adminmate_ca'));
-// app.use('/adminmate/custom_api', require('./server/routes/custom_api'));
+app.use(plugin.init(amConfig));
 
 module.exports = app;

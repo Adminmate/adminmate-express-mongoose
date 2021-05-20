@@ -32,8 +32,9 @@ Object {
   },
   "linkedModels": Array [
     Object {
+      "model_slug": "cars",
       "ref_field": "user_id",
-      "slug": "cars",
+      "slug": "cars_user_id",
     },
   ],
 }
