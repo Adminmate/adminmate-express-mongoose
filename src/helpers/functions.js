@@ -21,6 +21,9 @@ const getModelProperties = model => {
       if (optionsTypes && optionsTypes[0] && typeof optionsTypes[0] === 'function') {
         property.type = `ArrayOf${optionsTypes[0].name}`;
       }
+      else if (optionsTypes && optionsTypes[0] && optionsTypes[0].type && typeof optionsTypes[0].type === 'function') {
+        property.type = `ArrayOf${optionsTypes[0].type.name}`;
+      }
       else {
         property.type = 'ArrayOfObject';
       }
