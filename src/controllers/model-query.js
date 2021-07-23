@@ -53,6 +53,21 @@ module.exports.customQuery = async (req, res) => {
 
       res.json({ data: sumData[0].count });
     }
+    else if (data.operation === 'avg') {
+      const avgData = await currentModel
+        .aggregate([{
+          $group: {
+            _id: `$${data.group_by}`,
+            avg: { $avg: `$${data.field}` },
+          }
+        }]);
+
+      if (!avgData || !avgData[0] || typeof avgData[0].avg !== 'number') {
+        return res.status(403).json();
+      }
+
+      res.json({ data: avgData[0].avg });
+    }
     else {
       const dataCount = await currentModel.countDocuments({});
       res.json({ data: dataCount });

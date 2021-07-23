@@ -17,6 +17,10 @@ module.exports.postOne = async (req, res) => {
   });
 
   if (newSavedItem) {
-    res.json({ data: { id: newSavedItem._id } }); // id and not _id to be generic
+    res.json({
+      data: {
+        id: newSavedItem._id // id and not _id to be generic
+      }
+    });
   }
 };
