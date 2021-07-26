@@ -12,9 +12,9 @@ module.exports.customQuery = async (req, res) => {
   }
 
   if (data.type === 'pie') {
-    let sum = 1;
-    if (data.field && data.operation === 'sum') {
-      sum = `$${data.field}`;
+    let _value = 1;
+    if (data.field && ['sum', 'avg'].includes(data.operation)) {
+      _value = `$${data.field}`;
     }
 
     const repartitionData = await currentModel
@@ -22,7 +22,7 @@ module.exports.customQuery = async (req, res) => {
         {
           $group: {
             _id: `$${data.group_by}`,
-            count: { $sum: sum },
+            count: data.operation === 'avg' ? { $avg: _value } : { $sum: _value },
           }
         },
         {
@@ -37,7 +37,7 @@ module.exports.customQuery = async (req, res) => {
 
     res.json({ data: repartitionData });
   }
-  else if (data.type === 'single_value') {
+  else if (data.type === 'single_value' || data.type === 'objective') {
     if (data.operation === 'sum') {
       const sumData = await currentModel
         .aggregate([{
