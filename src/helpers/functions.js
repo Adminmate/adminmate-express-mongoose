@@ -78,9 +78,11 @@ const getModelProperties = model => {
 module.exports.getModelProperties = getModelProperties;
 
 // Return real mongoose model name
-module.exports.getModelRealname = model => {
+const getModelRealname = model => {
   return model.modelName;
 };
+
+module.exports.getModelRealname = getModelRealname;
 
 // To be used in this file
 const permutations = list => {
@@ -352,19 +354,18 @@ module.exports.constructSearch = (search, fieldsToSearchIn, fieldsToPopulate = [
   return params;
 };
 
-module.exports.getModelAssociations = modelCode => {
-  if (!modelCode) {
-    return null;
-  }
-
+module.exports.getModelAssociations = model => {
   // Get current model mongoose realname
-  const currentModel = global._amConfig.models.find(m => m.slug === modelCode);
-  const currentModelRealName = currentModel.model.modelName;
+  const currentModelRealName = getModelRealname(model);
+
+  if (!currentModelRealName) {
+    return [];
+  }
 
   // List all the models that reference the current model
   const associationsList = [];
   global._amConfig.models
-    .filter(mc => mc.slug !== modelCode)
+    .filter(mc => getModelRealname(mc.model) !== currentModelRealName)
     .forEach(mc => {
       const modelProperties = getModelProperties(mc.model);
       if (modelProperties && modelProperties.length) {

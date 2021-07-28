@@ -18,10 +18,6 @@ module.exports.getOne = async (req, res) => {
   // Build ref fields for the model (for mongoose population purpose)
   const fieldsToPopulate = fnHelper.getFieldsToPopulate(keys, fieldsToFetch, refFields);
 
-  // Get model associations
-  const modelAssociations = fnHelper.getModelAssociations(modelName)
-    .map(ma => ({ slug: ma.slug, model_slug: ma.model_slug, ref_field: ma.ref_field }));
-
   let data = await currentModel
     .findById(modelItemId)
     .select(fieldsToFetch)
@@ -38,7 +34,6 @@ module.exports.getOne = async (req, res) => {
   data = fnHelper.refFields(data, fieldsToPopulate);
 
   res.json({
-    data,
-    linkedModels: modelAssociations
+    data
   });
 };
