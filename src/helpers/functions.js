@@ -122,7 +122,7 @@ const queryRule = rule => {
     q[rule.field] = { $eq: rule.value };
   }
   else if (rule.operator === 'is_not') {
-    q[rule.field] = { $neq: rule.value };
+    q[rule.field] = { $ne: rule.value };
   }
   // Date
   else if (rule.operator === 'is_before') {
