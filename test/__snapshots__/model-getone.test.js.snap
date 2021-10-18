@@ -15,7 +15,6 @@ Object {
     },
     "year": 1948,
   },
-  "linkedModels": Array [],
 }
 `;
 
@@ -30,12 +29,5 @@ Object {
     "rating": 4,
     "updatedAt": "2021-04-02T00:00:00.000Z",
   },
-  "linkedModels": Array [
-    Object {
-      "model_slug": "cars",
-      "ref_field": "user_id",
-      "slug": "cars_user_id",
-    },
-  ],
 }
 `;
