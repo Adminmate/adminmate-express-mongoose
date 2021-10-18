@@ -13,7 +13,7 @@
     "url": "https://github.com/Adminmate/adminmate-express-mongoose.git"
   },
   "dependencies": {
-    "adminmate-express-core": "^1.1.1",
+    "adminmate-express-core": "^1.1.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "mongoose": "^5.9.7",
