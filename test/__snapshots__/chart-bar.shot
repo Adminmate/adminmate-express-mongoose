@@ -1,0 +1,389 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Bar/Lines chart - Simple day 1`] = `
+Object {
+  "chart": Object {
+    "config": Object {
+      "xaxis": Array [
+        Object {
+          "dataKey": "key",
+        },
+      ],
+      "yaxis": Array [
+        Object {
+          "dataKey": "value",
+        },
+      ],
+    },
+    "data": Array [
+      Object {
+        "key": "04/10",
+        "value": 0,
+      },
+      Object {
+        "key": "05/10",
+        "value": 0,
+      },
+      Object {
+        "key": "06/10",
+        "value": 0,
+      },
+      Object {
+        "key": "07/10",
+        "value": 0,
+      },
+      Object {
+        "key": "08/10",
+        "value": 0,
+      },
+      Object {
+        "key": "09/10",
+        "value": 0,
+      },
+      Object {
+        "key": "10/10",
+        "value": 0,
+      },
+      Object {
+        "key": "11/10",
+        "value": 0,
+      },
+      Object {
+        "key": "12/10",
+        "value": 0,
+      },
+      Object {
+        "key": "13/10",
+        "value": 0,
+      },
+      Object {
+        "key": "14/10",
+        "value": 0,
+      },
+      Object {
+        "key": "15/10",
+        "value": 0,
+      },
+      Object {
+        "key": "16/10",
+        "value": 0,
+      },
+      Object {
+        "key": "17/10",
+        "value": 0,
+      },
+      Object {
+        "key": "18/10",
+        "value": 0,
+      },
+      Object {
+        "key": "19/10",
+        "value": 0,
+      },
+      Object {
+        "key": "20/10",
+        "value": 0,
+      },
+      Object {
+        "key": "21/10",
+        "value": 0,
+      },
+      Object {
+        "key": "22/10",
+        "value": 0,
+      },
+      Object {
+        "key": "23/10",
+        "value": 0,
+      },
+      Object {
+        "key": "24/10",
+        "value": 0,
+      },
+      Object {
+        "key": "25/10",
+        "value": 0,
+      },
+      Object {
+        "key": "26/10",
+        "value": 0,
+      },
+      Object {
+        "key": "27/10",
+        "value": 0,
+      },
+      Object {
+        "key": "28/10",
+        "value": 0,
+      },
+      Object {
+        "key": "29/10",
+        "value": 0,
+      },
+      Object {
+        "key": "30/10",
+        "value": 0,
+      },
+      Object {
+        "key": "31/10",
+        "value": 0,
+      },
+      Object {
+        "key": "01/11",
+        "value": 0,
+      },
+      Object {
+        "key": "02/11",
+        "value": 0,
+      },
+    ],
+  },
+}
+`;
+
+exports[`Bar/Lines chart - Simple month 1`] = `
+Object {
+  "chart": Object {
+    "config": Object {
+      "xaxis": Array [
+        Object {
+          "dataKey": "key",
+        },
+      ],
+      "yaxis": Array [
+        Object {
+          "dataKey": "value",
+        },
+      ],
+    },
+    "data": Array [
+      Object {
+        "key": "Dec",
+        "value": 0,
+      },
+      Object {
+        "key": "Jan",
+        "value": 0,
+      },
+      Object {
+        "key": "Feb",
+        "value": 0,
+      },
+      Object {
+        "key": "Mar",
+        "value": 0,
+      },
+      Object {
+        "key": "Apr",
+        "value": 0,
+      },
+      Object {
+        "key": "May",
+        "value": 0,
+      },
+      Object {
+        "key": "Jun",
+        "value": 0,
+      },
+      Object {
+        "key": "Jul",
+        "value": 0,
+      },
+      Object {
+        "key": "Aug",
+        "value": 0,
+      },
+      Object {
+        "key": "Sep",
+        "value": 0,
+      },
+      Object {
+        "key": "Oct",
+        "value": 0,
+      },
+      Object {
+        "key": "Nov",
+        "value": 0,
+      },
+    ],
+  },
+}
+`;
+
+exports[`Bar/Lines chart - Simple week 1`] = `
+Object {
+  "chart": Object {
+    "config": Object {
+      "xaxis": Array [
+        Object {
+          "dataKey": "key",
+        },
+      ],
+      "yaxis": Array [
+        Object {
+          "dataKey": "value",
+        },
+      ],
+    },
+    "data": Array [
+      Object {
+        "key": "09/05",
+        "value": 0,
+      },
+      Object {
+        "key": "16/05",
+        "value": 0,
+      },
+      Object {
+        "key": "23/05",
+        "value": 0,
+      },
+      Object {
+        "key": "30/05",
+        "value": 0,
+      },
+      Object {
+        "key": "06/06",
+        "value": 0,
+      },
+      Object {
+        "key": "13/06",
+        "value": 0,
+      },
+      Object {
+        "key": "20/06",
+        "value": 0,
+      },
+      Object {
+        "key": "27/06",
+        "value": 0,
+      },
+      Object {
+        "key": "04/07",
+        "value": 0,
+      },
+      Object {
+        "key": "11/07",
+        "value": 0,
+      },
+      Object {
+        "key": "18/07",
+        "value": 0,
+      },
+      Object {
+        "key": "25/07",
+        "value": 0,
+      },
+      Object {
+        "key": "01/08",
+        "value": 0,
+      },
+      Object {
+        "key": "08/08",
+        "value": 0,
+      },
+      Object {
+        "key": "15/08",
+        "value": 0,
+      },
+      Object {
+        "key": "22/08",
+        "value": 0,
+      },
+      Object {
+        "key": "29/08",
+        "value": 0,
+      },
+      Object {
+        "key": "05/09",
+        "value": 0,
+      },
+      Object {
+        "key": "12/09",
+        "value": 0,
+      },
+      Object {
+        "key": "19/09",
+        "value": 0,
+      },
+      Object {
+        "key": "26/09",
+        "value": 0,
+      },
+      Object {
+        "key": "03/10",
+        "value": 0,
+      },
+      Object {
+        "key": "10/10",
+        "value": 0,
+      },
+      Object {
+        "key": "17/10",
+        "value": 0,
+      },
+      Object {
+        "key": "24/10",
+        "value": 0,
+      },
+      Object {
+        "key": "31/10",
+        "value": 0,
+      },
+    ],
+  },
+}
+`;
+
+exports[`Bar/Lines chart - Simple year 1`] = `
+Object {
+  "chart": Object {
+    "config": Object {
+      "xaxis": Array [
+        Object {
+          "dataKey": "key",
+        },
+      ],
+      "yaxis": Array [
+        Object {
+          "dataKey": "value",
+        },
+      ],
+    },
+    "data": Array [
+      Object {
+        "key": "2014",
+        "value": 0,
+      },
+      Object {
+        "key": "2015",
+        "value": 0,
+      },
+      Object {
+        "key": "2016",
+        "value": 0,
+      },
+      Object {
+        "key": "2017",
+        "value": 0,
+      },
+      Object {
+        "key": "2018",
+        "value": 0,
+      },
+      Object {
+        "key": "2019",
+        "value": 0,
+      },
+      Object {
+        "key": "2020",
+        "value": 0,
+      },
+      Object {
+        "key": "2021",
+        "value": 0,
+      },
+    ],
+  },
+}
+`;

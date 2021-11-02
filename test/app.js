@@ -1,17 +1,7 @@
 'use strict';
 
-const express = require('express');
-
 // If you want to use the dev version of @adminmate-express-core
 global.AM_DEV_MODE = true;
-
-// Create express app
-const app = express();
-
-app.use(express.json());
-app.use(express.urlencoded({
-  extended: true
-}));
 
 // Connect to database
 const { models, connectDb } = require('../database');
@@ -57,7 +47,4 @@ const amConfig = {
   ]
 };
 
-const plugin = require('../index.js');
-app.use(plugin.init(amConfig));
-
-module.exports = app;
+require('../index.js').init(amConfig);

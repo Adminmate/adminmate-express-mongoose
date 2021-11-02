@@ -1,3 +1,9 @@
 module.exports = {
-  testEnvironment: 'node'
+  testEnvironment: 'node',
+  projects: [
+    {
+      displayName: 'mongodb',
+      testMatch: ['<rootDir>/test/mongodb.test.js']
+    }
+  ]
 };

@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pie chart - Count 1`] = `
+Object {
+  "chart": Object {
+    "config": null,
+    "data": Array [
+      Object {
+        "key": 4,
+        "value": 1,
+      },
+      Object {
+        "key": 5,
+        "value": 1,
+      },
+    ],
+  },
+}
+`;

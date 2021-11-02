@@ -1,6 +1,148 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Testing POST /api/models/cars With "fields" parameter (name & manufacturer only) 1`] = `
+exports[`Cars request - No parameter 1`] = `
+Object {
+  "count": 20,
+  "data": Array [
+    Object {
+      "_id": "5cd5308e695db945d3cc81d2",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 LM",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "5cd5308e695db945d3cc81a2",
+        "type": "ref",
+      },
+      "year": 1964,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81d1",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 275",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "5cd5308e695db945d3cc81a2",
+        "type": "ref",
+      },
+      "year": 1964,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c9",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 488",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "5cd5308e695db945d3cc81a2",
+        "type": "ref",
+      },
+      "year": 1969,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c8",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GT Lusso",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a1",
+        "label": "5cd5308e695db945d3cc81a1",
+        "type": "ref",
+      },
+      "year": 1962,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c7",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GTO",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "5cd5308e695db945d3cc81a2",
+        "type": "ref",
+      },
+      "year": 1962,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c6",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GT 2+2",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a1",
+        "label": "5cd5308e695db945d3cc81a1",
+        "type": "ref",
+      },
+      "year": 1960,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c5",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GT Berlinetta SWB",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "5cd5308e695db945d3cc81a2",
+        "type": "ref",
+      },
+      "year": 1959,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c4",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 GT Coupé",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a1",
+        "label": "5cd5308e695db945d3cc81a1",
+        "type": "ref",
+      },
+      "year": 1954,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c3",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 250 MM",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a2",
+        "label": "5cd5308e695db945d3cc81a2",
+        "type": "ref",
+      },
+      "year": 1952,
+    },
+    Object {
+      "_id": "5cd5308e695db945d3cc81c2",
+      "createdAt": "2021-04-02T00:00:00.000Z",
+      "manufacturer": "Ferrari",
+      "name": "Ferrari 212 Inter",
+      "updatedAt": "2021-04-02T00:00:00.000Z",
+      "user_id": Object {
+        "id": "5cd5308e695db945d3cc81a1",
+        "label": "5cd5308e695db945d3cc81a1",
+        "type": "ref",
+      },
+      "year": 1951,
+    },
+  ],
+  "pagination": Object {
+    "count": 2,
+    "current": 1,
+  },
+}
+`;
+
+exports[`Cars request - With "fields" parameter (name & manufacturer only) 1`] = `
 Object {
   "count": 20,
   "data": Array [
@@ -62,7 +204,7 @@ Object {
 }
 `;
 
-exports[`Testing POST /api/models/cars With "page" parameter set to 2 1`] = `
+exports[`Cars request - With "page" parameter set to 2 1`] = `
 Object {
   "count": 20,
   "data": Array [
@@ -204,149 +346,7 @@ Object {
 }
 `;
 
-exports[`Testing POST /api/models/cars With "refFields" parameter 1`] = `
-Object {
-  "count": 20,
-  "data": Array [
-    Object {
-      "_id": "5cd5308e695db945d3cc81d2",
-      "createdAt": "2021-04-02T00:00:00.000Z",
-      "manufacturer": "Ferrari",
-      "name": "Ferrari 250 LM",
-      "updatedAt": "2021-04-02T00:00:00.000Z",
-      "user_id": Object {
-        "id": "5cd5308e695db945d3cc81a2",
-        "label": "Maria Doe",
-        "type": "ref",
-      },
-      "year": 1964,
-    },
-    Object {
-      "_id": "5cd5308e695db945d3cc81d1",
-      "createdAt": "2021-04-02T00:00:00.000Z",
-      "manufacturer": "Ferrari",
-      "name": "Ferrari 275",
-      "updatedAt": "2021-04-02T00:00:00.000Z",
-      "user_id": Object {
-        "id": "5cd5308e695db945d3cc81a2",
-        "label": "Maria Doe",
-        "type": "ref",
-      },
-      "year": 1964,
-    },
-    Object {
-      "_id": "5cd5308e695db945d3cc81c9",
-      "createdAt": "2021-04-02T00:00:00.000Z",
-      "manufacturer": "Ferrari",
-      "name": "Ferrari 488",
-      "updatedAt": "2021-04-02T00:00:00.000Z",
-      "user_id": Object {
-        "id": "5cd5308e695db945d3cc81a2",
-        "label": "Maria Doe",
-        "type": "ref",
-      },
-      "year": 1969,
-    },
-    Object {
-      "_id": "5cd5308e695db945d3cc81c8",
-      "createdAt": "2021-04-02T00:00:00.000Z",
-      "manufacturer": "Ferrari",
-      "name": "Ferrari 250 GT Lusso",
-      "updatedAt": "2021-04-02T00:00:00.000Z",
-      "user_id": Object {
-        "id": "5cd5308e695db945d3cc81a1",
-        "label": "John Doe",
-        "type": "ref",
-      },
-      "year": 1962,
-    },
-    Object {
-      "_id": "5cd5308e695db945d3cc81c7",
-      "createdAt": "2021-04-02T00:00:00.000Z",
-      "manufacturer": "Ferrari",
-      "name": "Ferrari 250 GTO",
-      "updatedAt": "2021-04-02T00:00:00.000Z",
-      "user_id": Object {
-        "id": "5cd5308e695db945d3cc81a2",
-        "label": "Maria Doe",
-        "type": "ref",
-      },
-      "year": 1962,
-    },
-    Object {
-      "_id": "5cd5308e695db945d3cc81c6",
-      "createdAt": "2021-04-02T00:00:00.000Z",
-      "manufacturer": "Ferrari",
-      "name": "Ferrari 250 GT 2+2",
-      "updatedAt": "2021-04-02T00:00:00.000Z",
-      "user_id": Object {
-        "id": "5cd5308e695db945d3cc81a1",
-        "label": "John Doe",
-        "type": "ref",
-      },
-      "year": 1960,
-    },
-    Object {
-      "_id": "5cd5308e695db945d3cc81c5",
-      "createdAt": "2021-04-02T00:00:00.000Z",
-      "manufacturer": "Ferrari",
-      "name": "Ferrari 250 GT Berlinetta SWB",
-      "updatedAt": "2021-04-02T00:00:00.000Z",
-      "user_id": Object {
-        "id": "5cd5308e695db945d3cc81a2",
-        "label": "Maria Doe",
-        "type": "ref",
-      },
-      "year": 1959,
-    },
-    Object {
-      "_id": "5cd5308e695db945d3cc81c4",
-      "createdAt": "2021-04-02T00:00:00.000Z",
-      "manufacturer": "Ferrari",
-      "name": "Ferrari 250 GT Coupé",
-      "updatedAt": "2021-04-02T00:00:00.000Z",
-      "user_id": Object {
-        "id": "5cd5308e695db945d3cc81a1",
-        "label": "John Doe",
-        "type": "ref",
-      },
-      "year": 1954,
-    },
-    Object {
-      "_id": "5cd5308e695db945d3cc81c3",
-      "createdAt": "2021-04-02T00:00:00.000Z",
-      "manufacturer": "Ferrari",
-      "name": "Ferrari 250 MM",
-      "updatedAt": "2021-04-02T00:00:00.000Z",
-      "user_id": Object {
-        "id": "5cd5308e695db945d3cc81a2",
-        "label": "Maria Doe",
-        "type": "ref",
-      },
-      "year": 1952,
-    },
-    Object {
-      "_id": "5cd5308e695db945d3cc81c2",
-      "createdAt": "2021-04-02T00:00:00.000Z",
-      "manufacturer": "Ferrari",
-      "name": "Ferrari 212 Inter",
-      "updatedAt": "2021-04-02T00:00:00.000Z",
-      "user_id": Object {
-        "id": "5cd5308e695db945d3cc81a1",
-        "label": "John Doe",
-        "type": "ref",
-      },
-      "year": 1951,
-    },
-  ],
-  "pagination": Object {
-    "count": 2,
-    "current": 1,
-  },
-}
-`;
-
-exports[`Testing POST /api/models/cars With a "filters" parameter 1`] = `
+exports[`Cars request - With a "filters" parameter 1`] = `
 Object {
   "count": 3,
   "data": Array [
@@ -373,7 +373,7 @@ Object {
 }
 `;
 
-exports[`Testing POST /api/models/cars With a "order" parameter 1`] = `
+exports[`Cars request - With a "order" parameter 1`] = `
 Object {
   "count": 3,
   "data": Array [
@@ -397,7 +397,7 @@ Object {
 }
 `;
 
-exports[`Testing POST /api/models/cars With a "search" parameter 1`] = `
+exports[`Cars request - With a "search" parameter 1`] = `
 Object {
   "count": 3,
   "data": Array [
@@ -421,7 +421,7 @@ Object {
 }
 `;
 
-exports[`Testing POST /api/models/cars With a "segment" parameter 1`] = `
+exports[`Cars request - With a "segment" parameter 1`] = `
 Object {
   "count": 10,
   "data": Array [
@@ -483,7 +483,7 @@ Object {
 }
 `;
 
-exports[`Testing POST /api/models/cars With access token 1`] = `
+exports[`Cars request - With refFields params 1`] = `
 Object {
   "count": 20,
   "data": Array [
@@ -495,7 +495,7 @@ Object {
       "updatedAt": "2021-04-02T00:00:00.000Z",
       "user_id": Object {
         "id": "5cd5308e695db945d3cc81a2",
-        "label": "5cd5308e695db945d3cc81a2",
+        "label": "Maria Doe",
         "type": "ref",
       },
       "year": 1964,
@@ -508,7 +508,7 @@ Object {
       "updatedAt": "2021-04-02T00:00:00.000Z",
       "user_id": Object {
         "id": "5cd5308e695db945d3cc81a2",
-        "label": "5cd5308e695db945d3cc81a2",
+        "label": "Maria Doe",
         "type": "ref",
       },
       "year": 1964,
@@ -521,7 +521,7 @@ Object {
       "updatedAt": "2021-04-02T00:00:00.000Z",
       "user_id": Object {
         "id": "5cd5308e695db945d3cc81a2",
-        "label": "5cd5308e695db945d3cc81a2",
+        "label": "Maria Doe",
         "type": "ref",
       },
       "year": 1969,
@@ -534,7 +534,7 @@ Object {
       "updatedAt": "2021-04-02T00:00:00.000Z",
       "user_id": Object {
         "id": "5cd5308e695db945d3cc81a1",
-        "label": "5cd5308e695db945d3cc81a1",
+        "label": "John Doe",
         "type": "ref",
       },
       "year": 1962,
@@ -547,7 +547,7 @@ Object {
       "updatedAt": "2021-04-02T00:00:00.000Z",
       "user_id": Object {
         "id": "5cd5308e695db945d3cc81a2",
-        "label": "5cd5308e695db945d3cc81a2",
+        "label": "Maria Doe",
         "type": "ref",
       },
       "year": 1962,
@@ -560,7 +560,7 @@ Object {
       "updatedAt": "2021-04-02T00:00:00.000Z",
       "user_id": Object {
         "id": "5cd5308e695db945d3cc81a1",
-        "label": "5cd5308e695db945d3cc81a1",
+        "label": "John Doe",
         "type": "ref",
       },
       "year": 1960,
@@ -573,7 +573,7 @@ Object {
       "updatedAt": "2021-04-02T00:00:00.000Z",
       "user_id": Object {
         "id": "5cd5308e695db945d3cc81a2",
-        "label": "5cd5308e695db945d3cc81a2",
+        "label": "Maria Doe",
         "type": "ref",
       },
       "year": 1959,
@@ -586,7 +586,7 @@ Object {
       "updatedAt": "2021-04-02T00:00:00.000Z",
       "user_id": Object {
         "id": "5cd5308e695db945d3cc81a1",
-        "label": "5cd5308e695db945d3cc81a1",
+        "label": "John Doe",
         "type": "ref",
       },
       "year": 1954,
@@ -599,7 +599,7 @@ Object {
       "updatedAt": "2021-04-02T00:00:00.000Z",
       "user_id": Object {
         "id": "5cd5308e695db945d3cc81a2",
-        "label": "5cd5308e695db945d3cc81a2",
+        "label": "Maria Doe",
         "type": "ref",
       },
       "year": 1952,
@@ -612,7 +612,7 @@ Object {
       "updatedAt": "2021-04-02T00:00:00.000Z",
       "user_id": Object {
         "id": "5cd5308e695db945d3cc81a1",
-        "label": "5cd5308e695db945d3cc81a1",
+        "label": "John Doe",
         "type": "ref",
       },
       "year": 1951,
@@ -625,7 +625,7 @@ Object {
 }
 `;
 
-exports[`Testing POST /api/models/users With access token 1`] = `
+exports[`Users request - No parameter 1`] = `
 Object {
   "count": 2,
   "data": Array [
