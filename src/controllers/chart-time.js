@@ -82,8 +82,8 @@ module.exports = async (currentModel, data) => {
 
   // Day timeframe
   if (data.timeframe === 'day') {
-    for (let i = 0; i < 30; i++) {
-      const currentDate = moment().subtract(i, 'day');
+    for (let i = 1; i <= 30; i++) {
+      const currentDate = moment().subtract(i, 'day').startOf('day');
       const countForTheTimeframe = _.find(repartitionData, { key: currentDate.format('YYYY-MM-DD') });
       formattedData.push({
         key: currentDate.format('DD/MM'),
@@ -93,9 +93,8 @@ module.exports = async (currentModel, data) => {
   }
   // Week timeframe
   else if (data.timeframe === 'week') {
-    for (let i = 0; i < 26; i++) {
-      const currentWeek = moment().subtract(i, 'week');
-
+    for (let i = 1; i <= 26; i++) {
+      const currentWeek = moment().subtract(i, 'week').startOf('week');
       const countForTheTimeframe = _.find(repartitionData, { key: currentWeek.format('WW') });
       formattedData.push({
         key: currentWeek.startOf('week').format('DD/MM'),
@@ -105,9 +104,8 @@ module.exports = async (currentModel, data) => {
   }
   // Month timeframe
   else if (data.timeframe === 'month') {
-    for (let i = 0; i < 12; i++) {
-      const currentMonth = moment().subtract(i, 'month');
-
+    for (let i = 1; i <= 12; i++) {
+      const currentMonth = moment().subtract(i, 'month').startOf('month');
       const countForTheTimeframe = _.find(repartitionData, { key: currentMonth.format('MM') });
       formattedData.push({
         key: currentMonth.startOf('month').format('MMM'),
@@ -117,9 +115,8 @@ module.exports = async (currentModel, data) => {
   }
   // Year timeframe
   else if (data.timeframe === 'year') {
-    for (let i = 0; i < 8; i++) {
-      const currentYear = moment().subtract(i, 'year');
-
+    for (let i = 1; i <= 8; i++) {
+      const currentYear = moment().subtract(i, 'year').startOf('year');
       const countForTheTimeframe = _.find(repartitionData, { key: currentYear.format('YYYY') });
       formattedData.push({
         key: currentYear.startOf('year').format('YYYY'),

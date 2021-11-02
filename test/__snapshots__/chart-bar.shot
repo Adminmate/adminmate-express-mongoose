@@ -158,6 +158,10 @@ Object {
     },
     "data": Array [
       Object {
+        "key": "Nov",
+        "value": 0,
+      },
+      Object {
         "key": "Dec",
         "value": 0,
       },
@@ -201,10 +205,6 @@ Object {
         "key": "Oct",
         "value": 0,
       },
-      Object {
-        "key": "Nov",
-        "value": 0,
-      },
     ],
   },
 }
@@ -226,6 +226,10 @@ Object {
       ],
     },
     "data": Array [
+      Object {
+        "key": "02/05",
+        "value": 0,
+      },
       Object {
         "key": "09/05",
         "value": 0,
@@ -326,10 +330,6 @@ Object {
         "key": "24/10",
         "value": 0,
       },
-      Object {
-        "key": "31/10",
-        "value": 0,
-      },
     ],
   },
 }
@@ -351,6 +351,10 @@ Object {
       ],
     },
     "data": Array [
+      Object {
+        "key": "2013",
+        "value": 0,
+      },
       Object {
         "key": "2014",
         "value": 0,
@@ -377,10 +381,6 @@ Object {
       },
       Object {
         "key": "2020",
-        "value": 0,
-      },
-      Object {
-        "key": "2021",
         "value": 0,
       },
     ],
