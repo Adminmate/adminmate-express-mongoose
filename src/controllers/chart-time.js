@@ -19,7 +19,7 @@ module.exports = async (currentModel, data) => {
   if (data.timeframe === 'day') {
     const startOfCurrentDay = moment().startOf('day');
     matchReq = {
-      '$gte': new Date(startOfCurrentDay.subtract(30, 'day').startOf('day').format()),
+      '$gte': new Date(startOfCurrentDay.clone().subtract(30, 'day').startOf('day').format()),
       '$lt': new Date(startOfCurrentDay.format())
     };
     groupFormat = '%Y-%m-%d';
@@ -28,7 +28,7 @@ module.exports = async (currentModel, data) => {
   else if (data.timeframe === 'week') {
     const startOfCurrentWeek = moment().startOf('week');
     matchReq = {
-      '$gte': new Date(startOfCurrentWeek.subtract(26, 'week').startOf('week').format()),
+      '$gte': new Date(startOfCurrentWeek.clone().subtract(26, 'week').startOf('week').format()),
       '$lt': new Date(startOfCurrentWeek.format())
     };
     groupFormat = '%V';
@@ -37,7 +37,7 @@ module.exports = async (currentModel, data) => {
   else if (data.timeframe === 'month') {
     const startOfCurrentMonth = moment().startOf('month');
     matchReq = {
-      '$gte': new Date(startOfCurrentMonth.subtract(12, 'month').startOf('month').format()),
+      '$gte': new Date(startOfCurrentMonth.clone().subtract(12, 'month').startOf('month').format()),
       '$lt': new Date(startOfCurrentMonth.format())
     };
     groupFormat = '%m';
@@ -46,7 +46,7 @@ module.exports = async (currentModel, data) => {
   else if (data.timeframe === 'year') {
     const startOfCurrentYear = moment().startOf('year');
     matchReq = {
-      '$gte': new Date(startOfCurrentYear.subtract(8, 'year').startOf('year').format()),
+      '$gte': new Date(startOfCurrentYear.clone().subtract(8, 'year').startOf('year').format()),
       '$lt': new Date(startOfCurrentYear.format())
     };
     groupFormat = '%Y';
