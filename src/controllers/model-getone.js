@@ -4,7 +4,8 @@ const fnHelper = require('../helpers/functions');
 module.exports.getOne = async (req, res) => {
   const modelName = req.params.model;
   const modelItemId = req.params.id;
-  const refFields = req.body.refFields || {};
+  const fieldsToFetch = req.headers['am-model-fields'] || [];
+  const refFields = req.headers['am-ref-fields'] || {};
 
   const currentModel = fnHelper.getModelObject(modelName);
   if (!currentModel) {
@@ -13,14 +14,14 @@ module.exports.getOne = async (req, res) => {
 
   const keys = fnHelper.getModelProperties(currentModel);
   const defaultFieldsToFetch = keys.map(key => key.path);
-  const fieldsToFetch = req.body.fields ? req.body.fields : defaultFieldsToFetch;
+  const fieldsToFetchSafe = Array.isArray(fieldsToFetch) && fieldsToFetch.length ? fieldsToFetch : defaultFieldsToFetch;
 
   // Build ref fields for the model (for mongoose population purpose)
-  const fieldsToPopulate = fnHelper.getFieldsToPopulate(keys, fieldsToFetch, refFields);
+  const fieldsToPopulate = fnHelper.getFieldsToPopulate(keys, fieldsToFetchSafe, refFields);
 
   let data = await currentModel
     .findById(modelItemId)
-    .select(fieldsToFetch)
+    .select(fieldsToFetchSafe)
     .populate(fieldsToPopulate)
     .lean()
     .catch(e => {

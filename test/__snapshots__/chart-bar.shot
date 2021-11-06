@@ -17,18 +17,6 @@ Object {
     },
     "data": Array [
       Object {
-        "key": "04/10",
-        "value": 0,
-      },
-      Object {
-        "key": "05/10",
-        "value": 0,
-      },
-      Object {
-        "key": "06/10",
-        "value": 0,
-      },
-      Object {
         "key": "07/10",
         "value": 0,
       },
@@ -134,6 +122,18 @@ Object {
       },
       Object {
         "key": "02/11",
+        "value": 0,
+      },
+      Object {
+        "key": "03/11",
+        "value": 0,
+      },
+      Object {
+        "key": "04/11",
+        "value": 0,
+      },
+      Object {
+        "key": "05/11",
         "value": 0,
       },
     ],

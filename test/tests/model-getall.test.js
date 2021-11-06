@@ -1,29 +1,33 @@
 const httpMocks = require('node-mocks-http');
 const { getAll } = require('../../src/controllers/model-getall');
 
-const makeUsersReq = data => {
+const makeUsersReq = (method, data, headers = {}) => {
   return httpMocks.createRequest({
-    method: 'POST',
+    method,
     params: {
       model: 'users'
     },
+    headers,
+    query: data,
     body: data
   });
 };
 
-const makeCarsReq = data => {
+const makeCarsReq = (method, data, headers = {}) => {
   return httpMocks.createRequest({
-    method: 'POST',
+    method,
     params: {
       model: 'cars'
     },
+    headers,
+    query: data,
     body: data
   });
 };
 
 describe('Users request', () => {
   it('- No parameter', async () => {
-    const request = makeUsersReq({});
+    const request = makeUsersReq('GET', {});
 
     const response = httpMocks.createResponse();
     await getAll(request, response, (err) => expect(err).toBeFalsy());
@@ -36,7 +40,7 @@ describe('Users request', () => {
 
 describe('Cars request', () => {
   it('- No parameter', async () => {
-    const request = makeCarsReq({});
+    const request = makeCarsReq('GET', {});
 
     const response = httpMocks.createResponse();
     await getAll(request, response, (err) => expect(err).toBeFalsy());
@@ -47,8 +51,8 @@ describe('Cars request', () => {
   });
 
   it('- With refFields params', async () => {
-    const request = makeCarsReq({
-      refFields: {
+    const request = makeCarsReq('GET', {}, {
+      'am-ref-fields': {
         users: 'firstname lastname'
       }
     });
@@ -62,8 +66,8 @@ describe('Cars request', () => {
   });
 
   it('- With "fields" parameter (name & manufacturer only)', async () => {
-    const request = makeCarsReq({
-      fields: ['name', 'manufacturer']
+    const request = makeCarsReq('GET', {}, {
+      'am-model-fields': ['name', 'manufacturer']
     });
 
     const response = httpMocks.createResponse();
@@ -75,7 +79,7 @@ describe('Cars request', () => {
   });
 
   it('- With "page" parameter set to 2', async () => {
-    const request = makeCarsReq({
+    const request = makeCarsReq('GET', {
       page: 2
     });
 
@@ -88,9 +92,10 @@ describe('Cars request', () => {
   });
 
   it('- With a "search" parameter', async () => {
-    const request = makeCarsReq({
-      fields: ['name'],
+    const request = makeCarsReq('GET', {
       search: 'Porsche 91'
+    }, {
+      'am-model-fields': ['name']
     });
 
     const response = httpMocks.createResponse();
@@ -102,10 +107,11 @@ describe('Cars request', () => {
   });
 
   it('- With a "order" parameter', async () => {
-    const request = makeCarsReq({
-      fields: ['name'],
+    const request = makeCarsReq('GET', {
       search: 'Porsche 91',
       order: [['name', 'ASC']]
+    }, {
+      'am-model-fields': ['name']
     });
 
     const response = httpMocks.createResponse();
@@ -117,8 +123,7 @@ describe('Cars request', () => {
   });
 
   it('- With a "filters" parameter', async () => {
-    const request = makeCarsReq({
-      fields: ['name', 'year'],
+    const request = makeCarsReq('GET', {
       search: 'Porsche',
       filters: {
         operator: 'or',
@@ -127,6 +132,8 @@ describe('Cars request', () => {
           { field: 'year', operator: 'is', value: 1969 }
         ]
       }
+    }, {
+      'am-model-fields': ['name', 'year']
     });
 
     const response = httpMocks.createResponse();
@@ -138,12 +145,13 @@ describe('Cars request', () => {
   });
 
   it('- With a "segment" parameter', async () => {
-    const request = makeCarsReq({
-      fields: ['name', 'year'],
+    const request = makeCarsReq('GET', {
       segment: {
         type: 'code',
         data: 'ferrari'
       }
+    }, {
+      'am-model-fields': ['name', 'year']
     });
 
     const response = httpMocks.createResponse();

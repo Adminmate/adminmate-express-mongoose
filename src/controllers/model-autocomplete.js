@@ -3,8 +3,8 @@ const fnHelper = require('../helpers/functions');
 
 module.exports.getAutocomplete = async (req, res) => {
   const modelName = req.params.model;
-  const search = (req.body.search || '').trim();
-  const refFields = req.body.refFields;
+  const search = (req.query.s || '').trim();
+  const refFields = req.headers['am-ref-fields'] || {};
   const maxItem = 10;
 
   const currentModel = fnHelper.getModelObject(modelName);

@@ -3,16 +3,16 @@ const fnHelper = require('../helpers/functions');
 
 module.exports.getAll = async (req, res) => {
   const modelName = req.params.model;
-  const segment = req.body.segment;
-  const search = (req.body.search || '').trim();
-  const filters = req.body.filters;
-  const fieldsToFetch = req.body.fields || [];
-  const refFields = req.body.refFields;
-  const fieldsToSearchIn = req.body.fieldsToSearchIn || [];
-  const page = parseInt(req.body.page || 1);
+  const segment = req.query.segment;
+  const search = (req.query.search || '').trim();
+  const filters = req.query.filters;
+  const fieldsToFetch = req.headers['am-model-fields'] || [];
+  const refFields = req.headers['am-ref-fields'] || {};
+  const fieldsToSearchIn = req.query.fieldsToSearchIn || [];
+  const page = parseInt(req.query.page || 1);
   const nbItemPerPage = 10;
   const defaultOrdering = [ ['_id', 'DESC'] ];
-  const order = req.body.order || null;
+  const order = req.query.order || null;
 
   const currentModel = fnHelper.getModelObject(modelName);
   if (!currentModel) {
