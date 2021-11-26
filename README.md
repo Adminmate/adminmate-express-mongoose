@@ -1,7 +1,9 @@
 # Adminmate (Express.js + Mongoose)
 
 Adminmate is a powerful & flexible back-office solution build for small to big teams. ✌️
+
 It provides an extremely flexible API developed in NodeJS that communicate with a powerful frontend back-office we host.
+
 As the security & privacy of your data is our main focus, the Data API is host by yourself and secured by your own credentials.
 
 ## Getting started

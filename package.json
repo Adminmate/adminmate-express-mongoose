@@ -3,6 +3,17 @@
   "version": "1.2.5",
   "description": "Adminmate Express/Mongoose connector",
   "author": "Marc Delalonde",
+  "homepage": "http://adminmate.io",
+  "license": "GPL-3.0",
+  "keywords": [
+    "adminmate",
+    "admin",
+    "panel",
+    "interface",
+    "back-office",
+    "mongodb",
+    "mongoose"
+  ],
   "scripts": {
     "start": "node ./index",
     "test": "jest --runInBand",
@@ -13,7 +24,7 @@
     "url": "https://github.com/Adminmate/adminmate-express-mongoose.git"
   },
   "dependencies": {
-    "adminmate-express-core": "^1.1.4",
+    "adminmate-express-core": "^1.1.5",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "mongoose": "^5.9.7",
