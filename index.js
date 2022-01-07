@@ -15,10 +15,14 @@ const { customQuery } = require('./src/controllers/model-query');
 
 const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, charts, authorizedIps }) => {
   const api = {
+    // App config
+    getAppConfig: fnHelper.getAppConfig,
+
     // General
     getModelProperties: fnHelper.getModelProperties,
     getModelRealname: fnHelper.getModelRealname,
     getModelRelationships: fnHelper.getModelAssociations,
+    getModelPrimaryKeys: fnHelper.getModelPrimaryKeys,
 
     // CRUD
     modelGetAll: getAll,

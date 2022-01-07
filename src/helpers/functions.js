@@ -3,6 +3,8 @@ const { serializeError } = require('serialize-error');
 const _ = require('lodash');
 const moment = require('moment');
 
+const pjson = require('../../package.json');
+
 const getModelProperties = model => {
   let modelFields = [];
   const modelProps = model.schema.paths;
@@ -354,6 +356,10 @@ module.exports.constructSearch = (search, fieldsToSearchIn, fieldsToPopulate = [
   return params;
 };
 
+module.exports.getModelPrimaryKeys = model => {
+  return ['_id'];
+};
+
 module.exports.getModelAssociations = model => {
   // Get current model mongoose realname
   const currentModelRealName = getModelRealname(model);
@@ -462,4 +468,11 @@ module.exports.getCleanOrderStructure = orderConfig => {
     order[oc[0]] = oc[1];
   });
   return order;
+};
+
+module.exports.getAppConfig = () => {
+  return {
+    package: pjson.name,
+    version: pjson.version
+  };
 };
