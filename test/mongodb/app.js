@@ -44,4 +44,4 @@ const amConfig = {
   ]
 };
 
-require('../index.js').init(amConfig);
+require('../../index.js').init(amConfig);

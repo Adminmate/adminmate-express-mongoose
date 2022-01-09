@@ -1,5 +1,4 @@
 module.exports = {
-  testEnvironment: 'node',
   projects: [
     {
       displayName: 'mongodb',

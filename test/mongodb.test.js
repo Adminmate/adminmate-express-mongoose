@@ -1,6 +1,6 @@
 require('jest-specific-snapshot');
 
-const { models, connectDb } = require('./database');
+const { models, connectDb } = require('./mongodb/database');
 
 let mongooseConnection;
 beforeAll(async () => {
@@ -10,13 +10,13 @@ beforeAll(async () => {
     models.Car.deleteMany({}),
     models.Blocked.deleteMany({})
   ]);
-  await models.User.insertMany(require('./data/users.js'));
-  await models.Car.insertMany(require('./data/cars.js'));
-  await models.Blocked.insertMany(require('./data/blocked.js'));
+  await models.User.insertMany(require('./mongodb/data/users.js'));
+  await models.Car.insertMany(require('./mongodb/data/cars.js'));
+  await models.Blocked.insertMany(require('./mongodb/data/blocked.js'));
 });
 
 // Init app
-require('./app.js');
+require('./mongodb/app.js');
 
 require('./tests/model-getall.test.js');
 require('./tests/model-query.test.js');
