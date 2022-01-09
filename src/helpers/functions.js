@@ -356,6 +356,10 @@ module.exports.constructSearch = (search, fieldsToSearchIn, fieldsToPopulate = [
   return params;
 };
 
+module.exports.getModelWhereClause = (model, idsArray) => {
+  return { _id: idsArray };
+};
+
 module.exports.getModelPrimaryKeys = model => {
   return ['_id'];
 };

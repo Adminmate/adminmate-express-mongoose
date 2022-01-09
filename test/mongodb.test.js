@@ -1,16 +1,19 @@
 require('jest-specific-snapshot');
 
-// Hide console.log
-// global.console = {
-//   log: jest.fn(),
-//   // Keep native behaviour for other methods
-//   error: console.error,
-//   warn: console.warn,
-//   info: console.info,
-//   debug: console.debug,
-// };
+const { models, connectDb } = require('./database');
 
-process.env.DIALECT = 'mongodb';
+let mongooseConnection;
+beforeAll(async () => {
+  mongooseConnection = await connectDb();
+  await Promise.all([
+    models.User.deleteMany({}),
+    models.Car.deleteMany({}),
+    models.Blocked.deleteMany({})
+  ]);
+  await models.User.insertMany(require('./data/users.js'));
+  await models.Car.insertMany(require('./data/cars.js'));
+  await models.Blocked.insertMany(require('./data/blocked.js'));
+});
 
 // Init app
 require('./app.js');
@@ -20,6 +23,5 @@ require('./tests/model-query.test.js');
 
 // Close mongoose connection
 afterAll(async () => {
-  const mongoose = require('mongoose');
-  await mongoose.connection.close();
+  mongooseConnection.disconnect();
 });

@@ -12,12 +12,15 @@ module.exports = async (currentModel, data) => {
 
   const toSum = data.field && data.operation === 'sum' ? `$${data.field}` : 1;
 
+  // To set the max date
+  const toDate = data.to ? moment(data.to) : moment();
+
   let matchReq = {};
   let groupFormat = '';
 
   // Day timeframe
   if (data.timeframe === 'day') {
-    const startOfCurrentDay = moment().startOf('day');
+    const startOfCurrentDay = toDate.startOf('day');
     matchReq = {
       '$gte': new Date(startOfCurrentDay.clone().subtract(30, 'day').startOf('day').format()),
       '$lt': new Date(startOfCurrentDay.format())
@@ -26,7 +29,7 @@ module.exports = async (currentModel, data) => {
   }
   // Week timeframe
   else if (data.timeframe === 'week') {
-    const startOfCurrentWeek = moment().startOf('week');
+    const startOfCurrentWeek = toDate.startOf('week');
     matchReq = {
       '$gte': new Date(startOfCurrentWeek.clone().subtract(26, 'week').startOf('week').format()),
       '$lt': new Date(startOfCurrentWeek.format())
@@ -35,7 +38,7 @@ module.exports = async (currentModel, data) => {
   }
   // Month timeframe
   else if (data.timeframe === 'month') {
-    const startOfCurrentMonth = moment().startOf('month');
+    const startOfCurrentMonth = toDate.startOf('month');
     matchReq = {
       '$gte': new Date(startOfCurrentMonth.clone().subtract(12, 'month').startOf('month').format()),
       '$lt': new Date(startOfCurrentMonth.format())
@@ -44,7 +47,7 @@ module.exports = async (currentModel, data) => {
   }
   // Year timeframe
   else if (data.timeframe === 'year') {
-    const startOfCurrentYear = moment().startOf('year');
+    const startOfCurrentYear = toDate.startOf('year');
     matchReq = {
       '$gte': new Date(startOfCurrentYear.clone().subtract(8, 'year').startOf('year').format()),
       '$lt': new Date(startOfCurrentYear.format())
@@ -83,7 +86,7 @@ module.exports = async (currentModel, data) => {
   // Day timeframe
   if (data.timeframe === 'day') {
     for (let i = 1; i <= 30; i++) {
-      const currentDate = moment().subtract(i, 'day').startOf('day');
+      const currentDate = toDate.clone().subtract(i, 'day').startOf('day');
       const countForTheTimeframe = _.find(repartitionData, { key: currentDate.format('YYYY-MM-DD') });
       formattedData.push({
         key: currentDate.format('DD/MM'),
@@ -94,7 +97,7 @@ module.exports = async (currentModel, data) => {
   // Week timeframe
   else if (data.timeframe === 'week') {
     for (let i = 1; i <= 26; i++) {
-      const currentWeek = moment().subtract(i, 'week').startOf('week');
+      const currentWeek = toDate.clone().subtract(i, 'week').startOf('week');
       const countForTheTimeframe = _.find(repartitionData, { key: currentWeek.format('WW') });
       formattedData.push({
         key: currentWeek.startOf('week').format('DD/MM'),
@@ -105,7 +108,7 @@ module.exports = async (currentModel, data) => {
   // Month timeframe
   else if (data.timeframe === 'month') {
     for (let i = 1; i <= 12; i++) {
-      const currentMonth = moment().subtract(i, 'month').startOf('month');
+      const currentMonth = toDate.clone().subtract(i, 'month').startOf('month');
       const countForTheTimeframe = _.find(repartitionData, { key: currentMonth.format('MM') });
       formattedData.push({
         key: currentMonth.startOf('month').format('MMM'),
@@ -116,7 +119,7 @@ module.exports = async (currentModel, data) => {
   // Year timeframe
   else if (data.timeframe === 'year') {
     for (let i = 1; i <= 8; i++) {
-      const currentYear = moment().subtract(i, 'year').startOf('year');
+      const currentYear = toDate.clone().subtract(i, 'year').startOf('year');
       const countForTheTimeframe = _.find(repartitionData, { key: currentYear.format('YYYY') });
       formattedData.push({
         key: currentYear.startOf('year').format('YYYY'),

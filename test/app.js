@@ -4,10 +4,7 @@
 global.AM_DEV_MODE = true;
 
 // Connect to database
-const { models, connectDb } = require('../database');
-connectDb().then(async () => {
-  console.log('MongoDB connected');
-});
+const { models } = require('./database');
 
 // Init
 const amConfig = {
