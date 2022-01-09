@@ -1,5 +1,5 @@
 const httpMocks = require('node-mocks-http');
-const { customQuery } = require('../../src/controllers/model-query');
+const { customQuery } = require('../../../src/controllers/model-query');
 
 const makeChartReq = data => {
   return httpMocks.createRequest({
@@ -24,7 +24,7 @@ it('Pie chart - Count', async () => {
 
   const responseData = response._getJSONData();
   expect(response.statusCode).toBe(200);
-  expect(responseData).toMatchSpecificSnapshot('./__snapshots__/chart-pie.shot');
+  expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/chart-pie.shot');
 });
 
 ['year', 'week', 'month', 'day'].forEach(timeframe => {
@@ -44,6 +44,6 @@ it('Pie chart - Count', async () => {
 
     const responseData = response._getJSONData();
     expect(response.statusCode).toBe(200);
-    expect(responseData).toMatchSpecificSnapshot(`./__snapshots__/chart-bar.shot`);
+    expect(responseData).toMatchSpecificSnapshot(`./mongodb/__snapshots__/chart-bar.shot`);
   });
 });

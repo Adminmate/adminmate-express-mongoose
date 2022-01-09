@@ -1,5 +1,5 @@
 const httpMocks = require('node-mocks-http');
-const { getAll } = require('../../src/controllers/model-getall');
+const { getAll } = require('../../../src/controllers/model-getall');
 
 const makeUsersReq = (method, data, headers = {}) => {
   return httpMocks.createRequest({
@@ -34,7 +34,7 @@ describe('Users request', () => {
 
     const responseData = response._getJSONData();
     expect(response.statusCode).toBe(200);
-    expect(responseData).toMatchSpecificSnapshot('./__snapshots__/model-getall.shot');
+    expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
   });
 });
 
@@ -47,7 +47,7 @@ describe('Cars request', () => {
 
     const responseData = response._getJSONData();
     expect(response.statusCode).toBe(200);
-    expect(responseData).toMatchSpecificSnapshot('./__snapshots__/model-getall.shot');
+    expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
   });
 
   it('- With refFields params', async () => {
@@ -62,7 +62,7 @@ describe('Cars request', () => {
 
     const responseData = response._getJSONData();
     expect(response.statusCode).toBe(200);
-    expect(responseData).toMatchSpecificSnapshot('./__snapshots__/model-getall.shot');
+    expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
   });
 
   it('- With "fields" parameter (name & manufacturer only)', async () => {
@@ -75,7 +75,7 @@ describe('Cars request', () => {
 
     const responseData = response._getJSONData();
     expect(response.statusCode).toBe(200);
-    expect(responseData).toMatchSpecificSnapshot('./__snapshots__/model-getall.shot');
+    expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
   });
 
   it('- With "page" parameter set to 2', async () => {
@@ -88,7 +88,7 @@ describe('Cars request', () => {
 
     const responseData = response._getJSONData();
     expect(response.statusCode).toBe(200);
-    expect(responseData).toMatchSpecificSnapshot('./__snapshots__/model-getall.shot');
+    expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
   });
 
   it('- With a "search" parameter', async () => {
@@ -103,7 +103,7 @@ describe('Cars request', () => {
 
     const responseData = response._getJSONData();
     expect(response.statusCode).toBe(200);
-    expect(responseData).toMatchSpecificSnapshot('./__snapshots__/model-getall.shot');
+    expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
   });
 
   it('- With a "order" parameter', async () => {
@@ -119,7 +119,7 @@ describe('Cars request', () => {
 
     const responseData = response._getJSONData();
     expect(response.statusCode).toBe(200);
-    expect(responseData).toMatchSpecificSnapshot('./__snapshots__/model-getall.shot');
+    expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
   });
 
   it('- With a "filters" parameter', async () => {
@@ -141,7 +141,7 @@ describe('Cars request', () => {
 
     const responseData = response._getJSONData();
     expect(response.statusCode).toBe(200);
-    expect(responseData).toMatchSpecificSnapshot('./__snapshots__/model-getall.shot');
+    expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
   });
 
   it('- With a "segment" parameter', async () => {
@@ -159,6 +159,6 @@ describe('Cars request', () => {
 
     const responseData = response._getJSONData();
     expect(response.statusCode).toBe(200);
-    expect(responseData).toMatchSpecificSnapshot('./__snapshots__/model-getall.shot');
+    expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
   });
 });

@@ -18,8 +18,8 @@ beforeAll(async () => {
 // Init app
 require('./mongodb/app.js');
 
-require('./tests/model-getall.test.js');
-require('./tests/model-query.test.js');
+require('./mongodb/tests/model-getall.test.js');
+require('./mongodb/tests/model-query.test.js');
 
 // Close mongoose connection
 afterAll(async () => {
