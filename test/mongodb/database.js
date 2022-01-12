@@ -5,7 +5,7 @@ const Car = require('./models/car');
 const Blocked = require('./models/blocked');
 
 const connectDb = () => {
-  return mongoose.connect('mongodb://localhost:27017/node-express-mongodb-server', {
+  return mongoose.connect('mongodb://localhost:27017/demo', {
     useNewUrlParser: true,
     useUnifiedTopology: true
   });
