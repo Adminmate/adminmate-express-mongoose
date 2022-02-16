@@ -8,7 +8,7 @@ module.exports.getAll = async (req, res) => {
   const filters = req.query.filters;
   const fieldsToFetch = req.headers['am-model-fields'] || [];
   const refFields = req.headers['am-ref-fields'] || {};
-  const fieldsToSearchIn = req.query.fieldsToSearchIn || [];
+  const fieldsToSearchIn = req.query.search_in_fields || [];
   const page = parseInt(req.query.page || 1);
   const nbItemPerPage = 10;
   const defaultOrdering = [ ['_id', 'DESC'] ];

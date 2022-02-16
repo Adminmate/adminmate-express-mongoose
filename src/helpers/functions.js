@@ -224,6 +224,12 @@ module.exports.constructQuery = jsonQuery => {
   return null;
 };
 
+module.exports.fieldsToValues = (string, values) => {
+  return string.replace(/[a-z._]+/gi, word => {
+    return _.get(values, word);
+  });
+};
+
 module.exports.refFields = (item, fieldsToPopulate) => {
   const attributes = Object.keys(item);
   attributes.forEach(attr => {

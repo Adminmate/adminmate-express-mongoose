@@ -7,6 +7,7 @@ const fnHelper = require('./src/helpers/functions');
 const { getAll } = require('./src/controllers/model-getall');
 const { getIn } = require('./src/controllers/model-getin');
 const { getOne } = require('./src/controllers/model-getone');
+const { getRefs } = require('./src/controllers/model-getrefs');
 const { postOne } = require('./src/controllers/model-postone');
 const { putOne } = require('./src/controllers/model-putone');
 const { deleteSome } = require('./src/controllers/model-deletesome');
@@ -29,6 +30,7 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
     modelGetAll: getAll,
     modelGetIn: getIn,
     modelGetOne: getOne,
+    modelGetRefs: getRefs,
     modelPostOne: postOne,
     modelPutOne: putOne,
     modelDeleteSome: deleteSome,
