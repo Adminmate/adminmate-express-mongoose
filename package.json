@@ -23,11 +23,10 @@
     "url": "https://github.com/Adminmate/adminmate-express-mongoose.git"
   },
   "dependencies": {
-    "adminmate-express-core": "^1.1.7",
+    "adminmate-express-core": "^1.2.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
-    "mongoose": "^5.9.7",
-    "mongoose-legacy-pluralize": "^1.0.2",
+    "mongoose": "~5.9.7",
     "serialize-error": "^7.0.1"
   },
   "devDependencies": {
