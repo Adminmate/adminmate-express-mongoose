@@ -119,6 +119,9 @@ const cleanString = string => {
 module.exports.cleanString = cleanString;
 
 const queryRule = rule => {
+  if (rule.type === 'group') {
+    return queryRuleSet(rule);
+  }
   let q = {};
   if (rule.operator === 'is') {
     q[rule.field] = { $eq: rule.value };
