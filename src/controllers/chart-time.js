@@ -1,142 +1,124 @@
 
+const Joi = require('@hapi/joi');
 const _ = require('lodash');
 const moment = require('moment');
+const fnHelper = require('../helpers/functions');
 
 module.exports = async (currentModel, data) => {
-  if (!['day', 'week', 'month', 'year'].includes(data.timeframe)) {
+  const paramsSchema = Joi.object({
+    type: Joi.string().required(),
+    model: Joi.string().required(),
+    operation: Joi.string().required(),
+    group_by: Joi.string().required(),
+    timeframe: Joi.string().required().valid('day', 'week', 'month', 'year'),
+    field: Joi.alternatives().conditional('operation', {
+      not: 'count',
+      then: Joi.string().required(),
+      otherwise: Joi.string()
+    }),
+    limit: Joi.number().optional(),
+    date_from: Joi.date().optional(),
+    date_to: Joi.date().optional()
+  });
+
+  // Validate params
+  const { error } = paramsSchema.validate(data);
+  if (error) {
     return {
       success: false,
-      message: 'Invalid timeframe'
+      message: error.details[0].message
     };
   }
 
   const toSum = data.field && data.operation === 'sum' ? `$${data.field}` : 1;
 
-  // To set the max date
-  const toDate = data.to ? moment(data.to) : moment();
-
   let matchReq = {};
   let groupFormat = '';
 
+  if (data.date_from) {
+    matchReq['$gte'] = new Date(moment(data.date_from));
+  }
+
+  if (data.date_to) {
+    matchReq['$lt'] = new Date(moment(data.date_to));
+  }
+
   // Day timeframe
   if (data.timeframe === 'day') {
-    const startOfCurrentDay = toDate.startOf('day');
-    matchReq = {
-      '$gte': new Date(startOfCurrentDay.clone().subtract(30, 'day').startOf('day').format()),
-      '$lt': new Date(startOfCurrentDay.format())
-    };
-    groupFormat = '%Y-%m-%d';
+    groupFormat = '%Y-%m-%d 00:00:00';
   }
   // Week timeframe
   else if (data.timeframe === 'week') {
-    const startOfCurrentWeek = toDate.startOf('week');
-    matchReq = {
-      '$gte': new Date(startOfCurrentWeek.clone().subtract(26, 'week').startOf('week').format()),
-      '$lt': new Date(startOfCurrentWeek.format())
-    };
-    groupFormat = '%V';
+    groupFormat = '%Y-%V';
   }
   // Month timeframe
   else if (data.timeframe === 'month') {
-    const startOfCurrentMonth = toDate.startOf('month');
-    matchReq = {
-      '$gte': new Date(startOfCurrentMonth.clone().subtract(12, 'month').startOf('month').format()),
-      '$lt': new Date(startOfCurrentMonth.format())
-    };
-    groupFormat = '%m';
+    groupFormat = '%Y-%m-01 00:00:00';
   }
   // Year timeframe
   else if (data.timeframe === 'year') {
-    const startOfCurrentYear = toDate.startOf('year');
-    matchReq = {
-      '$gte': new Date(startOfCurrentYear.clone().subtract(8, 'year').startOf('year').format()),
-      '$lt': new Date(startOfCurrentYear.format())
-    };
-    groupFormat = '%Y';
+    groupFormat = '%Y-01-01 00:00:00';
   }
 
   if (!groupFormat) {
     return res.status(403).json({ message: 'Invalid request' });
   }
 
-  const repartitionData = await currentModel
-    .aggregate([
-      {
-        $match: {
-          [data.group_by]: matchReq
+  let repartitionData;
+  try {
+    repartitionData = await currentModel
+      .aggregate([
+        {
+          $match: Object.keys(matchReq).length > 0 ? {
+            [data.group_by]: matchReq
+          } : {}
+        },
+        {
+          $group: {
+            _id: { $dateToString: { format: groupFormat, date: `$${data.group_by}` } },
+            count: { $sum: toSum }
+          }
+        },
+        {
+          $project: {
+            key: '$_id',
+            value: '$count',
+            _id: false
+          }
         }
-      },
-      {
-        $group: {
-          _id: { $dateToString: { format: groupFormat, date: `$${data.group_by}` } },
-          count: { $sum: toSum }
-        }
-      },
-      {
-        $project: {
-          key: '$_id',
-          value: '$count',
-          _id: false
-        }
-      }
-    ]);
+      ]);
+  }
+  catch(e) {
+    return {
+      success: false,
+      message: e.message
+    };
+  }
+
+  // Get min & max date in the results
+  const momentFormat = data.timeframe === 'week' ? 'YYYY-ww' : 'YYYY-MM-DD HH:mm:ss';
+  const unixRange = repartitionData.map(data => moment(data.key, momentFormat));
+  const min = _.min(unixRange);
+  const max = _.max(unixRange);
 
   const formattedData = [];
-
-  // Day timeframe
-  if (data.timeframe === 'day') {
-    for (let i = 1; i <= 30; i++) {
-      const currentDate = toDate.clone().subtract(i, 'day').startOf('day');
-      const countForTheTimeframe = _.find(repartitionData, { key: currentDate.format('YYYY-MM-DD') });
-      formattedData.push({
-        key: currentDate.format('DD/MM'),
-        value: countForTheTimeframe ? countForTheTimeframe.value : 0
-      });
-    }
+  let currentDate = min;
+  while (currentDate.isSameOrBefore(max)) {
+    const countForTheTimeframe = repartitionData.find(d => moment(d.key, momentFormat).isSame(currentDate, data.timeframe));
+    const value = countForTheTimeframe ? fnHelper.toFixedIfNecessary(countForTheTimeframe.value, 2) : 0;
+    formattedData.push({
+      key: currentDate.format('YYYY-MM-DD'),
+      value
+    });
+    currentDate.add(1, data.timeframe).startOf('day');
   }
-  // Week timeframe
-  else if (data.timeframe === 'week') {
-    for (let i = 1; i <= 26; i++) {
-      const currentWeek = toDate.clone().subtract(i, 'week').startOf('week');
-      const countForTheTimeframe = _.find(repartitionData, { key: currentWeek.format('WW') });
-      formattedData.push({
-        key: currentWeek.startOf('week').format('DD/MM'),
-        value: countForTheTimeframe ? countForTheTimeframe.value : 0
-      });
-    }
-  }
-  // Month timeframe
-  else if (data.timeframe === 'month') {
-    for (let i = 1; i <= 12; i++) {
-      const currentMonth = toDate.clone().subtract(i, 'month').startOf('month');
-      const countForTheTimeframe = _.find(repartitionData, { key: currentMonth.format('MM') });
-      formattedData.push({
-        key: currentMonth.startOf('month').format('MMM'),
-        value: countForTheTimeframe ? countForTheTimeframe.value : 0
-      });
-    }
-  }
-  // Year timeframe
-  else if (data.timeframe === 'year') {
-    for (let i = 1; i <= 8; i++) {
-      const currentYear = toDate.clone().subtract(i, 'year').startOf('year');
-      const countForTheTimeframe = _.find(repartitionData, { key: currentYear.format('YYYY') });
-      formattedData.push({
-        key: currentYear.startOf('year').format('YYYY'),
-        value: countForTheTimeframe ? countForTheTimeframe.value : 0
-      });
-    }
-  }
-
-  const formattedDataOrdered = formattedData.reverse();
 
   const chartConfig = {
     xaxis: [
       { dataKey: 'key' }
     ],
     yaxis: [
-      { dataKey: 'value' },
-      // { dataKey: 'test', orientation: 'right' }
+      { dataKey: 'value' }
     ]
   };
 
@@ -144,7 +126,7 @@ module.exports = async (currentModel, data) => {
     success: true,
     data: {
       config: chartConfig,
-      data: formattedDataOrdered
+      data: formattedData
     }
   };
 };

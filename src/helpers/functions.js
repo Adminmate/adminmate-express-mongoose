@@ -220,6 +220,10 @@ const queryRuleSet = ruleSet => {
   }
 };
 
+module.exports.toFixedIfNecessary = (value, dp) => {
+  return +parseFloat(value).toFixed(dp);
+};
+
 module.exports.constructQuery = jsonQuery => {
   if (jsonQuery.operator && jsonQuery.list && jsonQuery.list.length) {
     return queryRuleSet(jsonQuery);
