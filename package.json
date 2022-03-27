@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
-    "adminmate-express-core": "^1.2.0",
+    "adminmate-express-core": "~1.2.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "mongoose": "~5.9.7",
