@@ -17,124 +17,8 @@ Object {
     },
     "data": Array [
       Object {
-        "key": "28/10",
-        "value": 0,
-      },
-      Object {
-        "key": "29/10",
-        "value": 0,
-      },
-      Object {
-        "key": "30/10",
-        "value": 0,
-      },
-      Object {
-        "key": "31/10",
-        "value": 0,
-      },
-      Object {
-        "key": "01/11",
-        "value": 0,
-      },
-      Object {
-        "key": "02/11",
-        "value": 0,
-      },
-      Object {
-        "key": "03/11",
-        "value": 0,
-      },
-      Object {
-        "key": "04/11",
-        "value": 0,
-      },
-      Object {
-        "key": "05/11",
-        "value": 0,
-      },
-      Object {
-        "key": "06/11",
-        "value": 0,
-      },
-      Object {
-        "key": "07/11",
-        "value": 0,
-      },
-      Object {
-        "key": "08/11",
-        "value": 0,
-      },
-      Object {
-        "key": "09/11",
-        "value": 0,
-      },
-      Object {
-        "key": "10/11",
-        "value": 0,
-      },
-      Object {
-        "key": "11/11",
-        "value": 0,
-      },
-      Object {
-        "key": "12/11",
-        "value": 0,
-      },
-      Object {
-        "key": "13/11",
-        "value": 0,
-      },
-      Object {
-        "key": "14/11",
-        "value": 0,
-      },
-      Object {
-        "key": "15/11",
-        "value": 0,
-      },
-      Object {
-        "key": "16/11",
-        "value": 0,
-      },
-      Object {
-        "key": "17/11",
-        "value": 0,
-      },
-      Object {
-        "key": "18/11",
-        "value": 0,
-      },
-      Object {
-        "key": "19/11",
-        "value": 0,
-      },
-      Object {
-        "key": "20/11",
-        "value": 0,
-      },
-      Object {
-        "key": "21/11",
-        "value": 0,
-      },
-      Object {
-        "key": "22/11",
-        "value": 0,
-      },
-      Object {
-        "key": "23/11",
-        "value": 0,
-      },
-      Object {
-        "key": "24/11",
-        "value": 0,
-      },
-      Object {
-        "key": "25/11",
-        "value": 0,
-      },
-      Object {
-        "key": "26/11",
-        "value": 0,
+        "key": "2021-04-02",
+        "value": 2,
       },
     ],
   },
@@ -158,52 +42,8 @@ Object {
     },
     "data": Array [
       Object {
-        "key": "Nov",
-        "value": 0,
-      },
-      Object {
-        "key": "Dec",
-        "value": 0,
-      },
-      Object {
-        "key": "Jan",
-        "value": 0,
-      },
-      Object {
-        "key": "Feb",
-        "value": 0,
-      },
-      Object {
-        "key": "Mar",
-        "value": 0,
-      },
-      Object {
-        "key": "Apr",
+        "key": "2021-04-01",
         "value": 2,
-      },
-      Object {
-        "key": "May",
-        "value": 0,
-      },
-      Object {
-        "key": "Jun",
-        "value": 0,
-      },
-      Object {
-        "key": "Jul",
-        "value": 0,
-      },
-      Object {
-        "key": "Aug",
-        "value": 0,
-      },
-      Object {
-        "key": "Sep",
-        "value": 0,
-      },
-      Object {
-        "key": "Oct",
-        "value": 0,
       },
     ],
   },
@@ -227,108 +67,8 @@ Object {
     },
     "data": Array [
       Object {
-        "key": "23/05",
-        "value": 0,
-      },
-      Object {
-        "key": "30/05",
-        "value": 0,
-      },
-      Object {
-        "key": "06/06",
-        "value": 0,
-      },
-      Object {
-        "key": "13/06",
-        "value": 0,
-      },
-      Object {
-        "key": "20/06",
-        "value": 0,
-      },
-      Object {
-        "key": "27/06",
-        "value": 0,
-      },
-      Object {
-        "key": "04/07",
-        "value": 0,
-      },
-      Object {
-        "key": "11/07",
-        "value": 0,
-      },
-      Object {
-        "key": "18/07",
-        "value": 0,
-      },
-      Object {
-        "key": "25/07",
-        "value": 0,
-      },
-      Object {
-        "key": "01/08",
-        "value": 0,
-      },
-      Object {
-        "key": "08/08",
-        "value": 0,
-      },
-      Object {
-        "key": "15/08",
-        "value": 0,
-      },
-      Object {
-        "key": "22/08",
-        "value": 0,
-      },
-      Object {
-        "key": "29/08",
-        "value": 0,
-      },
-      Object {
-        "key": "05/09",
-        "value": 0,
-      },
-      Object {
-        "key": "12/09",
-        "value": 0,
-      },
-      Object {
-        "key": "19/09",
-        "value": 0,
-      },
-      Object {
-        "key": "26/09",
-        "value": 0,
-      },
-      Object {
-        "key": "03/10",
-        "value": 0,
-      },
-      Object {
-        "key": "10/10",
-        "value": 0,
-      },
-      Object {
-        "key": "17/10",
-        "value": 0,
-      },
-      Object {
-        "key": "24/10",
-        "value": 0,
-      },
-      Object {
-        "key": "31/10",
-        "value": 0,
-      },
-      Object {
-        "key": "07/11",
-        "value": 0,
-      },
-      Object {
-        "key": "14/11",
-        "value": 0,
+        "key": "2021-03-29",
+        "value": 2,
       },
     ],
   },
@@ -352,36 +92,8 @@ Object {
     },
     "data": Array [
       Object {
-        "key": "2013",
-        "value": 0,
-      },
-      Object {
-        "key": "2014",
-        "value": 0,
-      },
-      Object {
-        "key": "2015",
-        "value": 0,
-      },
-      Object {
-        "key": "2016",
-        "value": 0,
-      },
-      Object {
-        "key": "2017",
-        "value": 0,
-      },
-      Object {
-        "key": "2018",
-        "value": 0,
-      },
-      Object {
-        "key": "2019",
-        "value": 0,
-      },
-      Object {
-        "key": "2020",
-        "value": 0,
+        "key": "2021-01-01",
+        "value": 2,
       },
     ],
   },

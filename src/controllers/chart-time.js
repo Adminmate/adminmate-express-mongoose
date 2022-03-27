@@ -61,7 +61,10 @@ module.exports = async (currentModel, data) => {
   }
 
   if (!groupFormat) {
-    return res.status(403).json({ message: 'Invalid request' });
+    return {
+      success: false,
+      message: 'Invalid request'
+    };
   }
 
   let repartitionData;
@@ -95,22 +98,24 @@ module.exports = async (currentModel, data) => {
     };
   }
 
-  // Get min & max date in the results
-  const momentFormat = data.timeframe === 'week' ? 'YYYY-ww' : 'YYYY-MM-DD HH:mm:ss';
-  const unixRange = repartitionData.map(data => moment(data.key, momentFormat));
-  const min = _.min(unixRange);
-  const max = _.max(unixRange);
-
   const formattedData = [];
-  let currentDate = min;
-  while (currentDate.isSameOrBefore(max)) {
-    const countForTheTimeframe = repartitionData.find(d => moment(d.key, momentFormat).isSame(currentDate, data.timeframe));
-    const value = countForTheTimeframe ? fnHelper.toFixedIfNecessary(countForTheTimeframe.value, 2) : 0;
-    formattedData.push({
-      key: currentDate.format('YYYY-MM-DD'),
-      value
-    });
-    currentDate.add(1, data.timeframe).startOf('day');
+  if (repartitionData && repartitionData.length > 0) {
+    // Get min & max date in the results
+    const momentFormat = data.timeframe === 'week' ? 'YYYY-WW' : 'YYYY-MM-DD HH:mm:ss';
+    const unixRange = repartitionData.map(data => moment(data.key, momentFormat));
+    const min = _.min(unixRange).clone();
+    const max = _.max(unixRange).clone();
+
+    let currentDate = min;
+    while (currentDate.isSameOrBefore(max)) {
+      const countForTheTimeframe = repartitionData.find(d => moment(d.key, momentFormat).isSame(currentDate, data.timeframe));
+      const value = countForTheTimeframe ? fnHelper.toFixedIfNecessary(countForTheTimeframe.value, 2) : 0;
+      formattedData.push({
+        key: currentDate.format('YYYY-MM-DD'),
+        value
+      });
+      currentDate.add(1, data.timeframe).startOf('day');
+    }
   }
 
   const chartConfig = {

@@ -14,7 +14,6 @@ it('Pie chart - Count', async () => {
   const request = makeChartReq({
     type: 'pie',
     model: 'users',
-    field: '',
     group_by: 'rating',
     operation: 'count'
   });
@@ -35,15 +34,14 @@ it('Pie chart - Count', async () => {
       field: 'createdAt',
       group_by: 'createdAt',
       timeframe: timeframe,
-      operation: 'count',
-      to: '2021-11-27'
+      operation: 'count'
     });
 
     const response = httpMocks.createResponse();
     await customQuery(request, response, (err) => expect(err).toBeFalsy());
 
     const responseData = response._getJSONData();
-    expect(response.statusCode).toBe(200);
     expect(responseData).toMatchSpecificSnapshot(`./mongodb/__snapshots__/chart-bar.shot`);
+    expect(response.statusCode).toBe(200);
   });
 });
