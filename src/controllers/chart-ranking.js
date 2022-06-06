@@ -1,4 +1,4 @@
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 const fnHelper = require('../helpers/functions');
 
 module.exports = async (currentModel, data) => {
