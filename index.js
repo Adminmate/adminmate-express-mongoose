@@ -1,20 +1,30 @@
-const { init, isAuthorized } = require(global.AM_DEV_MODE ? '../adminmate-express-core' : 'adminmate-express-core');
+const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, charts, authorizedIps, devMode = false }) => {
+  const _conf = {};
+  _conf.projectId = projectId;
+  _conf.secretKey = secretKey;
+  _conf.authKey = authKey;
+  _conf.masterPassword = masterPassword;
+  _conf.models = models || [];
+  _conf.charts = charts || [];
+  _conf.authorizedIps = authorizedIps || null;
+  _conf.devMode = devMode;
 
-// Helpers
-const fnHelper = require('./src/helpers/functions');
+  const amCore = require(_conf.devMode ? '../adminmate-express-core' : 'adminmate-express-core');
 
-// CRUD
-const { getAll } = require('./src/controllers/model-getall');
-const { getIn } = require('./src/controllers/model-getin');
-const { getOne } = require('./src/controllers/model-getone');
-const { getRefs } = require('./src/controllers/model-getrefs');
-const { postOne } = require('./src/controllers/model-postone');
-const { putOne } = require('./src/controllers/model-putone');
-const { deleteSome } = require('./src/controllers/model-deletesome');
-const { getAutocomplete } = require('./src/controllers/model-autocomplete');
-const { customQuery } = require('./src/controllers/model-query');
+  // Helpers
+  const fnHelper = require('./src/helpers/functions')(_conf);
 
-const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, charts, authorizedIps }) => {
+  // CRUD
+  const getAll = require('./src/controllers/model-getall')(_conf);
+  const getIn = require('./src/controllers/model-getin')(_conf);
+  const getOne = require('./src/controllers/model-getone')(_conf);
+  const getRefs = require('./src/controllers/model-getrefs')(_conf);
+  const postOne = require('./src/controllers/model-postone')(_conf);
+  const putOne = require('./src/controllers/model-putone')(_conf);
+  const deleteSome = require('./src/controllers/model-deletesome')(_conf);
+  const getAutocomplete = require('./src/controllers/model-autocomplete')(_conf);
+  const customQuery = require('./src/controllers/model-query')(_conf);
+
   const api = {
     // App config
     getAppConfig: fnHelper.getAppConfig,
@@ -38,19 +48,12 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
     modelCustomQuery: customQuery
   };
 
-  return init({
-    projectId,
-    secretKey,
-    authKey,
-    masterPassword,
-    models,
-    charts,
-    authorizedIps,
+  return amCore.init({
+    config: _conf,
     api
   });
 };
 
 module.exports = {
-  init: Adminmate,
-  isAuthorized,
+  init: Adminmate
 };

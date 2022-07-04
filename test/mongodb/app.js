@@ -1,8 +1,5 @@
 'use strict';
 
-// If you want to use the dev version of @adminmate-express-core
-global.AM_DEV_MODE = true;
-
 // Connect to database
 const { models } = require('./database');
 
@@ -12,6 +9,7 @@ const amConfig = {
   secretKey: '7dn6m0zrcsqta5b57hug52xlira4upqdempch65mwy5guehr33vt0r1s8cyrnmko',
   authKey: 'authkey_secret',
   masterPassword: 'demo-password',
+  devMode: true, // If you want to use the dev version of @adminmate-express-core
   models: [
     {
       slug: 'users',

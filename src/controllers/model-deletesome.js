@@ -1,23 +1,26 @@
-const _ = require('lodash');
-const fnHelper = require('../helpers/functions');
+module.exports = _conf => {
+  const fnHelper = require('../helpers/functions')(_conf);
 
-module.exports.deleteSome = async (req, res) => {
-  const modelName = req.params.model;
-  const itemIds = req.body.ids;
+  const deleteSome = async (req, res) => {
+    const modelName = req.params.model;
+    const itemIds = req.body.ids;
 
-  if (!itemIds || !itemIds.length) {
-    return res.status(403).json({ message: 'Invalid request' });
-  }
+    if (!itemIds || !itemIds.length) {
+      return res.status(403).json({ message: 'Invalid request' });
+    }
 
-  const currentModel = fnHelper.getModelObject(modelName);
-  if (!currentModel) {
-    return res.status(403).json({ message: 'Invalid request' });
-  }
+    const currentModel = fnHelper.getModelObject(modelName);
+    if (!currentModel) {
+      return res.status(403).json({ message: 'Invalid request' });
+    }
 
-  const deleteReq = await currentModel.deleteMany({ _id: { $in: itemIds }})
-    .catch(e => {
-      res.status(403).json({ message: 'Unable to delete the model items' });
-    });
+    const deleteReq = await currentModel.deleteMany({ _id: { $in: itemIds }})
+      .catch(e => {
+        res.status(403).json({ message: 'Unable to delete the model items' });
+      });
 
-  res.json({ deletedCount: deleteReq.deletedCount });
+    res.json({ deletedCount: deleteReq.deletedCount });
+  };
+
+  return deleteSome;
 };

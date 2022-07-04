@@ -1,40 +1,45 @@
-const _ = require('lodash');
-const fnHelper = require('../helpers/functions');
+// const _ = require('lodash');
 
-module.exports.putOne = async (req, res) => {
-  const modelName = req.params.model;
-  const modelItemId = req.params.id;
-  const data = req.body.data;
+module.exports = _conf => {
+  const fnHelper = require('../helpers/functions')(_conf);
 
-  const currentModel = fnHelper.getModelObject(modelName);
-  if (!currentModel) {
-    return res.status(403).json({ message: 'Invalid request' });
-  }
+  const putOne = async (req, res) => {
+    const modelName = req.params.model;
+    const modelItemId = req.params.id;
+    const data = req.body.data;
 
-  // const { model, itemEditableKeys } = models[modelName];
-
-  // Only keep authorized keys
-  // const cleanData = {};
-  // updatableFields.forEach(updatableField => {
-  //   const fieldValue = _.get(data, updatableField);
-  //   if (fieldValue) {
-  //     _.set(cleanData, updatableField, fieldValue)
-  //   }
-  // });
-
-  const cleanData = data;
-
-  if (Object.keys(cleanData).length) {
-    try {
-      await currentModel.findByIdAndUpdate(modelItemId, cleanData, { runValidators: true });
-      res.json({ data: cleanData });
+    const currentModel = fnHelper.getModelObject(modelName);
+    if (!currentModel) {
+      return res.status(403).json({ message: 'Invalid request' });
     }
-    catch(e) {
-      const errorObject = fnHelper.buildError(e, 'Unable to update the model');
-      res.status(403).json(errorObject);
+
+    // const { model, itemEditableKeys } = models[modelName];
+
+    // Only keep authorized keys
+    // const cleanData = {};
+    // updatableFields.forEach(updatableField => {
+    //   const fieldValue = _.get(data, updatableField);
+    //   if (fieldValue) {
+    //     _.set(cleanData, updatableField, fieldValue)
+    //   }
+    // });
+
+    const cleanData = data;
+
+    if (Object.keys(cleanData).length) {
+      try {
+        await currentModel.findByIdAndUpdate(modelItemId, cleanData, { runValidators: true });
+        res.json({ data: cleanData });
+      }
+      catch(e) {
+        const errorObject = fnHelper.buildError(e, 'Unable to update the model');
+        res.status(403).json(errorObject);
+      }
     }
-  }
-  else {
-    res.json({});
-  }
+    else {
+      res.json({});
+    }
+  };
+
+  return putOne;
 };
