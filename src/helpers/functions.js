@@ -127,10 +127,12 @@ module.exports = _conf => {
     }
     // Date
     else if (rule.operator === 'is_before') {
-      q[rule.field] = { $lt: rule.value };
+      // In order that aggregate queries to work well
+      q[rule.field] = { $lt: new Date(moment(rule.value)) };
     }
     else if (rule.operator === 'is_after') {
-      q[rule.field] = { $gt: rule.value };
+      // In order that aggregate queries to work well
+      q[rule.field] = { $gt: new Date(moment(rule.value)) };
     }
     else if (rule.operator === 'is_today') {
       q[rule.field] = {

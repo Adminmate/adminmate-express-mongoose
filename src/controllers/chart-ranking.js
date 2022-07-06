@@ -46,9 +46,21 @@ module.exports = _conf => {
       _value = `$${data.relationship_field}`;
     }
 
+    // Filters
+    let findParams = {};
+    if (data.filters) {
+      const filtersQuery = fnHelper.constructQuery(data.filters);
+      if (filtersQuery) {
+        findParams = filtersQuery;
+      }
+    }
+
     try {
       const repartitionData = await relationshipModel
         .aggregate([
+          {
+            $match: findParams
+          },
           {
             $group: {
               _id: `$${data.relationship_model_ref_field}`,

@@ -35,9 +35,21 @@ module.exports = _conf => {
       _value = `$${data.field}`;
     }
 
+    // Filters
+    let findParams = {};
+    if (data.filters) {
+      const filtersQuery = fnHelper.constructQuery(data.filters);
+      if (filtersQuery) {
+        findParams = filtersQuery;
+      }
+    }
+
     try {
       const repartitionData = await currentModel
         .aggregate([
+          {
+            $match: findParams
+          },
           {
             $group: {
               _id: `$${data.group_by}`,

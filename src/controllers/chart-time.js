@@ -73,14 +73,21 @@ module.exports = _conf => {
       };
     }
 
+    // Filters
+    let findParams = Object.keys(matchReq).length > 0 ? { [data.group_by]: matchReq } : {};
+    if (data.filters) {
+      const filtersQuery = fnHelper.constructQuery(data.filters);
+      if (filtersQuery) {
+        findParams = { $and: [findParams, filtersQuery] };
+      }
+    }
+
     let repartitionData;
     try {
       repartitionData = await currentModel
         .aggregate([
           {
-            $match: Object.keys(matchReq).length > 0 ? {
-              [data.group_by]: matchReq
-            } : {}
+            $match: findParams
           },
           {
             $group: {
