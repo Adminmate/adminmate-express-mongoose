@@ -20,7 +20,11 @@ module.exports = _conf => {
       }),
       limit: Joi.number().optional(),
       date_from: Joi.date().optional(),
-      date_to: Joi.date().optional()
+      date_to: Joi.date().optional(),
+      filters: Joi.object({
+        operator: Joi.string().valid('and', 'or').required(),
+        list: Joi.array().required()
+      })
     });
 
     // Validate params

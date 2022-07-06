@@ -17,6 +17,10 @@ module.exports = _conf => {
         otherwise: Joi.string()
       }),
       limit: Joi.number().optional(),
+      filters: Joi.object({
+        operator: Joi.string().valid('and', 'or').required(),
+        list: Joi.array().required()
+      })
     });
 
     // Validate params

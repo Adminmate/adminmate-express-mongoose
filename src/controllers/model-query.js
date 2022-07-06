@@ -1,7 +1,7 @@
 module.exports = _conf => {
   const fnHelper = require('../helpers/functions')(_conf);
-  const chartPie = require('./chart-pie');
-  const chartValue = require('./chart-value');
+  const chartPie = require('./chart-pie')(_conf);
+  const chartValue = require('./chart-value')(_conf);
   const chartTime = require('./chart-time')(_conf);
   const chartRanking = require('./chart-ranking')(_conf);
 

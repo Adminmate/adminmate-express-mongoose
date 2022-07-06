@@ -116,10 +116,14 @@ module.exports = _conf => {
     }
     let q = {};
     if (rule.operator === 'is') {
-      q[rule.field] = { $eq: rule.value };
+      // In order that aggregate queries to work well
+      const value = mongoose.Types.ObjectId.isValid(rule.value) ? new mongoose.Types.ObjectId(rule.value) : rule.value;
+      q[rule.field] = { $eq: value };
     }
     else if (rule.operator === 'is_not') {
-      q[rule.field] = { $ne: rule.value };
+      // In order that aggregate queries to work well
+      const value = mongoose.Types.ObjectId.isValid(rule.value) ? new mongoose.Types.ObjectId(rule.value) : rule.value;
+      q[rule.field] = { $ne: value };
     }
     // Date
     else if (rule.operator === 'is_before') {
@@ -380,7 +384,7 @@ module.exports = _conf => {
     // List all the models that reference the current model
     const associationsList = [];
     _conf.models
-      .filter(mc => getModelRealname(mc.model) !== currentModelRealName)
+      .filter(mc => !!mc.model && getModelRealname(mc.model) !== currentModelRealName)
       .forEach(mc => {
         const modelProperties = getModelProperties(mc.model);
         if (modelProperties && modelProperties.length) {
