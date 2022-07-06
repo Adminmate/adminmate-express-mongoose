@@ -1,3 +1,5 @@
+const { intersection } = require('lodash');
+
 module.exports = _conf => {
   const fnHelper = require('../helpers/functions')(_conf);
 
@@ -27,10 +29,18 @@ module.exports = _conf => {
     const orderSafe = fnHelper.getCleanOrderStructure(orderConfig);
 
     // Construct default fields to fetch
-    const defaultFieldsToFetch = keys
+    let fieldsToFetchSafe = keys
       .filter(key => !key.path.includes('.'))
       .map(key => key.path);
-    const fieldsToFetchSafe = Array.isArray(fieldsToFetch) && fieldsToFetch.length ? fieldsToFetch : defaultFieldsToFetch;
+
+    // If we get specific fields to display
+    if (Array.isArray(fieldsToFetch) && fieldsToFetch.length > 0) {
+      const flatKeys = keys.map(key => key.path);
+      const validKeys = intersection(fieldsToFetch, flatKeys);
+      if (validKeys.length > 0) {
+        fieldsToFetchSafe = validKeys;
+      }
+    }
 
     // Construct default fields to search in (only String type)
     const defaultFieldsToSearchIn = keys

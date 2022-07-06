@@ -4,7 +4,7 @@ const _ = require('lodash');
 const moment = require('moment');
 const pjson = require('../../package.json');
 
-module.exports = (_conf) => {
+module.exports = _conf => {
   const getModelProperties = model => {
     let modelFields = [];
     const modelProps = model.schema.paths;
