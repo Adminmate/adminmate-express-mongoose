@@ -117,12 +117,12 @@ module.exports = _conf => {
     let q = {};
     if (rule.operator === 'is') {
       // In order that aggregate queries to work well
-      const value = mongoose.Types.ObjectId.isValid(rule.value) ? new mongoose.Types.ObjectId(rule.value) : rule.value;
+      const value = mongoose.isValidObjectId(rule.value) ? new mongoose.Types.ObjectId(rule.value) : rule.value;
       q[rule.field] = { $eq: value };
     }
     else if (rule.operator === 'is_not') {
       // In order that aggregate queries to work well
-      const value = mongoose.Types.ObjectId.isValid(rule.value) ? new mongoose.Types.ObjectId(rule.value) : rule.value;
+      const value = mongoose.isValidObjectId(rule.value) ? new mongoose.Types.ObjectId(rule.value) : rule.value;
       q[rule.field] = { $ne: value };
     }
     // Date
@@ -335,7 +335,7 @@ module.exports = _conf => {
 
     // If the search is a valid mongodb _id
     // An object id's only defining feature is that its 12 bytes long
-    if (mongoose.Types.ObjectId.isValid(search)) {
+    if (mongoose.isValidObjectId(search)) {
       params.$or.push({ _id: search });
       fieldsToPopulate.map(field => {
         params.$or.push({ [field.path]: search });

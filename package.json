@@ -23,8 +23,8 @@
     "url": "https://github.com/Adminmate/adminmate-express-mongoose.git"
   },
   "dependencies": {
-    "joi": "^17.6.0",
     "adminmate-express-core": "~1.2.0",
+    "joi": "^17.6.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "mongoose": "~5.9.7",

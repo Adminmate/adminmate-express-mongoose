@@ -16,10 +16,10 @@ beforeAll(async () => {
 });
 
 // Init app
-require('./mongodb/app.js');
+const api = require('./mongodb/app.js');
 
-require('./mongodb/tests/model-getall.test.js');
-require('./mongodb/tests/model-query.test.js');
+require('./mongodb/tests/model-getall.test.js')(api);
+require('./mongodb/tests/model-query.test.js')(api);
 
 // Close mongoose connection
 afterAll(async () => {

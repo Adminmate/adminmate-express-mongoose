@@ -1,5 +1,4 @@
 const httpMocks = require('node-mocks-http');
-const { getAll } = require('../../../src/controllers/model-getall');
 
 const makeUsersReq = (method, data, headers = {}) => {
   return httpMocks.createRequest({
@@ -25,140 +24,142 @@ const makeCarsReq = (method, data, headers = {}) => {
   });
 };
 
-describe('Users request', () => {
-  it('- No parameter', async () => {
-    const request = makeUsersReq('GET', {});
+module.exports = api => {
+  describe('Users request', () => {
+    it('- No parameter', async () => {
+      const request = makeUsersReq('GET', {});
 
-    const response = httpMocks.createResponse();
-    await getAll(request, response, (err) => expect(err).toBeFalsy());
+      const response = httpMocks.createResponse();
+      await api.modelGetAll(request, response, (err) => expect(err).toBeFalsy());
 
-    const responseData = response._getJSONData();
-    expect(response.statusCode).toBe(200);
-    expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
-  });
-});
-
-describe('Cars request', () => {
-  it('- No parameter', async () => {
-    const request = makeCarsReq('GET', {});
-
-    const response = httpMocks.createResponse();
-    await getAll(request, response, (err) => expect(err).toBeFalsy());
-
-    const responseData = response._getJSONData();
-    expect(response.statusCode).toBe(200);
-    expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
+      const responseData = response._getJSONData();
+      expect(response.statusCode).toBe(200);
+      expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
+    });
   });
 
-  it('- With refFields params', async () => {
-    const request = makeCarsReq('GET', {}, {
-      'am-ref-fields': {
-        users: 'firstname lastname'
-      }
+  describe('Cars request', () => {
+    it('- No parameter', async () => {
+      const request = makeCarsReq('GET', {});
+
+      const response = httpMocks.createResponse();
+      await api.modelGetAll(request, response, (err) => expect(err).toBeFalsy());
+
+      const responseData = response._getJSONData();
+      expect(response.statusCode).toBe(200);
+      expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
     });
 
-    const response = httpMocks.createResponse();
-    await getAll(request, response, (err) => expect(err).toBeFalsy());
+    it('- With refFields params', async () => {
+      const request = makeCarsReq('GET', {}, {
+        'am-ref-fields': {
+          users: 'firstname lastname'
+        }
+      });
 
-    const responseData = response._getJSONData();
-    expect(response.statusCode).toBe(200);
-    expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
-  });
+      const response = httpMocks.createResponse();
+      await api.modelGetAll(request, response, (err) => expect(err).toBeFalsy());
 
-  it('- With "fields" parameter (name & manufacturer only)', async () => {
-    const request = makeCarsReq('GET', {}, {
-      'am-model-fields': ['name', 'manufacturer']
+      const responseData = response._getJSONData();
+      expect(response.statusCode).toBe(200);
+      expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
     });
 
-    const response = httpMocks.createResponse();
-    await getAll(request, response, (err) => expect(err).toBeFalsy());
+    it('- With "fields" parameter (name & manufacturer only)', async () => {
+      const request = makeCarsReq('GET', {}, {
+        'am-model-fields': ['name', 'manufacturer']
+      });
 
-    const responseData = response._getJSONData();
-    expect(response.statusCode).toBe(200);
-    expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
-  });
+      const response = httpMocks.createResponse();
+      await api.modelGetAll(request, response, (err) => expect(err).toBeFalsy());
 
-  it('- With "page" parameter set to 2', async () => {
-    const request = makeCarsReq('GET', {
-      page: 2
+      const responseData = response._getJSONData();
+      expect(response.statusCode).toBe(200);
+      expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
     });
 
-    const response = httpMocks.createResponse();
-    await getAll(request, response, (err) => expect(err).toBeFalsy());
+    it('- With "page" parameter set to 2', async () => {
+      const request = makeCarsReq('GET', {
+        page: 2
+      });
 
-    const responseData = response._getJSONData();
-    expect(response.statusCode).toBe(200);
-    expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
-  });
+      const response = httpMocks.createResponse();
+      await api.modelGetAll(request, response, (err) => expect(err).toBeFalsy());
 
-  it('- With a "search" parameter', async () => {
-    const request = makeCarsReq('GET', {
-      search: 'Porsche 91'
-    }, {
-      'am-model-fields': ['name']
+      const responseData = response._getJSONData();
+      expect(response.statusCode).toBe(200);
+      expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
     });
 
-    const response = httpMocks.createResponse();
-    await getAll(request, response, (err) => expect(err).toBeFalsy());
+    it('- With a "search" parameter', async () => {
+      const request = makeCarsReq('GET', {
+        search: 'Porsche 91'
+      }, {
+        'am-model-fields': ['name']
+      });
 
-    const responseData = response._getJSONData();
-    expect(response.statusCode).toBe(200);
-    expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
-  });
+      const response = httpMocks.createResponse();
+      await api.modelGetAll(request, response, (err) => expect(err).toBeFalsy());
 
-  it('- With a "order" parameter', async () => {
-    const request = makeCarsReq('GET', {
-      search: 'Porsche 91',
-      order: [['name', 'ASC']]
-    }, {
-      'am-model-fields': ['name']
+      const responseData = response._getJSONData();
+      expect(response.statusCode).toBe(200);
+      expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
     });
 
-    const response = httpMocks.createResponse();
-    await getAll(request, response, (err) => expect(err).toBeFalsy());
+    it('- With a "order" parameter', async () => {
+      const request = makeCarsReq('GET', {
+        search: 'Porsche 91',
+        order: [['name', 'ASC']]
+      }, {
+        'am-model-fields': ['name']
+      });
 
-    const responseData = response._getJSONData();
-    expect(response.statusCode).toBe(200);
-    expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
-  });
+      const response = httpMocks.createResponse();
+      await api.modelGetAll(request, response, (err) => expect(err).toBeFalsy());
 
-  it('- With a "filters" parameter', async () => {
-    const request = makeCarsReq('GET', {
-      search: 'Porsche',
-      filters: {
-        operator: 'or',
-        list: [
-          { field: 'year', operator: 'is', value: 1968 },
-          { field: 'year', operator: 'is', value: 1969 }
-        ]
-      }
-    }, {
-      'am-model-fields': ['name', 'year']
+      const responseData = response._getJSONData();
+      expect(response.statusCode).toBe(200);
+      expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
     });
 
-    const response = httpMocks.createResponse();
-    await getAll(request, response, (err) => expect(err).toBeFalsy());
+    it('- With a "filters" parameter', async () => {
+      const request = makeCarsReq('GET', {
+        search: 'Porsche',
+        filters: {
+          operator: 'or',
+          list: [
+            { field: 'year', operator: 'is', value: 1968 },
+            { field: 'year', operator: 'is', value: 1969 }
+          ]
+        }
+      }, {
+        'am-model-fields': ['name', 'year']
+      });
 
-    const responseData = response._getJSONData();
-    expect(response.statusCode).toBe(200);
-    expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
-  });
+      const response = httpMocks.createResponse();
+      await api.modelGetAll(request, response, (err) => expect(err).toBeFalsy());
 
-  it('- With a "segment" parameter', async () => {
-    const request = makeCarsReq('GET', {
-      segment: {
-        type: 'code',
-        data: 'ferrari'
-      }
-    }, {
-      'am-model-fields': ['name', 'year']
+      const responseData = response._getJSONData();
+      expect(response.statusCode).toBe(200);
+      expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
     });
 
-    const response = httpMocks.createResponse();
-    await getAll(request, response, (err) => expect(err).toBeFalsy());
+    it('- With a "segment" parameter', async () => {
+      const request = makeCarsReq('GET', {
+        segment: {
+          type: 'code',
+          data: 'ferrari'
+        }
+      }, {
+        'am-model-fields': ['name', 'year']
+      });
 
-    const responseData = response._getJSONData();
-    expect(response.statusCode).toBe(200);
-    expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
+      const response = httpMocks.createResponse();
+      await api.modelGetAll(request, response, (err) => expect(err).toBeFalsy());
+
+      const responseData = response._getJSONData();
+      expect(response.statusCode).toBe(200);
+      expect(responseData).toMatchSpecificSnapshot('./mongodb/__snapshots__/model-getall.shot');
+    });
   });
-});
+};

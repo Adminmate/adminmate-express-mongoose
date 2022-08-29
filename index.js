@@ -1,4 +1,4 @@
-const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, charts, authorizedIps, devMode = false }) => {
+const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, charts, authorizedIps, devMode = false, testMode = false }) => {
   const _conf = {};
   _conf.projectId = projectId;
   _conf.secretKey = secretKey;
@@ -8,6 +8,7 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
   _conf.charts = charts || [];
   _conf.authorizedIps = authorizedIps || null;
   _conf.devMode = devMode;
+  _conf.testMode = testMode;
 
   const amCore = require(_conf.devMode ? '../adminmate-express-core' : 'adminmate-express-core');
 
@@ -47,6 +48,10 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
     modelGetAutocomplete: getAutocomplete,
     modelCustomQuery: customQuery
   };
+
+  if (testMode === true) {
+    return api;
+  }
 
   return amCore.init({
     config: _conf,
