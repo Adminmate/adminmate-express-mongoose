@@ -10,6 +10,7 @@ module.exports = _conf => {
     const filters = req.query.filters;
     const fieldsToFetch = req.headers['am-model-fields'] || [];
     const refFields = req.headers['am-ref-fields'] || {};
+    const inlineActions = req.headers['am-inline-actions'] || [];
     const fieldsToSearchIn = req.query.search_in_fields || [];
     const page = parseInt(req.query.page || 1);
     const nbItemPerPage = 10;
@@ -20,6 +21,9 @@ module.exports = _conf => {
     if (!currentModel) {
       return res.status(403).json({ message: 'Invalid request' });
     }
+
+    // Model actions
+    const currentModelActions = fnHelper.getModelActions(modelName);
 
     // Get model properties
     const keys = fnHelper.getModelProperties(currentModel);
@@ -103,6 +107,16 @@ module.exports = _conf => {
     const formattedData = data.map(item => {
       return fnHelper.refFields(item, fieldsToPopulate);
     });
+
+    // Inline actions button
+    const _inlineActions = currentModelActions.filter(action => inlineActions.includes(action.code));
+    if (_inlineActions.length) {
+      formattedData.forEach(item => {
+        item._am_inline_actions = _inlineActions
+          .filter(action => typeof action.filter === 'undefined' || action.filter(item))
+          .map(action => action.code);
+      })
+    }
 
     res.json({
       data: formattedData,
