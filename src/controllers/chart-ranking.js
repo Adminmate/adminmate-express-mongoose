@@ -68,17 +68,17 @@ module.exports = _conf => {
             }
           },
           {
+            $sort: { count: -1 }
+          },
+          {
+            $limit: limit
+          },
+          {
             $project: {
               key: '$_id',
               value: '$count',
               _id: false
             }
-          },
-          {
-            $sort: { count: -1 }
-          },
-          {
-            $limit: limit
           }
         ]);
         // .limit(limit)
