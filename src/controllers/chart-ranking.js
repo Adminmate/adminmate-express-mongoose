@@ -16,7 +16,7 @@ module.exports = _conf => {
         then: Joi.string().required(),
         otherwise: Joi.string()
       }),
-      limit: Joi.number().optional(),
+      limit: Joi.alternatives().try(Joi.string(), Joi.number()).optional(),
       filters: Joi.object({
         operator: Joi.string().valid('and', 'or').required(),
         list: Joi.array().required()
@@ -39,7 +39,7 @@ module.exports = _conf => {
     }
 
     // Default limit
-    let limit = data.limit || 10;
+    let limit = parseInt(data.limit) || 10;
 
     let _value = 1;
     if (data.relationship_field && ['sum', 'avg'].includes(data.relationship_operation)) {
@@ -73,10 +73,16 @@ module.exports = _conf => {
               value: '$count',
               _id: false
             }
+          },
+          {
+            $sort: { count: -1 }
+          },
+          {
+            $limit: limit
           }
-        ])
-        .limit(limit)
-        .sort({ value: -1 });
+        ]);
+        // .limit(limit)
+        // .sort({ value: -1 });
 
       const parentIds = repartitionData.map(d => d.key);
       const parentData = await currentModel.find({ _id: parentIds }).select(data.field).lean();
