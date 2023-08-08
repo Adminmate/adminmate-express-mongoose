@@ -13,7 +13,7 @@ module.exports = _conf => {
     const inlineActions = req.headers['am-inline-actions'] || [];
     const fieldsToSearchIn = req.query.search_in_fields || [];
     const page = parseInt(req.query.page || 1);
-    const nbItemPerPage = 10;
+    const rowsPerPage = parseInt(req.query.rows || 10);
     const defaultOrdering = [ ['_id', 'DESC'] ];
     const order = req.query.order || null;
 
@@ -89,8 +89,8 @@ module.exports = _conf => {
       .select(fieldsToFetchSafe)
       .populate(fieldsToPopulate)
       .sort(orderSafe)
-      .skip(nbItemPerPage * (page - 1))
-      .limit(nbItemPerPage)
+      .skip(rowsPerPage * (page - 1))
+      .limit(rowsPerPage)
       .lean()
       .catch(e => {
         res.status(403).json({ message: e.message });
@@ -101,7 +101,7 @@ module.exports = _conf => {
     }
 
     const dataCount = await currentModel.countDocuments(findParams);
-    const nbPage = Math.ceil(dataCount / nbItemPerPage);
+    const nbPage = Math.ceil(dataCount / rowsPerPage);
 
     // Make ref fields appeared as link in the dashboard
     const formattedData = data.map(item => {
@@ -123,7 +123,8 @@ module.exports = _conf => {
       count: dataCount,
       pagination: {
         current: page,
-        count: nbPage
+        count: nbPage,
+        rows_per_page: rowsPerPage
       }
     });
   };
