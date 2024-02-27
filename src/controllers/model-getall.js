@@ -14,7 +14,7 @@ module.exports = _conf => {
     const fieldsToSearchIn = req.query.search_in_fields || [];
     const page = parseInt(req.query.page || 1);
     const rowsPerPage = parseInt(req.query.rows || 10);
-    const defaultOrdering = [ ['_id', 'DESC'] ];
+    const defaultOrdering = [ ['_id', 'desc'] ];
     const order = req.query.order || null;
 
     const currentModel = fnHelper.getModelObject(modelName);
