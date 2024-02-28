@@ -284,7 +284,8 @@ module.exports = _conf => {
     let fieldsToPopulate = [];
     fieldsToFetch.forEach(field => {
       const matchingField = keys.find(k => k.path === field);
-      if (matchingField && matchingField.type === 'ObjectID' && (matchingField.ref || matchingField.refPath)) {
+      const isItObjectIdField = matchingField && matchingField.type?.toLowerCase() === 'objectid';
+      if (isItObjectIdField && (matchingField.ref || matchingField.refPath)) {
 
         let fieldToSelect = '_id';
         let toPush = {
