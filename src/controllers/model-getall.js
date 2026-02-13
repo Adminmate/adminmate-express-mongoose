@@ -84,23 +84,29 @@ module.exports = _conf => {
 
     const findParams = queriesArray.length ? { $and: queriesArray } : {};
 
-    const data = await currentModel
+    const findQuery = currentModel
       .find(findParams)
       .select(fieldsToFetchSafe)
       .populate(fieldsToPopulate)
       .sort(orderSafe)
       .skip(rowsPerPage * (page - 1))
       .limit(rowsPerPage)
-      .lean()
+      .lean();
+
+    const countQuery = queriesArray.length
+      ? currentModel.countDocuments(findParams)
+      : currentModel.estimatedDocumentCount();
+
+    const [data, dataCount] = await Promise.all([findQuery, countQuery])
       .catch(e => {
         res.status(403).json({ message: e.message });
+        return [];
       });
 
     if (!data) {
       return res.status(403).json();
     }
 
-    const dataCount = await currentModel.countDocuments(findParams);
     const nbPage = Math.ceil(dataCount / rowsPerPage);
 
     // Make ref fields appeared as link in the dashboard
