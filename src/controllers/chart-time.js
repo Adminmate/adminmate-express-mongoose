@@ -115,16 +115,23 @@ module.exports = _conf => {
     if (repartitionData && repartitionData.length > 0) {
       // Get min & max date in the results
       const momentFormat = data.timeframe === 'week' ? 'YYYY-WW' : 'YYYY-MM-DD HH:mm:ss';
-      const unixRange = repartitionData.map(data => moment(data.key, momentFormat));
+      const unixRange = repartitionData.map(d => moment(d.key, momentFormat));
       const min = _.min(unixRange).clone();
       const max = _.max(unixRange).clone();
 
+      // Pre-build a map keyed by formatted date to avoid O(n²) lookup
+      const dataMap = new Map(repartitionData.map(d => {
+        const key = moment(d.key, momentFormat).startOf(data.timeframe).format('YYYY-MM-DD');
+        return [key, d.value];
+      }));
+
       let currentDate = min;
       while (currentDate.isSameOrBefore(max)) {
-        const countForTheTimeframe = repartitionData.find(d => moment(d.key, momentFormat).isSame(currentDate, data.timeframe));
-        const value = countForTheTimeframe ? fnHelper.toFixedIfNecessary(countForTheTimeframe.value, 2) : 0;
+        const dateKey = currentDate.format('YYYY-MM-DD');
+        const matchingValue = dataMap.get(dateKey);
+        const value = matchingValue !== undefined ? fnHelper.toFixedIfNecessary(matchingValue, 2) : 0;
         formattedData.push({
-          key: currentDate.format('YYYY-MM-DD'),
+          key: dateKey,
           value
         });
         currentDate.add(1, data.timeframe).startOf('day');

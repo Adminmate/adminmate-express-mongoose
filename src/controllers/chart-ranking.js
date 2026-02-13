@@ -87,10 +87,12 @@ module.exports = _conf => {
       const parentIds = repartitionData.map(d => d.key);
       const parentData = await currentModel.find({ _id: parentIds }).select(data.field).lean();
 
+      const parentMap = new Map(parentData.map(p => [p._id.toString(), p]));
+
       repartitionData.forEach(d => {
         d.item_model = data.model;
         d.item_id = d.key;
-        const parent = parentData.find(p => p._id.toString() === d.key.toString());
+        const parent = parentMap.get(d.key.toString());
         if (parent) {
           d.key = parent[data.field];
         }

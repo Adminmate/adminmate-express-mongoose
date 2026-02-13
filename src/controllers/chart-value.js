@@ -102,7 +102,9 @@ module.exports = _conf => {
       }
 
       // Simple count
-      const dataCount = await currentModel.countDocuments(findParams);
+      const dataCount = Object.keys(findParams).length
+        ? await currentModel.countDocuments(findParams)
+        : await currentModel.estimatedDocumentCount();
 
       return {
         success: true,
