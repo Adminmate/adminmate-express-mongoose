@@ -115,14 +115,17 @@ module.exports = _conf => {
       return queryRuleSet(rule);
     }
     let q = {};
+    // Strict 24-hex check — mongoose.isValidObjectId accepts any 24-char string,
+    // which throws when constructing an ObjectId from a non-hex value.
+    const isStrictObjectId = (val) => typeof val === 'string' && /^[a-f\d]{24}$/i.test(val);
     if (rule.operator === 'is') {
       // In order that aggregate queries to work well
-      const value = mongoose.isValidObjectId(rule.value) ? new mongoose.Types.ObjectId(rule.value) : rule.value;
+      const value = isStrictObjectId(rule.value) ? new mongoose.Types.ObjectId(rule.value) : rule.value;
       q[rule.field] = { $eq: value };
     }
     else if (rule.operator === 'is_not') {
       // In order that aggregate queries to work well
-      const value = mongoose.isValidObjectId(rule.value) ? new mongoose.Types.ObjectId(rule.value) : rule.value;
+      const value = isStrictObjectId(rule.value) ? new mongoose.Types.ObjectId(rule.value) : rule.value;
       q[rule.field] = { $ne: value };
     }
     // Date
@@ -334,9 +337,10 @@ module.exports = _conf => {
       params.$or.push({ [field]: { '$regex': `${search}`, '$options': 'i' } });
     });
 
-    // If the search is a valid mongodb _id
-    // An object id's only defining feature is that its 12 bytes long
-    if (mongoose.isValidObjectId(search)) {
+    // If the search looks like a real mongodb ObjectId (24 hex chars).
+    // mongoose.isValidObjectId is too permissive (accepts any 24-char string),
+    // which causes Cast errors for values like "foo.myshopify.com" (24 chars but not hex).
+    if (/^[a-f\d]{24}$/i.test(search)) {
       params.$or.push({ _id: search });
       fieldsToPopulate.map(field => {
         params.$or.push({ [field.path]: search });
