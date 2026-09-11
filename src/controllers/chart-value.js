@@ -28,6 +28,11 @@ module.exports = _conf => {
       };
     }
 
+    // Whitelist the field against the schema
+    if (data.field && !fnHelper.isValidFieldPath(currentModel, data.field)) {
+      return { success: false, message: 'Invalid field' };
+    }
+
     // Filters
     let findParams = {};
     if (data.filters) {

@@ -138,6 +138,7 @@ Object {
   "pagination": Object {
     "count": 2,
     "current": 1,
+    "rows_per_page": 10,
   },
 }
 `;
@@ -200,6 +201,7 @@ Object {
   "pagination": Object {
     "count": 2,
     "current": 1,
+    "rows_per_page": 10,
   },
 }
 `;
@@ -342,6 +344,7 @@ Object {
   "pagination": Object {
     "count": 2,
     "current": 2,
+    "rows_per_page": 10,
   },
 }
 `;
@@ -369,6 +372,7 @@ Object {
   "pagination": Object {
     "count": 1,
     "current": 1,
+    "rows_per_page": 10,
   },
 }
 `;
@@ -393,6 +397,7 @@ Object {
   "pagination": Object {
     "count": 1,
     "current": 1,
+    "rows_per_page": 10,
   },
 }
 `;
@@ -417,6 +422,7 @@ Object {
   "pagination": Object {
     "count": 1,
     "current": 1,
+    "rows_per_page": 10,
   },
 }
 `;
@@ -479,6 +485,7 @@ Object {
   "pagination": Object {
     "count": 1,
     "current": 1,
+    "rows_per_page": 10,
   },
 }
 `;
@@ -621,6 +628,7 @@ Object {
   "pagination": Object {
     "count": 2,
     "current": 1,
+    "rows_per_page": 10,
   },
 }
 `;
@@ -651,6 +659,7 @@ Object {
   "pagination": Object {
     "count": 1,
     "current": 1,
+    "rows_per_page": 10,
   },
 }
 `;

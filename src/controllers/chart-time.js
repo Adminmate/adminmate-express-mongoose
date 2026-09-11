@@ -36,6 +36,14 @@ module.exports = _conf => {
       };
     }
 
+    // Whitelist the fields against the schema
+    if (!fnHelper.isValidFieldPath(currentModel, data.group_by)) {
+      return { success: false, message: 'Invalid group_by field' };
+    }
+    if (data.field && !fnHelper.isValidFieldPath(currentModel, data.field)) {
+      return { success: false, message: 'Invalid field' };
+    }
+
     const toSum = data.field && data.operation === 'sum' ? `$${data.field}` : 1;
 
     let matchReq = {};
@@ -128,7 +136,8 @@ module.exports = _conf => {
       let currentDate = min;
       while (currentDate.isSameOrBefore(max)) {
         const dateKey = currentDate.format('YYYY-MM-DD');
-        const matchingValue = dataMap.get(dateKey);
+        // Lookup with the same normalization as the map keys (matters for the 'week' timeframe)
+        const matchingValue = dataMap.get(currentDate.clone().startOf(data.timeframe).format('YYYY-MM-DD'));
         const value = matchingValue !== undefined ? fnHelper.toFixedIfNecessary(matchingValue, 2) : 0;
         formattedData.push({
           key: dateKey,

@@ -1,4 +1,4 @@
-const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, charts, authorizedIps, devMode = false, testMode = false }) => {
+const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, charts, authorizedIps, devMode = false, testMode = false, agentKeyVerification = true, agentKeyVerifyUrl = null }) => {
   const _conf = {};
   _conf.projectId = projectId;
   _conf.secretKey = secretKey;
@@ -9,6 +9,11 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
   _conf.authorizedIps = authorizedIps || null;
   _conf.devMode = devMode;
   _conf.testMode = testMode;
+  // AI agents (MCP): revocation check of agent keys against the Adminmate API
+  _conf.agentKeyVerification = agentKeyVerification !== false;
+  if (agentKeyVerifyUrl) {
+    _conf.agentKeyVerifyUrl = agentKeyVerifyUrl;
+  }
 
   const amCore = require(_conf.devMode ? '../adminmate-express-core' : 'adminmate-express-core');
 
@@ -25,6 +30,16 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
   const deleteSome = require('./src/controllers/model-deletesome')(_conf);
   const getAutocomplete = require('./src/controllers/model-autocomplete')(_conf);
   const customQuery = require('./src/controllers/model-query')(_conf);
+
+  // AI agents: approval requests & logs storage (dedicated collections)
+  let agentStore = null;
+  try {
+    agentStore = require('./src/agent-store')(_conf);
+  }
+  catch(e) {
+    console.warn('[adminmate] Unable to initialize the agent store:', e && e.message);
+    agentStore = null;
+  }
 
   const api = {
     // App config
@@ -51,7 +66,10 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
     modelPutOne: putOne,
     modelDeleteSome: deleteSome,
     modelGetAutocomplete: getAutocomplete,
-    modelCustomQuery: customQuery
+    modelCustomQuery: customQuery,
+
+    // AI agents (optional)
+    agentStore
   };
 
   if (testMode === true) {

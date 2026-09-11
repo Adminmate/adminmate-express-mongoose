@@ -5,7 +5,7 @@ module.exports = _conf => {
     const modelName = req.params.model;
     const itemIds = req.body.ids;
 
-    if (!itemIds || !itemIds.length) {
+    if (!Array.isArray(itemIds) || !itemIds.length) {
       return res.status(403).json({ message: 'Invalid request' });
     }
 
@@ -14,10 +14,13 @@ module.exports = _conf => {
       return res.status(403).json({ message: 'Invalid request' });
     }
 
-    const deleteReq = await currentModel.deleteMany({ _id: { $in: itemIds }})
-      .catch(e => {
-        res.status(403).json({ message: 'Unable to delete the model items' });
-      });
+    let deleteReq;
+    try {
+      deleteReq = await currentModel.deleteMany({ _id: { $in: itemIds } });
+    }
+    catch(e) {
+      return res.status(403).json({ message: 'Unable to delete the model items' });
+    }
 
     res.json({ deletedCount: deleteReq.deletedCount });
   };

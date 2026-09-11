@@ -12,8 +12,9 @@ module.exports = _conf => {
     const refFields = req.headers['am-ref-fields'] || {};
     const inlineActions = req.headers['am-inline-actions'] || [];
     const fieldsToSearchIn = req.query.search_in_fields || [];
-    const page = parseInt(req.query.page || 1);
-    const rowsPerPage = parseInt(req.query.rows || 10);
+    const MAX_ROWS_PER_PAGE = 500;
+    const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+    const rowsPerPage = Math.min(Math.max(parseInt(req.query.rows, 10) || 10, 1), MAX_ROWS_PER_PAGE);
     const defaultOrdering = [ ['_id', 'desc'] ];
     const order = req.query.order || null;
 
@@ -29,7 +30,7 @@ module.exports = _conf => {
     const keys = fnHelper.getModelProperties(currentModel);
 
     // Ordering config
-    const orderConfig = fnHelper.validateOrderStructure(order) ? order : defaultOrdering;
+    const orderConfig = fnHelper.validateOrderStructure(order, currentModel) ? order : defaultOrdering;
     const orderSafe = fnHelper.getCleanOrderStructure(orderConfig);
 
     // Construct default fields to fetch

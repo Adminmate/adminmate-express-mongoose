@@ -82,6 +82,30 @@ module.exports = _conf => {
     return model.modelName;
   };
 
+  // Escape a user provided string before using it inside a RegExp
+  const escapeRegExp = value => {
+    return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  };
+
+  // All the paths declared in the mongoose schema (nested paths included)
+  const getSchemaPaths = model => {
+    if (!model || !model.schema || !model.schema.paths) {
+      return [];
+    }
+    return Object.keys(model.schema.paths).filter(path => path !== '__v');
+  };
+
+  // Check that a user provided field name exists in the schema
+  const isValidFieldPath = (model, path) => {
+    if (typeof path !== 'string' || !path || path.startsWith('$') || path.includes('\0')) {
+      return false;
+    }
+    return getSchemaPaths(model).includes(path);
+  };
+
+  // Maximum number of words used to compute search permutations (n! combinations)
+  const MAX_PERMUTATION_WORDS = 4;
+
   // To be used in this file
   const permutations = list => {
     if (list.length <= 1) {
@@ -97,7 +121,7 @@ module.exports = _conf => {
     for(; i < list.length; i++) {
       rest = list.slice(); // make a copy of list
       current = rest.splice(i, 1);
-      permutationsRest = permutations(rest);
+      const permutationsRest = permutations(rest);
       for(j = 0; j < permutationsRest.length; j++) {
         result.push(current.concat(permutationsRest[j]));
       }
@@ -190,19 +214,19 @@ module.exports = _conf => {
     }
     // String comparison
     else if (rule.operator === 'starts_with') {
-      const regexp = new RegExp(`^${rule.value}`);
+      const regexp = new RegExp(`^${escapeRegExp(rule.value)}`);
       q[rule.field] = { $regex: regexp, $options: 'i' };
     }
     else if (rule.operator === 'ends_with') {
-      const regexp = new RegExp(`${rule.value}$`);
+      const regexp = new RegExp(`${escapeRegExp(rule.value)}$`);
       q[rule.field] = { $regex: regexp, $options: 'i' };
     }
     else if (rule.operator === 'contains') {
-      const regexp = new RegExp(`${rule.value}`);
+      const regexp = new RegExp(escapeRegExp(rule.value));
       q[rule.field] = { $regex: regexp, $options: 'i' };
     }
     else if (rule.operator === 'not_contains') {
-      const regexp = new RegExp(`^((?!${rule.value}).)*$`);
+      const regexp = new RegExp(`^((?!${escapeRegExp(rule.value)}).)*$`);
       q[rule.field] = { $regex: regexp, $options: 'i' };
     }
     return q;
@@ -331,10 +355,11 @@ module.exports = _conf => {
   };
 
   const constructSearch = (search, fieldsToSearchIn, fieldsToPopulate = []) => {
-    params = { $or: [] };
+    const params = { $or: [] };
+    const safeSearch = escapeRegExp(search);
 
     fieldsToSearchIn.map(field => {
-      params.$or.push({ [field]: { '$regex': `${search}`, '$options': 'i' } });
+      params.$or.push({ [field]: { '$regex': safeSearch, '$options': 'i' } });
     });
 
     // If the search looks like a real mongodb ObjectId (24 hex chars).
@@ -350,9 +375,12 @@ module.exports = _conf => {
     // If the search terms contains multiple words and there is multiple fields to search in
     if (/\s/.test(search) && fieldsToSearchIn.length > 1) {
       // Create all search combinaisons for $regexMatch
-      const searchPieces = search.split(' ');
-      const searchCombinaisons = permutations(searchPieces)
-        .map(comb => cleanString(comb.join('')))
+      const searchPieces = search.split(/\s+/).filter(Boolean);
+      // Permutations are factorial: above MAX_PERMUTATION_WORDS words we only keep the given order
+      const combinations = searchPieces.length <= MAX_PERMUTATION_WORDS ? permutations(searchPieces) : [searchPieces];
+      const searchCombinaisons = combinations
+        .map(comb => escapeRegExp(cleanString(comb.join(''))))
+        .filter(Boolean)
         .join('|');
       const concatFields = fieldsToSearchIn.map(field => `$${field}`);
 
@@ -469,32 +497,36 @@ module.exports = _conf => {
     else if (e && e.message) {
       const errorObject = serializeError(e);
       const arr = [{
-        message: errorObject.stack
+        message: errorObject.message
       }];
       return { message: defaultMessage, error_details: arr };
     }
     return { message: defaultMessage };
   };
 
-  const validateOrderStructure = orderConfig => {
-    let bool = true;
-    if (orderConfig && Array.isArray(orderConfig)) {
-      orderConfig.forEach(oc => {
-        if (!Array.isArray(oc) || oc.length !== 2 && !['ASC', 'DESC'].includes(oc[1])) {
-          bool = false;
-        }
-      });
+  const validateOrderStructure = (orderConfig, model = null) => {
+    if (!orderConfig || !Array.isArray(orderConfig) || orderConfig.length === 0) {
+      return false;
     }
-    else {
-      bool = false;
-    }
-    return bool;
+    return orderConfig.every(oc => {
+      if (!Array.isArray(oc) || oc.length !== 2 || typeof oc[0] !== 'string' || typeof oc[1] !== 'string') {
+        return false;
+      }
+      if (!['ASC', 'DESC'].includes(oc[1].toUpperCase())) {
+        return false;
+      }
+      // Whitelist the field against the schema when a model is provided
+      if (model && !isValidFieldPath(model, oc[0])) {
+        return false;
+      }
+      return true;
+    });
   };
 
   const getCleanOrderStructure = orderConfig => {
     const order = {};
     orderConfig.forEach(oc => {
-      order[oc[0]] = oc[1];
+      order[oc[0]] = String(oc[1]).toLowerCase();
     });
     return order;
   };
@@ -521,8 +553,10 @@ module.exports = _conf => {
     getModelProperties,
     constructSearch,
     getFieldsToPopulate,
-    getFieldsToPopulate,
     refFields,
+    escapeRegExp,
+    getSchemaPaths,
+    isValidFieldPath,
     fieldsToValues,
     constructQuery,
     toFixedIfNecessary,

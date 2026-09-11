@@ -20,8 +20,10 @@ const api = require('./mongodb/app.js');
 
 require('./mongodb/tests/model-getall.test.js')(api);
 require('./mongodb/tests/model-query.test.js')(api);
+require('./mongodb/tests/security.test.js')(api);
+require('./mongodb/tests/agent-store.test.js')(api);
 
 // Close mongoose connection
 afterAll(async () => {
-  mongooseConnection.disconnect();
+  await mongooseConnection.disconnect();
 });

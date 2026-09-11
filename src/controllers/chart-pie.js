@@ -30,6 +30,14 @@ module.exports = _conf => {
       };
     }
 
+    // Whitelist the fields against the schema
+    if (!fnHelper.isValidFieldPath(currentModel, data.group_by)) {
+      return { success: false, message: 'Invalid group_by field' };
+    }
+    if (data.field && !fnHelper.isValidFieldPath(currentModel, data.field)) {
+      return { success: false, message: 'Invalid field' };
+    }
+
     let _value = 1;
     if (data.field && ['sum', 'avg'].includes(data.operation)) {
       _value = `$${data.field}`;

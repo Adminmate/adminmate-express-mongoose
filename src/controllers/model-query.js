@@ -6,7 +6,10 @@ module.exports = _conf => {
   const chartRanking = require('./chart-ranking')(_conf);
 
   const customQuery = async (req, res) => {
-    const data = req.body.data;
+    const data = req.body && req.body.data;
+    if (!data || typeof data !== 'object' || typeof data.model !== 'string') {
+      return res.status(403).json({ message: 'Invalid request' });
+    }
     const modelName = data.model;
 
     const currentModel = fnHelper.getModelObject(modelName);

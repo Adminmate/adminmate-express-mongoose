@@ -35,11 +35,22 @@ module.exports = _conf => {
     // Get relationship model
     const relationshipModel = fnHelper.getModelObject(data.relationship_model);
     if (!relationshipModel) {
-      return res.status(403).json({ message: 'Invalid request' });
+      return { success: false, message: 'Invalid relationship model' };
+    }
+
+    // Whitelist the fields against the schemas
+    if (!fnHelper.isValidFieldPath(currentModel, data.field)) {
+      return { success: false, message: 'Invalid field' };
+    }
+    if (!fnHelper.isValidFieldPath(relationshipModel, data.relationship_model_ref_field)) {
+      return { success: false, message: 'Invalid relationship_model_ref_field' };
+    }
+    if (data.relationship_field && !fnHelper.isValidFieldPath(relationshipModel, data.relationship_field)) {
+      return { success: false, message: 'Invalid relationship_field' };
     }
 
     // Default limit
-    let limit = parseInt(data.limit) || 10;
+    let limit = Math.min(Math.max(parseInt(data.limit, 10) || 10, 1), 500);
 
     let _value = 1;
     if (data.relationship_field && ['sum', 'avg'].includes(data.relationship_operation)) {
@@ -64,7 +75,7 @@ module.exports = _conf => {
           {
             $group: {
               _id: `$${data.relationship_model_ref_field}`,
-              count: data.operation === 'avg' ? { $avg: _value } : { $sum: _value },
+              count: data.relationship_operation === 'avg' ? { $avg: _value } : { $sum: _value },
             }
           },
           {
